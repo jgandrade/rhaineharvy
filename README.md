@@ -36,6 +36,54 @@ slug below (category `gallery`), run `npm run assets:upload`.
 
 A hero video can replace the hero photo: set `SITE.heroVideo` to its URL.
 
+### Interim photography (live)
+
+Every slot currently holds a free-license Unsplash photo
+([unsplash.com/license](https://unsplash.com/license) - commercial use allowed),
+uploaded to S3 via `npm run assets:upload`. Replace any of them by dropping the
+couple's own photo into `assets-src/<slug>.jpg` and re-running the upload.
+
+<details><summary>Photo sources</summary>
+
+| Slot | Unsplash page |
+| ---- | ------------- |
+| `hero` | https://unsplash.com/photos/man-and-woman-kissing-on-brown-grass-field-during-daytime-haRyBAihS_0 |
+| `preloader-1` | https://unsplash.com/photos/a-black-and-white-photo-of-a-womans-dress-LAnaayWiBuw |
+| `preloader-2` | https://unsplash.com/photos/woman-in-white-floral-dress-holding-green-plant-QKYxgkaTmQk |
+| `preloader-3` | https://unsplash.com/photos/woman-touching-chest-of-man-BOhDR9n4u2s |
+| `promise-portrait` | https://unsplash.com/photos/woman-in-white-wedding-dress-standing-near-window-during-daytime-zGtGfqQqe6U |
+| `story-1` | https://unsplash.com/photos/couple-looks-at-each-other-lovingly-in-a-field-3qKpnFMcNdM |
+| `story-2` | https://unsplash.com/photos/woman-touch-mans-hand-N1CZNuM_Fd8 |
+| `story-3` | https://unsplash.com/photos/grayscale-shot-of-bride-and-groom-FTW8ADj5igs |
+| `day-portrait` | https://unsplash.com/photos/woman-wearing-wedding-gown-white-holding-bouquet-qQ01rvKkE0w |
+| `day-1` | https://unsplash.com/photos/groom-and-bridge-about-to-kiss-during-daytime-7baHM9rEYUw |
+| `day-2` | https://unsplash.com/photos/grayscale-photo-of-woman-in-wedding-gown-0gVEoi52d-E |
+| `day-3` | https://unsplash.com/photos/woman-in-white-tank-top-jpiiDziFagQ |
+| `day-4` | https://unsplash.com/photos/newly-wedded-couple-standing-on-shore-during-daytime-H_cZqryUuok |
+| `day-5` | https://unsplash.com/photos/a-close-up-of-a-purse-MS0VPle30z0 |
+| `moment-01` | https://unsplash.com/photos/woman-in-white-wedding-dress-mLIurLmSRAY |
+| `moment-02` | https://unsplash.com/photos/man-in-black-suit-kissing-woman-in-white-wedding-dress-jbaF5N0uO0k |
+| `moment-03` | https://unsplash.com/photos/man-kissing-shoulder-of-woman-4nPVmlj8ngM |
+| `moment-04` | https://unsplash.com/photos/a-woman-in-a-wedding-dress-spraying-herself-with-water-ri4X7rIavK4 |
+| `moment-05` | https://unsplash.com/photos/a-person-in-a-white-dress-YfkB8R3GB4M |
+| `moment-06` | https://unsplash.com/photos/a-couple-of-women-standing-next-to-each-other-twnM_uWr3Gc |
+| `moment-07` | https://unsplash.com/photos/a-woman-in-a-dress-holding-a-bouquet-of-flowers-hFsZ_rWqJyo |
+| `moment-08` | https://unsplash.com/photos/woman-wearing-white-floral-wedding-dress-holding-bouquet-BJfGfaCKFn0 |
+| `moment-09` | https://unsplash.com/photos/a-bride-and-groom-walking-on-the-beach-Fp5v1bp_0JI |
+| `moment-10` | https://unsplash.com/photos/woman-wearing-white-sheer-lace-wedding-gown-KRPCwGCzUJs |
+| `moment-11` | https://unsplash.com/photos/bride-holding-bouquet-standing-on-white-stairs-BruuboWUC_U |
+| `moment-12` | https://unsplash.com/photos/woman-in-white-floral-wedding-dress--shn8ecaH2w |
+| `moment-13` | https://unsplash.com/photos/a-close-up-of-two-people-holding-hands-ZkgitNKeR9U |
+| `moment-14` | https://unsplash.com/photos/selective-focus-photography-of-two-gold-colored-rings-on-black-stone-during-daytime-AKbE5xlIZXA |
+| `moment-15` | https://unsplash.com/photos/a-group-of-women-standing-next-to-each-other-tYuVJ2xRnKk |
+| `moment-16` | https://unsplash.com/photos/a-bride-and-her-bridesmaids-standing-together-EjL8PUEu4HU |
+| `moment-17` | https://unsplash.com/photos/clear-long-stem-wine-glasses-on-table-hw_sKmjb0ns |
+| `moment-18` | https://unsplash.com/photos/a-wooden-table-topped-with-plates-and-glasses-_9Lh9_uO34o |
+| `moment-19` | https://unsplash.com/photos/woman-in-white-wedding-dress-nKsev-cGRuA |
+| `moment-20` | https://unsplash.com/photos/a-woman-with-a-veil-on-her-head-PPuWCyPxVCk |
+
+</details>
+
 ### Reference stand-ins (preview only)
 
 `npm run assets:reference` fills every slot with borrowed photos and video from

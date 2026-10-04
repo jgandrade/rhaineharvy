@@ -66,9 +66,80 @@ const MASTER_MAX = 3200;
 
 /**
  * The curated catalogue. Everything the site shows comes from here.
+ *
+ * Interim photography: free-license Unsplash photos (unsplash.com/license -
+ * commercial use allowed, no permission needed), one per slot, until the
+ * couple's own photos replace them. Keep the slugs; swap the files.
  */
 const CATALOG = [
-  // { file: "hero.jpg", category: "gallery", slug: "hero", title: "Hero", tag: "Photo" },
+  // https://unsplash.com/photos/man-and-woman-kissing-on-brown-grass-field-during-daytime-haRyBAihS_0
+  { file: "hero.jpg", category: "gallery", slug: "hero", title: "Hero", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-black-and-white-photo-of-a-womans-dress-LAnaayWiBuw
+  { file: "preloader-1.jpg", category: "gallery", slug: "preloader-1", title: "Preloader 1", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-in-white-floral-dress-holding-green-plant-QKYxgkaTmQk
+  { file: "preloader-2.jpg", category: "gallery", slug: "preloader-2", title: "Preloader 2", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-touching-chest-of-man-BOhDR9n4u2s
+  { file: "preloader-3.jpg", category: "gallery", slug: "preloader-3", title: "Preloader 3", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-in-white-wedding-dress-standing-near-window-during-daytime-zGtGfqQqe6U
+  { file: "promise-portrait.jpg", category: "gallery", slug: "promise-portrait", title: "Promise Portrait", tag: "Unsplash" },
+  // https://unsplash.com/photos/couple-looks-at-each-other-lovingly-in-a-field-3qKpnFMcNdM
+  { file: "story-1.jpg", category: "gallery", slug: "story-1", title: "Story 1", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-touch-mans-hand-N1CZNuM_Fd8
+  { file: "story-2.jpg", category: "gallery", slug: "story-2", title: "Story 2", tag: "Unsplash" },
+  // https://unsplash.com/photos/grayscale-shot-of-bride-and-groom-FTW8ADj5igs
+  { file: "story-3.jpg", category: "gallery", slug: "story-3", title: "Story 3", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-wearing-wedding-gown-white-holding-bouquet-qQ01rvKkE0w
+  { file: "day-portrait.jpg", category: "gallery", slug: "day-portrait", title: "Day Portrait", tag: "Unsplash" },
+  // https://unsplash.com/photos/groom-and-bridge-about-to-kiss-during-daytime-7baHM9rEYUw
+  { file: "day-1.jpg", category: "gallery", slug: "day-1", title: "Day 1", tag: "Unsplash" },
+  // https://unsplash.com/photos/grayscale-photo-of-woman-in-wedding-gown-0gVEoi52d-E
+  { file: "day-2.jpg", category: "gallery", slug: "day-2", title: "Day 2", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-in-white-tank-top-jpiiDziFagQ
+  { file: "day-3.jpg", category: "gallery", slug: "day-3", title: "Day 3", tag: "Unsplash" },
+  // https://unsplash.com/photos/newly-wedded-couple-standing-on-shore-during-daytime-H_cZqryUuok
+  { file: "day-4.jpg", category: "gallery", slug: "day-4", title: "Day 4", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-close-up-of-a-purse-MS0VPle30z0
+  { file: "day-5.jpg", category: "gallery", slug: "day-5", title: "Day 5", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-in-white-wedding-dress-mLIurLmSRAY
+  { file: "moment-01.jpg", category: "gallery", slug: "moment-01", title: "Moment 01", tag: "Unsplash" },
+  // https://unsplash.com/photos/man-in-black-suit-kissing-woman-in-white-wedding-dress-jbaF5N0uO0k
+  { file: "moment-02.jpg", category: "gallery", slug: "moment-02", title: "Moment 02", tag: "Unsplash" },
+  // https://unsplash.com/photos/man-kissing-shoulder-of-woman-4nPVmlj8ngM
+  { file: "moment-03.jpg", category: "gallery", slug: "moment-03", title: "Moment 03", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-woman-in-a-wedding-dress-spraying-herself-with-water-ri4X7rIavK4
+  { file: "moment-04.jpg", category: "gallery", slug: "moment-04", title: "Moment 04", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-person-in-a-white-dress-YfkB8R3GB4M
+  { file: "moment-05.jpg", category: "gallery", slug: "moment-05", title: "Moment 05", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-couple-of-women-standing-next-to-each-other-twnM_uWr3Gc
+  { file: "moment-06.jpg", category: "gallery", slug: "moment-06", title: "Moment 06", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-woman-in-a-dress-holding-a-bouquet-of-flowers-hFsZ_rWqJyo
+  { file: "moment-07.jpg", category: "gallery", slug: "moment-07", title: "Moment 07", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-wearing-white-floral-wedding-dress-holding-bouquet-BJfGfaCKFn0
+  { file: "moment-08.jpg", category: "gallery", slug: "moment-08", title: "Moment 08", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-bride-and-groom-walking-on-the-beach-Fp5v1bp_0JI
+  { file: "moment-09.jpg", category: "gallery", slug: "moment-09", title: "Moment 09", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-wearing-white-sheer-lace-wedding-gown-KRPCwGCzUJs
+  { file: "moment-10.jpg", category: "gallery", slug: "moment-10", title: "Moment 10", tag: "Unsplash" },
+  // https://unsplash.com/photos/bride-holding-bouquet-standing-on-white-stairs-BruuboWUC_U
+  { file: "moment-11.jpg", category: "gallery", slug: "moment-11", title: "Moment 11", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-in-white-floral-wedding-dress--shn8ecaH2w
+  { file: "moment-12.jpg", category: "gallery", slug: "moment-12", title: "Moment 12", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-close-up-of-two-people-holding-hands-ZkgitNKeR9U
+  { file: "moment-13.jpg", category: "gallery", slug: "moment-13", title: "Moment 13", tag: "Unsplash" },
+  // https://unsplash.com/photos/selective-focus-photography-of-two-gold-colored-rings-on-black-stone-during-daytime-AKbE5xlIZXA
+  { file: "moment-14.jpg", category: "gallery", slug: "moment-14", title: "Moment 14", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-group-of-women-standing-next-to-each-other-tYuVJ2xRnKk
+  { file: "moment-15.jpg", category: "gallery", slug: "moment-15", title: "Moment 15", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-bride-and-her-bridesmaids-standing-together-EjL8PUEu4HU
+  { file: "moment-16.jpg", category: "gallery", slug: "moment-16", title: "Moment 16", tag: "Unsplash" },
+  // https://unsplash.com/photos/clear-long-stem-wine-glasses-on-table-hw_sKmjb0ns
+  { file: "moment-17.jpg", category: "gallery", slug: "moment-17", title: "Moment 17", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-wooden-table-topped-with-plates-and-glasses-_9Lh9_uO34o
+  { file: "moment-18.jpg", category: "gallery", slug: "moment-18", title: "Moment 18", tag: "Unsplash" },
+  // https://unsplash.com/photos/woman-in-white-wedding-dress-nKsev-cGRuA
+  { file: "moment-19.jpg", category: "gallery", slug: "moment-19", title: "Moment 19", tag: "Unsplash" },
+  // https://unsplash.com/photos/a-woman-with-a-veil-on-her-head-PPuWCyPxVCk
+  { file: "moment-20.jpg", category: "gallery", slug: "moment-20", title: "Moment 20", tag: "Unsplash" },
 ];
 
 const s3 = new S3Client({
