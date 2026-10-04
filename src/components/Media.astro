@@ -1,0 +1,146 @@
+---
+/**
+ * One frame for every photo on the site.
+ *
+ * Pass the slug of an uploaded photo (see scripts/upload-assets.mjs). Until
+ * that photo exists the frame renders a toned placeholder in the same spot -
+ * wine for the warm studio shots, stone for the quiet grey ones, blush for
+ * the soft ones - so the layout already reads like the finished site.
+ */
+import { getArtwork } from "../lib/assets";
+
+interface Props {
+  slug: string;
+  /** Shown on the placeholder so it's obvious which photo goes where. */
+  label?: string;
+  tone?: "wine" | "stone" | "blush";
+  sizes?: string;
+  eager?: boolean;
+  /** Use the still even when the slot has a video (tiny frames, previews). */
+  still?: boolean;
+  class?: string;
+  /** Extra attributes for the wrapper, e.g. data hooks for motion. */
+  [key: `data-${string}`]: string | undefined;
+}
+
+const {
+  slug,
+  label = slug,
+  tone = "wine",
+  sizes = "100vw",
+  eager = false,
+  still = false,
+  class: className,
+  ...rest
+} = Astro.props;
+const art = getArtwork(slug);
+---
+
+<div
+  class:list={["media", `media--${tone}`, { "media--ph": !art }, className]}
+  style={art ? `--media-color:${art.color}` : undefined}
+  {...rest}
+>
+  {
+    art?.video && !still ? (
+      <video
+        class="media__img"
+        src={art.video}
+        poster={art.src(1280)}
+        width={art.width}
+        height={art.height}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload={eager ? "auto" : "metadata"}
+        aria-hidden="true"
+      />
+    ) : art ? (
+      <img
+        class="media__img"
+        src={art.src(1280)}
+        srcset={art.srcset}
+        sizes={sizes}
+        width={art.width}
+        height={art.height}
+        alt={art.title}
+        loading={eager ? "eager" : "lazy"}
+        decoding="async"
+        fetchpriority={eager ? "high" : "auto"}
+        style={`background-image:url(${art.lqip})`}
+      />
+    ) : (
+      <span class="media__label" aria-hidden="true">
+        {label}
+      </span>
+    )
+  }
+</div>
+
+<style>
+  .media {
+    position: relative;
+    overflow: hidden;
+    background: var(--media-color, var(--wine-deep));
+  }
+
+  .media__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background-size: cover;
+  }
+
+  /*
+   * Placeholders echo Vero's lit backdrops: a soft spotlight high on the
+   * wall falling off into the corners, with a fine grain over it.
+   */
+  .media--ph {
+    background:
+      radial-gradient(120% 90% at 38% 22%, var(--ph-hi) 0%, var(--ph-mid) 45%, var(--ph-lo) 100%);
+  }
+
+  .media--ph::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.22;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .media--wine {
+    --ph-hi: #a8394b;
+    --ph-mid: #6e1a2b;
+    --ph-lo: #2a0910;
+  }
+
+  .media--stone {
+    --ph-hi: #9a9193;
+    --ph-mid: #6f6668;
+    --ph-lo: #3e3739;
+  }
+
+  .media--blush {
+    --ph-hi: #f1e3de;
+    --ph-mid: #d8bcb6;
+    --ph-lo: #a9817d;
+  }
+
+  .media__label {
+    position: absolute;
+    left: 10px;
+    bottom: 8px;
+    z-index: 1;
+    font-family: var(--font-sans);
+    font-size: var(--fs-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgb(255 253 251 / 0.55);
+  }
+
+  .media--blush .media__label {
+    color: rgb(58 13 22 / 0.5);
+  }
+</style>

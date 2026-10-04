@@ -1,0 +1,93 @@
+---
+/**
+ * Vero's large quote: poster-scale lines that run off both edges and drift
+ * sideways on scroll, with a seal travelling down through the gap between
+ * the two halves of each line and turning as it goes.
+ */
+import Rich from "./Rich.astro";
+import Seal from "./Seal.astro";
+import { VERSE } from "../lib/site";
+---
+
+<section class="verse" aria-label="A verse">
+  <div class="verse__body" data-verse>
+    <blockquote class="verse__lines">
+      {
+        VERSE.lines.map(([a, b], i) => (
+          <p class="verse__line" data-verse-line={String(i)}>
+            <span>
+              <Rich text={a!} />
+            </span>
+            <span class="verse__gap" aria-hidden="true" />
+            <span>
+              <Rich text={b!} />
+            </span>
+          </p>
+        ))
+      }
+    </blockquote>
+
+    <div class="verse__seal" data-verse-seal>
+      <Seal />
+    </div>
+  </div>
+  <p class="verse__author eyebrow">{VERSE.author}</p>
+</section>
+
+<style>
+  .verse {
+    padding: 16vh 0 14vh;
+    overflow: hidden;
+  }
+
+  .verse__body {
+    position: relative;
+  }
+
+  .verse__lines {
+    margin: 0;
+  }
+
+  .verse__line {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(3rem, 10.4vw, 10rem);
+    line-height: 0.92;
+    letter-spacing: -0.015em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .verse__line :global(em) {
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  /* The lane the seal travels down. */
+  .verse__gap {
+    flex: none;
+    width: clamp(70px, 11vw, 170px);
+  }
+
+  .verse__seal {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: clamp(64px, 9vw, 150px);
+    translate: -50% 0;
+    perspective: 800px;
+  }
+
+  .verse__seal :global(.seal) {
+    transform-style: preserve-3d;
+  }
+
+  .verse__author {
+    margin-top: 5vh;
+    font-size: var(--fs-tiny);
+  }
+</style>

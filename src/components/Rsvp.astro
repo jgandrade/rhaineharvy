@@ -1,0 +1,239 @@
+---
+/**
+ * Vero's closing "Your story deserves to be sculpted" beat, turned into the
+ * reply card. The seal sits over it; the form posts to PUBLIC_RSVP_ENDPOINT
+ * (see src/scripts/rsvp.ts).
+ */
+import Rich from "./Rich.astro";
+import Seal from "./Seal.astro";
+import { RSVP, SITE } from "../lib/site";
+---
+
+<section class="rsvp" id="rsvp" aria-labelledby="rsvp-title">
+  <div class="rsvp__seal" data-rsvp-seal><Seal /></div>
+  <h2 class="title rsvp__title" id="rsvp-title">{RSVP.title}</h2>
+  <p class="prose rsvp__sub">{RSVP.sub}</p>
+
+  <form class="rsvp__form" data-rsvp novalidate>
+    <fieldset class="rsvp__choice">
+      <legend class="visually-hidden">Will you attend?</legend>
+      <label>
+        <input type="radio" name="attending" value="yes" required />
+        <span><Rich text={RSVP.accept} /></span>
+      </label>
+      <label>
+        <input type="radio" name="attending" value="no" />
+        <span><Rich text={RSVP.decline} /></span>
+      </label>
+    </fieldset>
+
+    <div class="field">
+      <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder=" " required />
+      <label for="rsvp-name">Full name, as on your invitation</label>
+    </div>
+
+    <div class="field">
+      <input id="rsvp-contact" name="contact" type="text" autocomplete="email" placeholder=" " required />
+      <label for="rsvp-contact">Email or mobile number</label>
+    </div>
+
+    <div class="rsvp__more" data-rsvp-more>
+      <div class="field">
+        <textarea id="rsvp-guests" name="guests" rows="2" placeholder=" "></textarea>
+        <label for="rsvp-guests">Names of everyone on your invitation who will attend</label>
+      </div>
+      <div class="field">
+        <input id="rsvp-diet" name="dietary" type="text" placeholder=" " />
+        <label for="rsvp-diet">Dietary needs or allergies</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <textarea id="rsvp-message" name="message" rows="2" placeholder=" "></textarea>
+      <label for="rsvp-message">A note for {SITE.bride} &amp; {SITE.groom} (optional)</label>
+    </div>
+
+    <!-- Bots fill every field; people never see this one. -->
+    <input class="visually-hidden" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+    <button class="btn rsvp__submit" type="submit"><Rich text={RSVP.submit} /></button>
+    <p class="rsvp__status" role="status" aria-live="polite" data-rsvp-status></p>
+  </form>
+
+  <div
+    class="rsvp__thanks"
+    data-rsvp-thanks
+    data-yes={RSVP.thanks.yes}
+    data-no={RSVP.thanks.no}
+    hidden
+  >
+    <p class="display display--md" data-rsvp-thanks-text></p>
+  </div>
+</section>
+
+<style>
+  .rsvp {
+    display: grid;
+    justify-items: center;
+    padding: 16vh var(--gutter) 12vh;
+    text-align: center;
+  }
+
+  .rsvp__seal {
+    width: clamp(84px, 9vw, 128px);
+    margin-bottom: 36px;
+    perspective: 800px;
+  }
+
+  .rsvp__sub {
+    max-width: 420px;
+    margin-top: 10px;
+  }
+
+  .rsvp__form {
+    display: grid;
+    gap: 22px;
+    width: min(100%, 520px);
+    margin-top: 56px;
+    text-align: left;
+  }
+
+  .rsvp__choice {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 0 0 14px;
+    padding: 0;
+    border: 0;
+  }
+
+  .rsvp__choice label {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .rsvp__choice input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .rsvp__choice span {
+    display: grid;
+    place-items: center;
+    min-height: 64px;
+    padding: 12px;
+    background: var(--white);
+    box-shadow: 0 4px 24px rgb(58 13 22 / 0.06);
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    text-transform: uppercase;
+    text-align: center;
+    transition:
+      background 0.5s var(--ease-out-expo),
+      color 0.5s var(--ease-out-expo);
+  }
+
+  .rsvp__choice span :global(em) {
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  .rsvp__choice input:checked + span {
+    background: var(--wine);
+    color: var(--ivory);
+  }
+
+  .rsvp__choice input:focus-visible + span {
+    outline: 1px solid var(--wine);
+    outline-offset: 3px;
+  }
+
+  /* Floating-label underline fields, like Vero's footer capture. */
+  .field {
+    position: relative;
+    display: grid;
+  }
+
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 22px 0 8px;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--ink-faint);
+    border-radius: 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    resize: vertical;
+    transition: border-color 0.4s;
+  }
+
+  .field input:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--wine);
+  }
+
+  .field label {
+    position: absolute;
+    left: 0;
+    top: 22px;
+    font-family: var(--font-sans);
+    font-size: 0.9375rem;
+    color: var(--ink-soft);
+    pointer-events: none;
+    transform-origin: left top;
+    transition:
+      transform 0.5s var(--ease-out-expo),
+      color 0.4s;
+  }
+
+  .field input:focus + label,
+  .field input:not(:placeholder-shown) + label,
+  .field textarea:focus + label,
+  .field textarea:not(:placeholder-shown) + label {
+    transform: translateY(-20px) scale(0.78);
+    color: var(--wine);
+  }
+
+  .field :global(.is-invalid) {
+    border-color: var(--wine-mid);
+  }
+
+  .rsvp__more {
+    display: grid;
+    gap: 22px;
+  }
+
+  .rsvp__more[hidden] {
+    display: none;
+  }
+
+  .rsvp__submit {
+    justify-self: center;
+    margin-top: 22px;
+    min-width: 160px;
+    min-height: 40px;
+  }
+
+  .rsvp__submit[disabled] {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .rsvp__status {
+    min-height: 1.5em;
+    font-style: italic;
+    font-size: var(--fs-tiny);
+    color: var(--wine);
+    text-align: center;
+  }
+
+  .rsvp__thanks {
+    max-width: 760px;
+    margin-top: 56px;
+  }
+</style>

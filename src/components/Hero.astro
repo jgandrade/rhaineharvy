@@ -1,0 +1,128 @@
+---
+/**
+ * Full-bleed opener. The preloader window lands here; on scroll the frame
+ * draws in to a card while the name sinks and fades, and the header picks the
+ * name up.
+ */
+import Media from "./Media.astro";
+import Rich from "./Rich.astro";
+import { HERO, SITE } from "../lib/site";
+---
+
+<section class="hero" id="top" data-hero>
+  <div class="hero__frame" data-hero-frame>
+    {
+      SITE.heroVideo ? (
+        <video
+          class="hero__video"
+          src={SITE.heroVideo}
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="auto"
+        />
+      ) : (
+        <Media slug="hero" label="Hero - couple portrait" tone="wine" eager class="hero__media" />
+      )
+    }
+    <div class="hero__shade" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__brand" data-hero-brand>
+    <h1 class="hero__title">
+      {SITE.bride} <em>&amp;</em> {SITE.groom}
+    </h1>
+    <p class="hero__sub"><Rich text={HERO.sub} /></p>
+  </div>
+
+  <svg class="hero__cue" viewBox="0 0 12 7" aria-hidden="true">
+    <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor"></path>
+  </svg>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    height: 100svh;
+    min-height: 520px;
+    color: var(--ivory);
+  }
+
+  .hero__frame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background: var(--wine-deep);
+    will-change: clip-path;
+  }
+
+  .hero__frame :global(.hero__media),
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(70% 50% at 50% 50%, rgb(34 7 13 / 0.28), transparent 75%);
+  }
+
+  .hero__brand {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    gap: 0.5em;
+    text-align: center;
+    pointer-events: none;
+  }
+
+  .hero__title {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.75rem, 7.4vw, 7rem);
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .hero__title em {
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  .hero__sub {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(0.95rem, 1.2vw, 1.15rem);
+    text-transform: uppercase;
+  }
+
+  .hero__sub :global(em) {
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  .hero__cue {
+    position: absolute;
+    left: 50%;
+    bottom: 22px;
+    width: 10px;
+    translate: -50% 0;
+    opacity: 0.8;
+    animation: cue 2.4s var(--ease-in-out-quart) infinite;
+  }
+
+  @keyframes cue {
+    50% {
+      transform: translateY(4px);
+    }
+  }
+</style>

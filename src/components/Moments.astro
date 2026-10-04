@@ -1,0 +1,101 @@
+---
+/**
+ * Vero's media grid: small frames spread wide on a five-column field, each
+ * column drifting at its own speed, with one button pinned to the middle of
+ * the screen as the grid scrolls past it.
+ */
+import Media from "./Media.astro";
+import Rich from "./Rich.astro";
+import { CTA, MOMENTS } from "../lib/site";
+
+const COUNT = 20;
+const tones = ["wine", "blush", "stone", "wine", "stone", "blush", "wine"] as const;
+const items = Array.from({ length: COUNT }, (_, i) => ({
+  slug: `moment-${String(i + 1).padStart(2, "0")}`,
+  tone: tones[i % tones.length]!,
+}));
+---
+
+<section class="moments" id="moments" aria-labelledby="moments-title">
+  <header class="moments__head">
+    <p class="eyebrow" data-reveal-fade><Rich text={MOMENTS.eyebrow} /></p>
+    <h2 class="display" id="moments-title" data-reveal><Rich text={MOMENTS.title} /></h2>
+  </header>
+
+  <div class="moments__field" data-moments-field>
+    <div class="moments__cta" data-pin-cta>
+      <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
+    </div>
+
+    <ul class="moments__grid">
+      {
+        items.map((it, i) => (
+          <li class="moments__item" data-col={String(i % 5)}>
+            <Media
+              slug={it.slug}
+              label={`Moment ${i + 1}`}
+              tone={it.tone}
+              sizes="(min-width: 900px) 12vw, 30vw"
+            />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .moments {
+    padding-top: 22vh;
+  }
+
+  .moments__head {
+    display: grid;
+    gap: 16px;
+    padding-inline: var(--gutter);
+    margin-bottom: 12vh;
+  }
+
+  .moments__field {
+    position: relative;
+    padding: 0 var(--gutter) 4vh;
+  }
+
+  /* Pinned to the middle of the viewport while the grid moves under it. */
+  .moments__cta {
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    height: 0;
+  }
+
+  :global(html:not(.has-smoother)) .moments__cta {
+    position: sticky;
+    top: 50%;
+  }
+
+  .moments__cta .btn {
+    translate: 0 -50%;
+  }
+
+  .moments__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: clamp(16px, 6vw, 100px);
+    row-gap: clamp(28px, 6vw, 72px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 900px) {
+    .moments__grid {
+      grid-template-columns: repeat(5, 1fr);
+      column-gap: 8.5vw;
+    }
+  }
+
+  .moments__item :global(.media) {
+    aspect-ratio: 4 / 5;
+  }
+</style>

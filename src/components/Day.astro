@@ -1,0 +1,221 @@
+---
+/**
+ * Secondary hero + Vero's diptych. Left: one tall portrait that stays pinned.
+ * Right: a column that scrolls past it - photo pairs, the schedule, a small
+ * photo with the RSVP button, another pair, and a quote from the couple.
+ */
+import Media from "./Media.astro";
+import Rich from "./Rich.astro";
+import { CTA, DAY } from "../lib/site";
+---
+
+<section class="day" id="the-day" aria-labelledby="day-title">
+  <header class="day__head">
+    <p class="eyebrow" data-reveal-fade><Rich text={DAY.eyebrow} /></p>
+    <h2 class="display" id="day-title" data-reveal><Rich text={DAY.title} /></h2>
+  </header>
+
+  <div class="diptych" data-diptych>
+    <div class="diptych__sticky" data-pin-diptych>
+      <Media
+        slug="day-portrait"
+        label="Portrait - detail"
+        tone="stone"
+        sizes="(min-width: 900px) 48vw, 100vw"
+        class="diptych__hero"
+        data-mask
+      />
+    </div>
+
+    <div class="diptych__col">
+      <div class="diptych__pair">
+        <Media slug="day-1" label="Day 1" tone="wine" sizes="24vw" data-mask />
+        <Media slug="day-2" label="Day 2" tone="stone" sizes="24vw" data-mask />
+      </div>
+
+      <div class="diptych__edito" data-fade>
+        <p class="title">{DAY.intro.title}</p>
+        <p class="prose prose--italic">{DAY.intro.lede}</p>
+
+        <dl class="schedule">
+          {
+            DAY.events.map((e) => (
+              <div class="schedule__row">
+                <dt>
+                  <span class="schedule__n">{e.n}</span>
+                  {e.name}
+                </dt>
+                <dd>
+                  <span>{e.time}</span>
+                  <span>{e.place}</span>
+                </dd>
+              </div>
+            ))
+          }
+          <div class="schedule__row">
+            <dt>
+              <span class="schedule__n">III.</span>
+              {DAY.attire.label}
+            </dt>
+            <dd><span>{DAY.attire.value}</span></dd>
+          </div>
+        </dl>
+      </div>
+
+      <div class="diptych__cta">
+        <Media slug="day-3" label="Day 3" tone="wine" sizes="12vw" class="diptych__small" data-mask />
+        <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
+      </div>
+
+      <div class="diptych__pair">
+        <Media slug="day-4" label="Day 4" tone="wine" sizes="24vw" data-mask />
+        <Media slug="day-5" label="Day 5" tone="stone" sizes="24vw" data-mask />
+      </div>
+
+      <figure class="diptych__quote" data-fade>
+        <blockquote class="title">{DAY.quote}</blockquote>
+        <figcaption class="eyebrow"><Rich text={DAY.quoteBy} /></figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .day {
+    padding-top: 22vh;
+  }
+
+  .day__head {
+    display: grid;
+    gap: 16px;
+    padding-inline: var(--gutter);
+    margin-bottom: 7vh;
+  }
+
+  .diptych {
+    display: grid;
+    gap: var(--grid-gap);
+    padding-inline: var(--gutter);
+  }
+
+  @media (min-width: 900px) {
+    .diptych {
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+  }
+
+  .diptych__sticky :global(.diptych__hero) {
+    aspect-ratio: 4 / 5;
+  }
+
+  @media (min-width: 900px) {
+    .diptych__sticky {
+      height: calc(100svh - var(--gutter) * 2);
+    }
+
+    /* Without smooth scroll CSS can pin it; with it, motion.ts pins it. */
+    :global(html:not(.has-smoother)) .diptych__sticky {
+      position: sticky;
+      top: var(--gutter);
+    }
+
+    .diptych__sticky :global(.diptych__hero) {
+      aspect-ratio: auto;
+      height: 100%;
+    }
+  }
+
+  .diptych__col {
+    display: grid;
+    align-content: start;
+  }
+
+  .diptych__pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--grid-gap);
+  }
+
+  .diptych__pair :global(.media) {
+    aspect-ratio: 3 / 4;
+  }
+
+  .diptych__edito {
+    display: grid;
+    justify-items: center;
+    gap: 14px;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 14vh 0 12vh;
+  }
+
+  .schedule {
+    width: 100%;
+    margin: 28px 0 0;
+    border-top: 1px solid var(--ink-faint);
+  }
+
+  .schedule__row {
+    display: grid;
+    grid-template-columns: 1fr 1.25fr;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ink-faint);
+    text-align: left;
+  }
+
+  .schedule dt {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .schedule__n {
+    display: inline-block;
+    width: 2.4em;
+    font-family: var(--font-serif);
+    font-weight: 500;
+    color: var(--ink-soft);
+  }
+
+  .schedule dd {
+    display: grid;
+    margin: 0;
+    font-size: var(--fs-body);
+    line-height: 1.35;
+  }
+
+  .schedule dd span + span {
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+
+  .diptych__cta {
+    display: grid;
+    justify-items: center;
+    gap: 28px;
+    padding-bottom: 14vh;
+  }
+
+  .diptych__cta :global(.diptych__small) {
+    width: clamp(88px, 9vw, 132px);
+    aspect-ratio: 2 / 3;
+  }
+
+  .diptych__quote {
+    display: grid;
+    justify-items: center;
+    gap: 22px;
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 14vh 0 10vh;
+  }
+
+  .diptych__quote blockquote {
+    margin: 0;
+    white-space: normal;
+  }
+</style>

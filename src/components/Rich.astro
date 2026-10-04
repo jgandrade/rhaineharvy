@@ -1,0 +1,26 @@
+---
+/**
+ * Renders copy from site.ts. One string → inline; an array → one masked
+ * line per entry, which motion.ts raises into place.
+ */
+import { rich } from "../lib/site";
+
+interface Props {
+  text: string | string[];
+}
+
+const { text } = Astro.props;
+const lines = Array.isArray(text) ? text : null;
+---
+
+{
+  lines ? (
+    lines.map((l) => (
+      <span class="line">
+        <span class="line__inner" set:html={rich(l)} />
+      </span>
+    ))
+  ) : (
+    <Fragment set:html={rich(text as string)} />
+  )
+}

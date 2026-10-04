@@ -1,0 +1,454 @@
+---
+/**
+ * Vero's footer, row for row:
+ *
+ *   nav                                    (left)
+ *   capture field  ·  quiet details        (left · right)
+ *   the name, set as one heavy block wall to wall
+ *   in-page links ↗                        ·  © / Back to top
+ *
+ * Every item rises out of a mask when the footer comes into view, and links
+ * roll to a copy on hover. The capture field is a shortcut into the RSVP:
+ * type a name, press the arrow, and the form opens with it filled in.
+ */
+import { FOOTER, NAV, SITE } from "../lib/site";
+
+const details = [SITE.couple, SITE.dateLong];
+const arrow = `<svg class="footer__icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.2 2H8v4.8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
+---
+
+<footer class="footer" data-footer>
+  <div class="footer__grid">
+    <nav class="footer__primary" aria-label="Footer">
+      {
+        NAV.map((item, i) => (
+          <span class="footer__inner" style={`--index:${i}`}>
+            <a class="footer__link" href={item.href} data-scroll-to>
+              <span class="footer__label">{item.label}</span>
+              <span class="footer__copy" aria-hidden="true">{item.label}</span>
+            </a>
+          </span>
+        ))
+      }
+    </nav>
+
+    <form class="footer__capture" data-footer-capture>
+      <span class="footer__inner" style="--index:0">
+        <label class="footer__capture-label" for="footer-name">{FOOTER.captureLabel}</label>
+      </span>
+      <span class="footer__inner footer__inner--block" style="--index:1">
+        <span class="footer__field">
+          <input
+            id="footer-name"
+            name="name"
+            type="text"
+            autocomplete="name"
+            placeholder={FOOTER.capturePlaceholder}
+          />
+          <button type="submit" aria-label="Continue to RSVP">→</button>
+        </span>
+      </span>
+    </form>
+
+    <div class="footer__secondary">
+      {
+        details.map((d, i) => (
+          <span class="footer__inner" style={`--index:${i}`}>
+            <span class="footer__detail">{d}</span>
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="footer__scene" aria-hidden="true">
+      <!-- Two lines at one size: the bride's name flush left, the groom's flush
+           right. footer script re-measures the glyphs and tightens the box. -->
+      <svg class="footer__mark" viewBox="0 -25 3600 1460" data-footer-mark>
+        <text class="footer__line" x="0" y="630" data-line="a">{SITE.bride.toUpperCase()}</text>
+        <text class="footer__line" x="3600" y="1386" text-anchor="end" data-line="b"><tspan class="footer__amp">&amp;</tspan> {SITE.groom.toUpperCase()}</text>
+      </svg>
+    </div>
+
+    <div class="footer__legals">
+      {
+        FOOTER.links.map((l, i) => (
+          <span class="footer__inner" style={`--index:${i}`}>
+            <a class="footer__link footer__link--quiet" href={l.href} data-scroll-to>
+              <span class="footer__label">
+                {l.label}
+                <Fragment set:html={arrow} />
+              </span>
+              <span class="footer__copy" aria-hidden="true">
+                {l.label}
+                <Fragment set:html={arrow} />
+              </span>
+            </a>
+          </span>
+        ))
+      }
+    </div>
+
+    <div class="footer__credits">
+      <span class="footer__inner" style="--index:0">
+        <span class="footer__small">© {SITE.year} {SITE.couple}</span>
+      </span>
+      <span class="footer__inner" style="--index:1">
+        <a class="footer__swipe" href="#top" data-scroll-to>{FOOTER.top}</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const footer = document.querySelector<HTMLElement>("[data-footer]");
+
+  if (footer) {
+    // Rise in once, the first time the footer shows.
+    new IntersectionObserver(
+      (entries, io) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          footer.classList.add("is-visible");
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15 },
+    ).observe(footer);
+
+    // Set both lines at one size - line A flush left, line B flush right -
+    // stacked on the cap height rather than the font's line box, so the two
+    // rows sit as one block of ink like Vero's wordmark.
+    const mark = footer.querySelector<SVGSVGElement>("[data-footer-mark]");
+    const fit = () => {
+      if (!mark) return;
+      const a = mark.querySelector<SVGTextElement>('[data-line="a"]')!;
+      const b = mark.querySelector<SVGTextElement>('[data-line="b"]')!;
+      const style = getComputedStyle(a);
+      const ctx = document.createElement("canvas").getContext("2d");
+      if (!ctx) return;
+      ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+      const cap = ctx.measureText("H").actualBoundingBoxAscent;
+
+      b.removeAttribute("text-anchor");
+      a.setAttribute("x", "0");
+      b.setAttribute("x", "0");
+      const wa = a.getComputedTextLength();
+      const wb = b.getComputedTextLength();
+      if (!cap || !wa || !wb) return;
+
+      const width = Math.max(wa, wb);
+      const gap = cap * 0.2;
+      a.setAttribute("y", String(cap));
+      b.setAttribute("x", String(width - wb));
+      b.setAttribute("y", String(cap * 2 + gap));
+      // The italic ampersand rises above the caps; leave it a sliver of room.
+      mark.setAttribute("viewBox", `0 ${-cap * 0.04} ${width} ${cap * 2.1 + gap}`);
+    };
+    document.fonts.ready.then(fit);
+
+    // Name → RSVP, prefilled.
+    const capture = footer.querySelector<HTMLFormElement>("[data-footer-capture]");
+    capture?.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = (capture.elements.namedItem("name") as HTMLInputElement).value.trim();
+      const field = document.querySelector<HTMLInputElement>("#rsvp-name");
+      if (field && name) field.value = name;
+      // Reuse the header's RSVP link so the scroll goes through the smoother.
+      document.querySelector<HTMLAnchorElement>('.header__cta[href="#rsvp"]')?.click();
+      window.setTimeout(() => field?.focus({ preventScroll: true }), 1200);
+    });
+  }
+</script>
+
+<style>
+  .footer {
+    position: relative;
+    padding: 30px 0 16px;
+    border-top: 1px solid var(--ink-faint);
+    overflow: hidden;
+    color: var(--ink);
+  }
+
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 64px;
+    margin-inline: 20px;
+  }
+
+  @media (min-width: 930px) {
+    .footer__grid {
+      grid-template-columns: repeat(12, 1fr);
+      column-gap: var(--grid-gap);
+      row-gap: 54px;
+      margin-inline: 30px;
+    }
+  }
+
+  /* ---------- Mask reveal ---------- */
+
+  .footer__inner {
+    position: relative;
+    display: inline-flex;
+    overflow: hidden;
+  }
+
+  .footer__inner--block {
+    display: flex;
+  }
+
+  :global(.js) .footer__inner > * {
+    transform: translateY(105%);
+    transition: transform 0.8s var(--ease-in-out-quart) calc(var(--index, 0) * 0.1s);
+  }
+
+  :global(.js) .footer.is-visible .footer__inner > * {
+    transform: none;
+  }
+
+  /* ---------- Links: roll to a copy on hover ---------- */
+
+  .footer__primary,
+  .footer__secondary {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer__primary {
+    grid-column: 1 / -1;
+  }
+
+  .footer__link {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    font: 500 1.125rem / 1.5 var(--font-sans);
+    letter-spacing: 0.04em;
+  }
+
+  .footer__label,
+  .footer__copy {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    transition: transform 0.65s var(--ease-out-quart);
+  }
+
+  .footer__copy {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: translateY(100%);
+  }
+
+  @media (hover: hover) {
+    .footer__link:hover .footer__label {
+      transform: translateY(-100%);
+    }
+
+    .footer__link:hover .footer__copy {
+      transform: none;
+    }
+  }
+
+  .footer__link--quiet {
+    font: 400 0.9375rem / 1.2 var(--font-sans);
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+
+  .footer__link--quiet :global(.footer__icon) {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* ---------- Capture field ---------- */
+
+  .footer__capture {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .footer__capture-label {
+    font: 400 12px / 1.2 var(--font-sans);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .footer__field {
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .footer__field input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 0;
+    background: none;
+    border: 0;
+    font: 400 15px / 1.2 var(--font-sans);
+    letter-spacing: 0.02em;
+  }
+
+  .footer__field input::placeholder {
+    color: currentColor;
+    opacity: 0.55;
+  }
+
+  .footer__field input:focus {
+    outline: none;
+  }
+
+  .footer__field button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    padding: 0 4px;
+    font-size: 18px;
+    transition: opacity 0.15s;
+  }
+
+  @media (hover: hover) {
+    .footer__field button:hover {
+      opacity: 0.7;
+    }
+  }
+
+  /* ---------- Details: grey, beside the field on desktop ---------- */
+
+  .footer__detail {
+    font: 500 1.125rem / 1.5 var(--font-sans);
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 930px) {
+    .footer__primary .footer__link,
+    .footer__detail {
+      font-size: 0.9375rem;
+    }
+
+    .footer__capture {
+      grid-column: 1 / 6;
+    }
+
+    .footer__secondary {
+      grid-column: -4 / -1;
+      align-items: flex-end;
+      text-align: right;
+    }
+  }
+
+  /* ---------- Wordmark ---------- */
+
+  .footer__scene {
+    grid-column: 1 / -1;
+    overflow: hidden;
+  }
+
+  .footer__mark {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+
+  .footer__line {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: 1000px;
+    letter-spacing: -0.035em;
+    fill: var(--ink);
+  }
+
+  .footer__amp {
+    font-style: italic;
+    font-weight: 600;
+    fill: var(--wine);
+  }
+
+  :global(.js) .footer__mark {
+    transform: translateY(100%);
+    transition: transform 1.4s var(--ease-out-expo) 0.15s;
+  }
+
+  :global(.js) .footer.is-visible .footer__mark {
+    transform: none;
+  }
+
+  /* ---------- Foot row ---------- */
+
+  .footer__legals,
+  .footer__credits {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    grid-column: 1 / -1;
+  }
+
+  .footer__credits {
+    flex-direction: column-reverse;
+  }
+
+  @media (min-width: 930px) {
+    .footer__legals {
+      flex-direction: row;
+      grid-column: 1 / span 6;
+      gap: 45px;
+    }
+
+    .footer__credits {
+      flex-direction: row;
+      grid-column: span 6 / -1;
+      justify-content: flex-end;
+      gap: 70px;
+      margin-right: 15px;
+    }
+  }
+
+  .footer__small,
+  .footer__swipe {
+    font: 400 0.9375rem / 1.2 var(--font-sans);
+    letter-spacing: 0.03em;
+    color: var(--ink-soft);
+  }
+
+  /* Vero's "Credits" underline: wipes out to the right, back in from the left. */
+  .footer__swipe {
+    position: relative;
+    padding-bottom: 3px;
+    overflow: hidden;
+  }
+
+  .footer__swipe::before,
+  .footer__swipe::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 1px;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transition: transform 0.8s var(--ease-out-quart);
+  }
+
+  .footer__swipe::before {
+    transform: translateX(calc(-100% - 50px));
+  }
+
+  @media (hover: hover) {
+    .footer__swipe:hover::before {
+      transform: none;
+    }
+
+    .footer__swipe:hover::after {
+      transform: translateX(100%);
+    }
+  }
+</style>

@@ -1,0 +1,194 @@
+---
+/**
+ * Vero's full-size stepper. Pinned: a small frame under the headline grows to
+ * fill the screen, then each later chapter wipes in from the right while its
+ * word lights up in the caption - "From HELLO, to YES, to I DO."
+ *
+ * Without JS (or with reduced motion) the chapters simply stack.
+ */
+import Media from "./Media.astro";
+import Rich from "./Rich.astro";
+import { STORY } from "../lib/site";
+
+const tones = ["wine", "stone", "wine"] as const;
+---
+
+<section class="story" id="story" aria-labelledby="story-title" data-story>
+  <div class="story__pin" data-story-pin>
+    <div class="story__intro" data-story-intro>
+      <p class="eyebrow"><Rich text={STORY.eyebrow} /></p>
+      <h2 class="display" id="story-title"><Rich text={STORY.title} /></h2>
+    </div>
+
+    <div class="story__frame" data-story-frame>
+      {
+        STORY.steps.map((s, i) => (
+          <div class="story__slide" data-story-slide>
+            <Media
+              slug={`story-${i + 1}`}
+              label={`Story ${i + 1} - ${s.label}`}
+              tone={tones[i]}
+              sizes="100vw"
+              class="story__media"
+            />
+          </div>
+        ))
+      }
+      <div class="story__shade" aria-hidden="true"></div>
+
+      <ul class="story__dots" aria-hidden="true">
+        {STORY.steps.map(() => <li data-story-dot />)}
+      </ul>
+
+      <p class="story__caption" data-story-caption>
+        {
+          STORY.steps.map((s) => (
+            <span class="story__step" data-story-step>
+              <em>{s.lead}</em> {s.word}
+            </span>
+          ))
+        }
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    position: relative;
+  }
+
+  .story__pin {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+
+  .story__intro {
+    position: absolute;
+    inset: 0 var(--gutter) auto;
+    padding-top: 14vh;
+    display: grid;
+    gap: 14px;
+  }
+
+  .story__frame {
+    position: absolute;
+    inset: 0;
+    color: var(--ivory);
+    /* Starts as a small card under the headline; motion.ts opens it. */
+    clip-path: inset(var(--t, 70%) var(--x, 44%) var(--b, 10%) var(--x, 44%));
+  }
+
+  .story__slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  .story__slide + .story__slide {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  .story__slide :global(.story__media) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .story__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(34 7 13 / 0.62), rgb(34 7 13 / 0.18) 32%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .story__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5vh;
+    display: flex;
+    justify-content: center;
+    gap: 0.28em;
+    padding-inline: var(--gutter);
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: var(--fs-display-2);
+    line-height: 1;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-shadow: 0 1px 24px rgb(34 7 13 / 0.35);
+  }
+
+  .story__step {
+    opacity: 0.45;
+    transition: opacity 0.6s var(--ease-out-expo);
+  }
+
+  .story__step em {
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  .story__step:global(.is-active) {
+    opacity: 1;
+  }
+
+  .story__dots {
+    position: absolute;
+    left: var(--gutter);
+    top: 50%;
+    display: grid;
+    gap: 9px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    translate: 0 -50%;
+  }
+
+  .story__dots li {
+    width: 5px;
+    height: 5px;
+    background: currentColor;
+    opacity: 0.45;
+    rotate: 45deg;
+    transition: opacity 0.6s;
+  }
+
+  .story__dots li:global(.is-active) {
+    opacity: 1;
+  }
+
+  /* No JS / reduced motion: chapters stack as plain full-bleed panels. */
+  :global(html:not(.js)) .story__pin,
+  :global(html.reduce-motion) .story__pin {
+    height: auto;
+  }
+
+  :global(html:not(.js)) .story__intro,
+  :global(html.reduce-motion) .story__intro {
+    position: static;
+    padding-block: 14vh 8vh;
+  }
+
+  :global(html:not(.js)) .story__frame,
+  :global(html.reduce-motion) .story__frame {
+    position: static;
+    clip-path: none;
+  }
+
+  :global(html:not(.js)) .story__slide,
+  :global(html.reduce-motion) .story__slide {
+    position: relative;
+    height: 80svh;
+    clip-path: none;
+  }
+
+  @media (max-width: 599px) {
+    .story__caption {
+      font-size: 1.45rem;
+      gap: 0.22em;
+    }
+  }
+</style>

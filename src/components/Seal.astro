@@ -1,0 +1,77 @@
+---
+/**
+ * Wax seal - our answer to Vero's spinning coin. Irregular poured rim,
+ * pressed inner ring, embossed monogram. Pure SVG so it stays sharp at any
+ * size and spins cleanly in 3D.
+ */
+import { SITE } from "../lib/site";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+// Several seals render on one page; each needs its own gradient ids.
+const id = `seal-${Math.random().toString(36).slice(2, 8)}`;
+
+// A poured-wax rim: a circle with soft, uneven lobes.
+const lobes = 14;
+const pts = Array.from({ length: lobes * 4 }, (_, i) => {
+  const a = (i / (lobes * 4)) * Math.PI * 2;
+  const r = 96 + Math.sin(i * 1.7) * 3.2 + Math.cos(i * 0.9) * 2.4;
+  return [100 + Math.cos(a) * r, 100 + Math.sin(a) * r];
+});
+const rim =
+  pts
+    .map(([x, y], i) => `${i ? "L" : "M"}${x!.toFixed(1)} ${y!.toFixed(1)}`)
+    .join(" ") + "Z";
+---
+
+<svg class:list={["seal", className]} viewBox="0 0 200 200" aria-hidden="true">
+  <defs>
+    <radialGradient id={`${id}-wax`} cx="38%" cy="32%" r="75%">
+      <stop offset="0" stop-color="#b2424f"></stop>
+      <stop offset="0.45" stop-color="#7a1d2e"></stop>
+      <stop offset="1" stop-color="#3a0d16"></stop>
+    </radialGradient>
+    <radialGradient id={`${id}-well`} cx="60%" cy="65%" r="70%">
+      <stop offset="0" stop-color="#8f2b3c"></stop>
+      <stop offset="1" stop-color="#4a1220"></stop>
+    </radialGradient>
+    <filter id={`${id}-soft`} x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="0.6"></feGaussianBlur>
+    </filter>
+  </defs>
+  <path d={rim} fill={`url(#${id}-wax)`}></path>
+  <circle cx="100" cy="100" r="70" fill={`url(#${id}-well)`}></circle>
+  <circle cx="100" cy="100" r="70" fill="none" stroke="#c4626f" stroke-opacity=".45" stroke-width="1.2"></circle>
+  <circle cx="100" cy="100" r="62" fill="none" stroke="#2a0910" stroke-opacity=".5" stroke-width="1" filter={`url(#${id}-soft)`}></circle>
+  <text
+    x="100"
+    y="114"
+    text-anchor="middle"
+    font-family="Cormorant Garamond, Garamond, serif"
+    font-size="44"
+    font-weight="500"
+    fill="#2a0910"
+    fill-opacity=".55"
+    dx="1"
+    dy="1.5">{SITE.monogram}</text>
+  <text
+    x="100"
+    y="114"
+    text-anchor="middle"
+    font-family="Cormorant Garamond, Garamond, serif"
+    font-size="44"
+    font-weight="500"
+    fill="#d77a86"
+    fill-opacity=".7">{SITE.monogram}</text>
+</svg>
+
+<style>
+  .seal {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 18px 24px rgb(58 13 22 / 0.28));
+  }
+</style>

@@ -1,0 +1,364 @@
+/* ================================================================
+ * Rhaine & Harvy - design system
+ *
+ * Vero's structure, re-toned to burgundy: warm ivory ground, ink
+ * type, wine for the photographic moments. Cormorant Garamond sets
+ * every headline in CAPS with *italic* lowercase asides; Hanken
+ * Grotesk carries titles, labels and forms. All fonts self-hosted.
+ * ================================================================ */
+
+@font-face {
+	font-family: 'Cormorant Garamond';
+	src: url('/fonts/cormorant-garamond-500-normal.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Cormorant Garamond';
+	src: url('/fonts/cormorant-garamond-500-italic.woff2') format('woff2');
+	font-weight: 500;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Cormorant Garamond';
+	src: url('/fonts/cormorant-garamond-400-italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* Heavier cuts, only for the footer wordmark. */
+@font-face {
+	font-family: 'Cormorant Garamond';
+	src: url('/fonts/cormorant-garamond-700-normal.woff2') format('woff2');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Cormorant Garamond';
+	src: url('/fonts/cormorant-garamond-600-italic.woff2') format('woff2');
+	font-weight: 600;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Hanken Grotesk';
+	src: url('/fonts/hanken-grotesk-400-normal.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Hanken Grotesk';
+	src: url('/fonts/hanken-grotesk-500-normal.woff2') format('woff2');
+	font-weight: 500;
+	font-style: normal;
+	font-display: swap;
+}
+
+:root {
+	/* Ground */
+	--ivory: #f4eeea;
+	--blush: #eadbd5;
+	--white: #fffdfb;
+	/* Ink */
+	--ink: #1e1416;
+	--ink-soft: rgb(30 20 22 / 0.62);
+	--ink-faint: rgb(30 20 22 / 0.14);
+	/* Burgundy */
+	--wine: #6e1a2b;
+	--wine-mid: #8f2b3c;
+	--wine-deep: #3a0d16;
+	--wine-night: #22070d;
+	--rose: #c99aa0;
+	/* The grey studio tone Vero uses for its sculpture shots. */
+	--stone: #7d7476;
+
+	--font-serif: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
+	--font-sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+
+	/* Type scale - mobile first, Vero's ratios. */
+	--fs-display-1: clamp(2.875rem, 9vw, 7.5rem);
+	--fs-display-2: clamp(1.75rem, 3.2vw, 2.75rem);
+	--fs-display-3: clamp(2.25rem, 6vw, 5rem);
+	--fs-title: clamp(1.25rem, 1.6vw, 1.5rem);
+	--fs-body: 1.0625rem;
+	--fs-button: 0.9375rem;
+	--fs-tiny: 0.8125rem;
+	--fs-micro: 0.6875rem;
+
+	--ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+	--ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+	--ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+	--gutter: 16px;
+	--grid-gap: 10px;
+	--header-h: 72px;
+}
+
+@media (min-width: 900px) {
+	:root {
+		--gutter: 20px;
+	}
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+	scroll-behavior: auto;
+	background: var(--ivory);
+}
+
+body {
+	margin: 0;
+	min-height: 100dvh;
+	background: var(--ivory);
+	color: var(--ink);
+	font: 400 var(--fs-body) / 1.5 var(--font-serif);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	text-rendering: optimizeLegibility;
+	overflow-x: clip;
+}
+
+img,
+svg,
+video {
+	display: block;
+	max-width: 100%;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+	font: inherit;
+	color: inherit;
+}
+
+button {
+	background: none;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+}
+
+p,
+h1,
+h2,
+h3 {
+	margin: 0;
+}
+
+::selection {
+	background: var(--wine);
+	color: var(--ivory);
+}
+
+:focus-visible {
+	outline: 1px solid var(--wine);
+	outline-offset: 3px;
+}
+
+/* ----------------------------------------------------------------
+ * Shared type
+ * ---------------------------------------------------------------- */
+
+/* CAPS with italic lowercase asides - the signature setting. */
+.display {
+	font-family: var(--font-serif);
+	font-weight: 500;
+	font-size: var(--fs-display-1);
+	line-height: 0.98;
+	letter-spacing: -0.01em;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.display em,
+.eyebrow em,
+.btn em,
+.caps em {
+	font-style: italic;
+	text-transform: none;
+	font-weight: 400;
+}
+
+.display em {
+	letter-spacing: -0.02em;
+}
+
+.display--md {
+	font-size: var(--fs-display-3);
+}
+
+.eyebrow {
+	font-family: var(--font-serif);
+	font-weight: 500;
+	font-size: var(--fs-tiny);
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+.title {
+	font-family: var(--font-sans);
+	font-weight: 500;
+	font-size: var(--fs-title);
+	line-height: 1.15;
+	letter-spacing: -0.01em;
+	text-align: center;
+	white-space: pre-line;
+}
+
+.prose {
+	font-size: var(--fs-body);
+	line-height: 1.5;
+	text-align: center;
+	color: var(--ink);
+}
+
+.prose--italic {
+	font-style: italic;
+}
+
+/* Line masks: each `.line` clips its inner span so it can rise into place. */
+.line {
+	display: block;
+	overflow: hidden;
+	padding-bottom: 0.06em;
+	margin-bottom: -0.06em;
+}
+
+.line__inner {
+	display: block;
+}
+
+/* ----------------------------------------------------------------
+ * Button - small ivory slab, serif label, soft lift.
+ * ---------------------------------------------------------------- */
+
+.btn {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.3em;
+	min-height: 32px;
+	padding: 8px 22px;
+	background: var(--white);
+	color: var(--ink);
+	font-family: var(--font-serif);
+	font-weight: 500;
+	font-size: var(--fs-button);
+	line-height: 1;
+	text-transform: uppercase;
+	letter-spacing: 0.01em;
+	box-shadow: 0 4px 24px rgb(58 13 22 / 0.08);
+	overflow: hidden;
+	isolation: isolate;
+	transition: color 0.5s var(--ease-out-expo);
+}
+
+/* Wine fills up from below on hover. */
+.btn::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	z-index: -1;
+	background: var(--wine);
+	transform: translateY(101%);
+	transition: transform 0.6s var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+	.btn:hover {
+		color: var(--ivory);
+	}
+
+	.btn:hover::before {
+		transform: translateY(0);
+	}
+}
+
+.btn--glass {
+	background: rgb(255 253 251 / 0.16);
+	color: var(--ivory);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: none;
+}
+
+/* ----------------------------------------------------------------
+ * Layout helpers
+ * ---------------------------------------------------------------- */
+
+.wrap {
+	padding-inline: var(--gutter);
+}
+
+.skip-link {
+	position: fixed;
+	left: var(--gutter);
+	top: -100px;
+	z-index: 1000;
+	padding: 8px 12px;
+	background: var(--ink);
+	color: var(--ivory);
+	font-family: var(--font-sans);
+	font-size: var(--fs-tiny);
+}
+
+.skip-link:focus {
+	top: 12px;
+}
+
+.visually-hidden {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+	white-space: nowrap;
+}
+
+/* While the preloader runs nothing scrolls. */
+html.is-loading,
+html.is-loading body,
+html.menu-open,
+html.menu-open body {
+	overflow: hidden;
+}
+
+/* ----------------------------------------------------------------
+ * Reduced motion: everything simply visible, no smoothing.
+ * ---------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}

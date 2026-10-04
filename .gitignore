@@ -1,0 +1,14 @@
+dist/
+.astro/
+node_modules/
+*.log*
+.env
+.env.local
+.env.production
+.DS_Store
+assets-src/
+
+# Borrowed reference images (preview only - never commit or deploy)
+assets-ref/
+public/ref/
+src/data/reference.json

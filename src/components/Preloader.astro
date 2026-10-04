@@ -1,0 +1,113 @@
+---
+/**
+ * First paint. Type fades from ghost to ink as the count climbs, a small
+ * window between the lines flicks through photos, then the window opens out
+ * to become the hero. motion.ts drives all of it; without JS this element is
+ * hidden by CSS.
+ */
+import Media from "./Media.astro";
+import Rich from "./Rich.astro";
+import { PRELOADER } from "../lib/site";
+
+const frames = [
+  { slug: "preloader-1", tone: "wine" },
+  { slug: "preloader-2", tone: "blush" },
+  { slug: "preloader-3", tone: "stone" },
+  { slug: "hero", tone: "wine" },
+] as const;
+---
+
+<div class="preloader" data-preloader aria-hidden="true">
+  <div class="preloader__type display">
+    <Rich text={PRELOADER.lines} />
+    <span class="preloader__window" data-preloader-window>
+      {
+        frames.map((f, i) => (
+          <Media
+            slug={f.slug}
+            tone={f.tone}
+            label=""
+            eager
+            still
+            class="preloader__frame"
+            data-frame={String(i)}
+          />
+        ))
+      }
+    </span>
+    <Rich text={PRELOADER.after} />
+  </div>
+  <div class="preloader__bar"><span></span></div>
+  <span class="preloader__pct" data-preloader-pct>0%</span>
+</div>
+
+<style>
+  .preloader {
+    display: none;
+  }
+
+  :global(.js) .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: grid;
+    place-items: center;
+    background: var(--ivory);
+    --p: 0;
+  }
+
+  .preloader__type {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: clamp(2.25rem, 4.4vw, 4rem);
+    line-height: 0.95;
+    /* Ghost → ink as the count climbs. */
+    color: color-mix(in srgb, var(--ink) calc(12% + var(--p) * 88%), var(--ivory));
+  }
+
+  .preloader__window {
+    position: relative;
+    display: block;
+    width: clamp(64px, 7vw, 104px);
+    aspect-ratio: 3 / 2;
+    margin: 0.12em 0 0.18em;
+    transform: scale(var(--w, 0));
+  }
+
+  .preloader__window :global(.preloader__frame) {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+  }
+
+  .preloader__window :global(.preloader__frame.is-on) {
+    opacity: 1;
+  }
+
+  .preloader__bar {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: 22px;
+    height: 1px;
+    background: var(--ink-faint);
+  }
+
+  .preloader__bar span {
+    position: absolute;
+    inset: 0;
+    background: var(--ink);
+    transform-origin: left;
+    transform: scaleX(var(--p));
+  }
+
+  .preloader__pct {
+    position: absolute;
+    right: var(--gutter);
+    bottom: 30px;
+    font-family: var(--font-serif);
+    font-size: var(--fs-micro);
+    color: color-mix(in srgb, var(--ink) calc(20% + var(--p) * 80%), var(--ivory));
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+/**
+ * The three things every guest should know before arriving - intimate
+ * guest list, adults only, gifts - set as numbered editorial columns.
+ */
+import Rich from "./Rich.astro";
+import { NOTES } from "../lib/site";
+---
+
+<section class="notes" id="notes" aria-labelledby="notes-title">
+  <header class="notes__head">
+    <p class="eyebrow" data-reveal-fade><Rich text={NOTES.eyebrow} /></p>
+    <h2 class="display display--md" id="notes-title" data-reveal><Rich text={NOTES.title} /></h2>
+  </header>
+
+  <ol class="notes__list">
+    {
+      NOTES.items.map((n) => (
+        <li class="notes__item" data-fade>
+          <span class="notes__n">{n.n}</span>
+          <h3 class="notes__title">{n.title}</h3>
+          <p class="notes__body">{n.body}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .notes {
+    padding: 16vh var(--gutter) 8vh;
+  }
+
+  .notes__head {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 10vh;
+  }
+
+  /*
+   * Vero's centered edito blocks, three abreast in a contained row: room on
+   * both sides, hairlines only between the notes, never at the screen edge.
+   */
+  .notes__list {
+    display: grid;
+    justify-items: center;
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 900px) {
+    .notes__list {
+      grid-template-columns: repeat(3, 1fr);
+      align-items: start;
+    }
+  }
+
+  .notes__item {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 14px;
+    max-width: 380px;
+    padding: 40px 8px;
+    text-align: center;
+  }
+
+  /* Phones: stacked, a short centered rule between notes. */
+  .notes__item + .notes__item::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 1px;
+    margin: -40px auto 40px;
+    background: var(--ink-faint);
+  }
+
+  @media (min-width: 900px) {
+    .notes__item {
+      max-width: none;
+      height: 100%;
+      padding: 8px clamp(28px, 4vw, 64px);
+    }
+
+    .notes__item + .notes__item {
+      border-left: 1px solid var(--ink-faint);
+    }
+
+    .notes__item + .notes__item::before {
+      display: none;
+    }
+  }
+
+  .notes__n {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.125rem;
+    line-height: 1;
+    color: var(--wine);
+  }
+
+  .notes__title {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--fs-title);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    max-width: 20ch;
+    text-wrap: balance;
+  }
+
+  .notes__body {
+    max-width: 34ch;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+</style>

@@ -1,0 +1,293 @@
+---
+/**
+ * Fixed chrome: MENU left, the couple's name centre (appears once the hero
+ * has gone), RSVP right. Over the hero the buttons are frosted glass; past it
+ * they turn into solid ivory slabs.
+ */
+import Rich from "./Rich.astro";
+import { CTA, NAV, SITE } from "../lib/site";
+---
+
+<header class="header" data-header>
+  <button
+    class="btn btn--glass header__menu"
+    type="button"
+    aria-expanded="false"
+    aria-controls="menu"
+    data-menu-toggle
+  >
+    <span class="header__swap">
+      <span class="header__swap-a">Menu</span>
+      <span class="header__swap-b" aria-hidden="true"><i>•</i> Close</span>
+    </span>
+  </button>
+
+  <a class="header__brand" href="#top" data-scroll-to aria-label={`${SITE.couple} - back to top`}>
+    {SITE.bride} <em>&amp;</em> {SITE.groom}
+  </a>
+
+  <a class="btn btn--glass header__cta" href={CTA.href} data-scroll-to>
+    <Rich text={CTA.label} />
+  </a>
+</header>
+
+<div class="menu" id="menu" data-menu>
+  <nav class="menu__panel" aria-label="Primary">
+    <ol class="menu__list">
+      {
+        NAV.map((item) => (
+          <li class="menu__item">
+            <span class="menu__n">{item.n}</span>
+            <a class="menu__link" href={item.href} data-scroll-to>
+              <span class="line">
+                <span class="line__inner">{item.label}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+    <div class="menu__aside">
+      <p class="menu__date">
+        <span>The wedding of</span>
+        {SITE.couple}<br />
+        {SITE.dateLong}
+      </p>
+      {SITE.contact && <p>{SITE.contact}</p>}
+    </div>
+  </nav>
+  <button class="menu__scrim" type="button" tabindex="-1" aria-label="Close menu" data-menu-close></button>
+</div>
+
+<style>
+  .header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 120;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    padding: 16px var(--gutter);
+    pointer-events: none;
+  }
+
+  .header > * {
+    pointer-events: auto;
+  }
+
+  .header__menu {
+    justify-self: start;
+    min-width: 80px;
+  }
+
+  .header__cta {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  :global(.header.is-solid) .btn--glass,
+  :global(html.menu-open) .header .btn--glass {
+    background: var(--white);
+    color: var(--ink);
+    box-shadow: 0 4px 24px rgb(58 13 22 / 0.08);
+  }
+
+  @media (hover: hover) {
+    :global(.header.is-solid) .btn--glass:hover,
+    :global(html.menu-open) .header .btn--glass:hover {
+      color: var(--ivory);
+    }
+  }
+
+  .header__brand {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      opacity 0.6s var(--ease-out-expo),
+      transform 0.8s var(--ease-out-expo);
+  }
+
+  .header__brand em {
+    font-style: italic;
+    font-weight: 400;
+    text-transform: none;
+  }
+
+  :global(.header.is-solid.has-brand) .header__brand,
+  :global(html.menu-open) .header__brand {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (max-width: 599px) {
+    .header__brand {
+      display: none;
+    }
+  }
+
+  /* MENU ↔ CLOSE roll. */
+  /* Both labels share one grid cell, so the button fits the wider one. */
+  .header__swap {
+    display: grid;
+    justify-items: center;
+    overflow: hidden;
+    height: 1em;
+    white-space: nowrap;
+  }
+
+  .header__swap-a,
+  .header__swap-b {
+    grid-area: 1 / 1;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  .header__swap-b {
+    transform: translateY(110%);
+  }
+
+  .header__swap-b i {
+    font-style: normal;
+    font-size: 0.7em;
+    vertical-align: 0.15em;
+  }
+
+  :global(html.menu-open) .header__swap-a {
+    transform: translateY(-110%);
+  }
+
+  :global(html.menu-open) .header__swap-b {
+    transform: none;
+  }
+
+  /* ---------------- Menu ---------------- */
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    visibility: hidden;
+    transition: visibility 0s 0.9s;
+  }
+
+  :global(html.menu-open) .menu {
+    visibility: visible;
+    transition: none;
+  }
+
+  .menu__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(34 7 13 / 0.45);
+    opacity: 0;
+    transition: opacity 0.7s var(--ease-out-expo);
+  }
+
+  :global(html.menu-open) .menu__scrim {
+    opacity: 1;
+  }
+
+  .menu__panel {
+    position: relative;
+    display: grid;
+    gap: 32px;
+    padding: calc(var(--header-h) + 16px) var(--gutter) 28px;
+    background:
+      radial-gradient(60% 80% at 85% 0%, rgb(201 154 160 / 0.2), transparent 70%),
+      var(--ivory);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.9s var(--ease-in-out-quart);
+  }
+
+  :global(html.menu-open) .menu__panel {
+    clip-path: inset(0 0 0 0);
+  }
+
+  @media (min-width: 900px) {
+    .menu__panel {
+      grid-template-columns: 1fr auto;
+      align-items: end;
+    }
+  }
+
+  .menu__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .menu__item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .menu__n {
+    width: 2.2em;
+    flex: none;
+    font-family: var(--font-serif);
+    font-size: var(--fs-micro);
+    color: var(--ink-soft);
+  }
+
+  .menu__link {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    font-size: clamp(2.5rem, 5.4vw, 4.75rem);
+    line-height: 1.02;
+    text-transform: uppercase;
+    background: linear-gradient(currentColor, currentColor) 0 90% / 0 1px no-repeat;
+    transition:
+      background-size 0.6s var(--ease-out-expo),
+      color 0.4s;
+  }
+
+  @media (hover: hover) {
+    .menu__link:hover {
+      color: var(--wine);
+      background-size: 100% 1px;
+    }
+  }
+
+  .menu__link .line__inner {
+    transform: translateY(105%);
+    transition: transform 0.9s var(--ease-out-expo);
+  }
+
+  :global(html.menu-open) .menu__link .line__inner {
+    transform: none;
+    transition-delay: calc(0.25s + var(--i, 0) * 0.05s);
+  }
+
+  .menu__item:nth-child(2) { --i: 1; }
+  .menu__item:nth-child(3) { --i: 2; }
+  .menu__item:nth-child(4) { --i: 3; }
+  .menu__item:nth-child(5) { --i: 4; }
+  .menu__item:nth-child(6) { --i: 5; }
+
+  .menu__aside {
+    display: grid;
+    gap: 12px;
+    font-style: italic;
+    font-size: var(--fs-tiny);
+    color: var(--ink-soft);
+  }
+
+  @media (min-width: 900px) {
+    .menu__aside {
+      text-align: right;
+    }
+  }
+
+  .menu__date span {
+    display: block;
+    font-style: normal;
+    color: var(--ink);
+  }
+</style>

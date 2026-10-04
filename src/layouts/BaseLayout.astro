@@ -1,0 +1,75 @@
+---
+import Header from "../components/Header.astro";
+import Preloader from "../components/Preloader.astro";
+import { SITE } from "../lib/site";
+import { getArtwork } from "../lib/assets";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = SITE.description } = Astro.props;
+const fullTitle = title ? `${title} - ${SITE.couple}` : `${SITE.couple} - Kindly RSVP`;
+const ogImage = getArtwork("hero")?.src(1280);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f4eeea" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="preload" href="/fonts/cormorant-garamond-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/cormorant-garamond-400-italic.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://d2jd2y2utwgsqv.cloudfront.net" crossorigin />
+
+    <script is:inline>
+      /*
+       * Before first paint, so nothing flashes.
+       *  - `.js` gates every hidden-until-animated state; without JS
+       *    everything is simply visible.
+       *  - `.is-loading` holds the page still under the preloader.
+       */
+      (() => {
+        const root = document.documentElement;
+        root.classList.add("js", "is-loading");
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          root.classList.add("reduce-motion");
+        }
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+      })();
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Preloader />
+    <Header />
+
+    <div id="smooth-wrapper">
+      <div id="smooth-content">
+        <main id="main">
+          <slot />
+        </main>
+        <slot name="footer" />
+      </div>
+    </div>
+
+    <script>
+      import "../scripts/motion";
+      import "../scripts/rsvp";
+    </script>
+  </body>
+</html>
