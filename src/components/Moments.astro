@@ -1,15 +1,16 @@
 ---
 /**
- * Vero's media grid: small frames spread wide on a five-column field, each
- * column drifting at its own speed, with one button pinned to the middle of
- * the screen as the grid scrolls past it.
+ * The couple's own photos as a masonry wall: every frame keeps its true
+ * shape (studio portraits, the odd landscape, phone snaps from the road), so
+ * nothing is cropped to a grid. Two columns on phones, up to four on desktop.
+ * Each frame opens upward as it arrives; the RSVP button closes the section.
  */
 import Media from "./Media.astro";
 import Rich from "./Rich.astro";
 import { CTA, MOMENTS } from "../lib/site";
 
 const COUNT = 20;
-const tones = ["wine", "blush", "stone", "wine", "stone", "blush", "wine"] as const;
+const tones = ["wine", "blush", "stone"] as const;
 const items = Array.from({ length: COUNT }, (_, i) => ({
   slug: `moment-${String(i + 1).padStart(2, "0")}`,
   tone: tones[i % tones.length]!,
@@ -19,83 +20,89 @@ const items = Array.from({ length: COUNT }, (_, i) => ({
 <section class="moments" id="moments" aria-labelledby="moments-title">
   <header class="moments__head">
     <p class="eyebrow" data-reveal-fade><Rich text={MOMENTS.eyebrow} /></p>
-    <h2 class="display" id="moments-title" data-reveal><Rich text={MOMENTS.title} /></h2>
+    <h2 class="display display--md" id="moments-title" data-reveal><Rich text={MOMENTS.title} /></h2>
+    <p class="prose prose--italic moments__lede" data-reveal-fade>{MOMENTS.lede}</p>
   </header>
 
-  <div class="moments__field" data-moments-field>
-    <div class="moments__cta" data-pin-cta>
-      <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
-    </div>
+  <ul class="moments__wall">
+    {
+      items.map((it, i) => (
+        <li class="moments__item">
+          <Media
+            slug={it.slug}
+            label={`Moment ${i + 1}`}
+            tone={it.tone}
+            sizes="(min-width: 1100px) 24vw, (min-width: 700px) 32vw, 48vw"
+            data-mask
+          />
+        </li>
+      ))
+    }
+  </ul>
 
-    <ul class="moments__grid">
-      {
-        items.map((it, i) => (
-          <li class="moments__item" data-col={String(i % 5)}>
-            <Media
-              slug={it.slug}
-              label={`Moment ${i + 1}`}
-              tone={it.tone}
-              sizes="(min-width: 900px) 12vw, 30vw"
-            />
-          </li>
-        ))
-      }
-    </ul>
+  <div class="moments__cta" data-fade>
+    <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
   </div>
 </section>
 
 <style>
   .moments {
-    padding-top: 22vh;
+    padding: 22vh var(--gutter) 0;
   }
 
   .moments__head {
     display: grid;
-    gap: 16px;
-    padding-inline: var(--gutter);
-    margin-bottom: 12vh;
+    justify-items: center;
+    gap: 18px;
+    margin-bottom: 9vh;
   }
 
-  .moments__field {
-    position: relative;
-    padding: 0 var(--gutter) 4vh;
+  .moments__lede {
+    max-width: 36ch;
+    margin-top: 6px;
+    color: var(--ink-soft);
   }
 
-  /* Pinned to the middle of the viewport while the grid moves under it. */
-  .moments__cta {
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    height: 0;
-  }
-
-  :global(html:not(.has-smoother)) .moments__cta {
-    position: sticky;
-    top: 50%;
-  }
-
-  .moments__cta .btn {
-    translate: 0 -50%;
-  }
-
-  .moments__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: clamp(16px, 6vw, 100px);
-    row-gap: clamp(28px, 6vw, 72px);
-    margin: 0;
+  /* Masonry by columns: frames flow top to bottom, then across. */
+  .moments__wall {
+    columns: 2;
+    column-gap: var(--grid-gap);
+    max-width: 1480px;
+    margin: 0 auto;
     padding: 0;
     list-style: none;
   }
 
-  @media (min-width: 900px) {
-    .moments__grid {
-      grid-template-columns: repeat(5, 1fr);
-      column-gap: 8.5vw;
+  @media (min-width: 700px) {
+    .moments__wall {
+      columns: 3;
     }
   }
 
-  .moments__item :global(.media) {
+  @media (min-width: 1100px) {
+    .moments__wall {
+      columns: 4;
+    }
+  }
+
+  .moments__item {
+    break-inside: avoid;
+    margin-bottom: var(--grid-gap);
+  }
+
+  /* No fixed ratio: the photo's own width/height sets the frame. Placeholders
+     (no photo yet) fall back to a portrait. */
+  .moments__item :global(.media--ph) {
     aspect-ratio: 4 / 5;
+  }
+
+  .moments__item :global(.media__img) {
+    height: auto;
+  }
+
+  .moments__cta {
+    display: flex;
+    justify-content: center;
+    padding: 10vh 0 4vh;
   }
 </style>

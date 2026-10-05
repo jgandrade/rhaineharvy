@@ -2,8 +2,10 @@
 
 Astro static site + GSAP (ScrollTrigger, ScrollSmoother). Structure and motion
 follow verostudio.com, re-toned to burgundy: ivory `#f4eeea`, ink `#1e1416`,
-wine `#6e1a2b`. Cormorant Garamond (CAPS with *italic* asides) + Hanken
-Grotesk, self-hosted in `public/fonts`.
+wine `#6e1a2b`. Libre Caslon Text (headings: CAPS with *italic* asides) + Lato
+(body), self-hosted in `public/fonts`. The pairing follows the couple's
+reference invitation (CaslonMO Pro Light Italic + Lato); Libre Caslon is the
+open-licence stand-in for CaslonMO, a Morisawa TypeSquare font.
 
 | Command                 | Does                                             |
 | ----------------------- | ------------------------------------------------ |
@@ -32,13 +34,18 @@ slug below (category `gallery`), run `npm run assets:upload`.
 | `story-1` … `story-3`              | Full-screen chapters: Hello / Yes / I do    |
 | `day-portrait`                     | Pinned left half of "The day"               |
 | `day-1` … `day-5`                  | Right column of "The day"                   |
-| `moment-01` … `moment-20`          | Moments grid                                |
+| `moment-01` … `moment-20`          | Moments masonry wall (any aspect ratio)     |
 
 A hero video can replace the hero photo: set `SITE.heroVideo` to its URL.
 
-### Interim photography (live)
+### Photography (live)
 
-Every slot currently holds a free-license Unsplash photo
+The couple's own photos (shared Drive folder) fill the promise portrait, the
+"The day" frames and all twenty moments - each CATALOG line links its Drive
+file. The landscape slots - `hero`, `preloader-1` … `3`, `story-1` … `3` -
+still hold the interim Unsplash photos below.
+
+Those interim slots hold a free-license Unsplash photo
 ([unsplash.com/license](https://unsplash.com/license) - commercial use allowed),
 uploaded to S3 via `npm run assets:upload`. Replace any of them by dropping the
 couple's own photo into `assets-src/<slug>.jpg` and re-running the upload.
@@ -104,6 +111,7 @@ open soon - nothing is sent.
 ## Sections (`src/components`)
 
 Preloader → Hero → Promise (pinned second line) → Story (pinned stepper) →
-Day (diptych + schedule) → Moments (drifting grid) → Verse (seal) → Notes
-(intimate gathering / adults only / gifts) → Rsvp → Footer. All motion is in
+Day (diptych + schedule, venues, dress code) → Moments (masonry wall) → Verse
+(seal) → Notes (wine panel: intimate gathering / adults only / gifts) → Rsvp
+(invitation summary + form card) → Footer (closing, venues, links). All motion is in
 `src/scripts/motion.ts`; reduced-motion users get a still, fully visible page.

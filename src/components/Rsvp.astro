@@ -1,101 +1,193 @@
 ---
 /**
- * Vero's closing "Your story deserves to be sculpted" beat, turned into the
- * reply card. The seal sits over it; the form posts to PUBLIC_RSVP_ENDPOINT
- * (see src/scripts/rsvp.ts).
+ * The reply card. Desktop: the invitation on the left - seal, heading and
+ * the day at a glance - and the form on a white card to its right. Phones
+ * stack them. The form posts to PUBLIC_RSVP_ENDPOINT (see src/scripts/rsvp.ts).
  */
 import Rich from "./Rich.astro";
 import Seal from "./Seal.astro";
-import { RSVP, SITE } from "../lib/site";
+import { EVENTS, RSVP, SITE } from "../lib/site";
 ---
 
 <section class="rsvp" id="rsvp" aria-labelledby="rsvp-title">
-  <div class="rsvp__seal" data-rsvp-seal><Seal /></div>
-  <h2 class="title rsvp__title" id="rsvp-title">{RSVP.title}</h2>
-  <p class="prose rsvp__sub">{RSVP.sub}</p>
+  <div class="rsvp__intro">
+    <div class="rsvp__seal" data-rsvp-seal><Seal /></div>
+    <p class="eyebrow"><Rich text={RSVP.eyebrow} /></p>
+    <h2 class="rsvp__title" id="rsvp-title">{RSVP.title}</h2>
+    <p class="rsvp__sub">{RSVP.sub}</p>
 
-  <form class="rsvp__form" data-rsvp novalidate>
-    <fieldset class="rsvp__choice">
-      <legend class="visually-hidden">Will you attend?</legend>
-      <label>
-        <input type="radio" name="attending" value="yes" required />
-        <span><Rich text={RSVP.accept} /></span>
-      </label>
-      <label>
-        <input type="radio" name="attending" value="no" />
-        <span><Rich text={RSVP.decline} /></span>
-      </label>
-    </fieldset>
-
-    <div class="field">
-      <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder=" " required />
-      <label for="rsvp-name">Full name, as on your invitation</label>
-    </div>
-
-    <div class="field">
-      <input id="rsvp-contact" name="contact" type="text" autocomplete="email" placeholder=" " required />
-      <label for="rsvp-contact">Email or mobile number</label>
-    </div>
-
-    <div class="rsvp__more" data-rsvp-more>
-      <div class="field">
-        <textarea id="rsvp-guests" name="guests" rows="2" placeholder=" "></textarea>
-        <label for="rsvp-guests">Names of everyone on your invitation who will attend</label>
+    <dl class="rsvp__facts">
+      <div>
+        <dt>Date</dt>
+        <dd>{SITE.dateLong}</dd>
       </div>
+      {
+        EVENTS.map((e) => (
+          <div>
+            <dt>{e.name.replace(/^The /, "")}</dt>
+            <dd>
+              {e.timeShort} · {e.place}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+
+  <div class="rsvp__card">
+    <form class="rsvp__form" data-rsvp novalidate>
+      <fieldset class="rsvp__choice">
+        <legend class="visually-hidden">Will you attend?</legend>
+        <label>
+          <input type="radio" name="attending" value="yes" required />
+          <span><Rich text={RSVP.accept} /></span>
+        </label>
+        <label>
+          <input type="radio" name="attending" value="no" />
+          <span><Rich text={RSVP.decline} /></span>
+        </label>
+      </fieldset>
+
       <div class="field">
-        <input id="rsvp-diet" name="dietary" type="text" placeholder=" " />
-        <label for="rsvp-diet">Dietary needs or allergies</label>
+        <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder=" " required />
+        <label for="rsvp-name">Full name, as on your invitation</label>
       </div>
+
+      <div class="field">
+        <input id="rsvp-contact" name="contact" type="text" autocomplete="email" placeholder=" " required />
+        <label for="rsvp-contact">Email or mobile number</label>
+      </div>
+
+      <div class="rsvp__more" data-rsvp-more>
+        <div class="field">
+          <textarea id="rsvp-guests" name="guests" rows="2" placeholder=" "></textarea>
+          <label for="rsvp-guests">Names of everyone on your invitation who will attend</label>
+        </div>
+        <div class="field">
+          <input id="rsvp-diet" name="dietary" type="text" placeholder=" " />
+          <label for="rsvp-diet">Dietary needs or allergies</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <textarea id="rsvp-message" name="message" rows="2" placeholder=" "></textarea>
+        <label for="rsvp-message">A note for {SITE.bride} &amp; {SITE.groom} (optional)</label>
+      </div>
+
+      <!-- Bots fill every field; people never see this one. -->
+      <input class="visually-hidden" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+      <button class="btn rsvp__submit" type="submit"><Rich text={RSVP.submit} /></button>
+      <p class="rsvp__status" role="status" aria-live="polite" data-rsvp-status></p>
+    </form>
+
+    <div
+      class="rsvp__thanks"
+      data-rsvp-thanks
+      data-yes={RSVP.thanks.yes}
+      data-no={RSVP.thanks.no}
+      hidden
+    >
+      <p class="display display--md" data-rsvp-thanks-text></p>
     </div>
-
-    <div class="field">
-      <textarea id="rsvp-message" name="message" rows="2" placeholder=" "></textarea>
-      <label for="rsvp-message">A note for {SITE.bride} &amp; {SITE.groom} (optional)</label>
-    </div>
-
-    <!-- Bots fill every field; people never see this one. -->
-    <input class="visually-hidden" type="text" name="company" tabindex="-1" autocomplete="off" aria-hidden="true" />
-
-    <button class="btn rsvp__submit" type="submit"><Rich text={RSVP.submit} /></button>
-    <p class="rsvp__status" role="status" aria-live="polite" data-rsvp-status></p>
-  </form>
-
-  <div
-    class="rsvp__thanks"
-    data-rsvp-thanks
-    data-yes={RSVP.thanks.yes}
-    data-no={RSVP.thanks.no}
-    hidden
-  >
-    <p class="display display--md" data-rsvp-thanks-text></p>
   </div>
 </section>
 
 <style>
   .rsvp {
     display: grid;
+    gap: 56px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 16vh var(--gutter) 14vh;
+  }
+
+  @media (min-width: 960px) {
+    .rsvp {
+      grid-template-columns: 1fr 1.1fr;
+      gap: clamp(48px, 7vw, 120px);
+      align-items: center;
+    }
+  }
+
+  .rsvp__intro {
+    display: grid;
     justify-items: center;
-    padding: 16vh var(--gutter) 12vh;
+    gap: 14px;
     text-align: center;
   }
 
+  @media (min-width: 960px) {
+    .rsvp__intro {
+      justify-items: start;
+      text-align: left;
+    }
+
+    .rsvp__intro .eyebrow {
+      text-align: left;
+    }
+  }
+
   .rsvp__seal {
-    width: clamp(84px, 9vw, 128px);
-    margin-bottom: 36px;
+    width: clamp(88px, 9vw, 120px);
+    margin-bottom: 18px;
     perspective: 800px;
   }
 
+  .rsvp__title {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: var(--fs-display-2);
+    line-height: 1.1;
+  }
+
   .rsvp__sub {
-    max-width: 420px;
-    margin-top: 10px;
+    max-width: 38ch;
+    color: var(--ink-soft);
+  }
+
+  .rsvp__facts {
+    display: grid;
+    width: 100%;
+    max-width: 440px;
+    margin: 22px 0 0;
+    border-top: 1px solid var(--ink-faint);
+    text-align: left;
+  }
+
+  .rsvp__facts > div {
+    display: grid;
+    grid-template-columns: 7.5rem 1fr;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--ink-faint);
+  }
+
+  .rsvp__facts dt {
+    font-size: var(--fs-tiny);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    line-height: 1.6;
+    text-transform: uppercase;
+  }
+
+  .rsvp__facts dd {
+    margin: 0;
+    line-height: 1.45;
+  }
+
+  .rsvp__card {
+    width: 100%;
+    max-width: 560px;
+    margin: 0 auto;
+    padding: clamp(28px, 4vw, 52px);
+    background: var(--white);
+    box-shadow: 0 10px 60px rgb(58 13 22 / 0.08);
   }
 
   .rsvp__form {
     display: grid;
     gap: 22px;
-    width: min(100%, 520px);
-    margin-top: 56px;
-    text-align: left;
   }
 
   .rsvp__choice {
@@ -121,13 +213,12 @@ import { RSVP, SITE } from "../lib/site";
   .rsvp__choice span {
     display: grid;
     place-items: center;
-    min-height: 64px;
+    min-height: 72px;
     padding: 12px;
-    background: var(--white);
-    box-shadow: 0 4px 24px rgb(58 13 22 / 0.06);
+    background: var(--ivory);
     font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    font-weight: 400;
+    font-size: clamp(1.0625rem, 1.4vw, 1.2rem);
     text-transform: uppercase;
     text-align: center;
     transition:
@@ -166,7 +257,7 @@ import { RSVP, SITE } from "../lib/site";
     border-bottom: 1px solid var(--ink-faint);
     border-radius: 0;
     font-family: var(--font-sans);
-    font-size: 1rem;
+    font-size: 1.0625rem;
     resize: vertical;
     transition: border-color 0.4s;
   }
@@ -182,7 +273,7 @@ import { RSVP, SITE } from "../lib/site";
     left: 0;
     top: 22px;
     font-family: var(--font-sans);
-    font-size: 0.9375rem;
+    font-size: 1rem;
     color: var(--ink-soft);
     pointer-events: none;
     transform-origin: left top;
@@ -233,7 +324,10 @@ import { RSVP, SITE } from "../lib/site";
   }
 
   .rsvp__thanks {
-    max-width: 760px;
-    margin-top: 56px;
+    text-align: center;
+  }
+
+  .rsvp__thanks .display {
+    font-size: var(--fs-display-2);
   }
 </style>

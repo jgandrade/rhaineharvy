@@ -1,120 +1,135 @@
 ---
 /**
  * The three things every guest should know before arriving - intimate
- * guest list, adults only, gifts - set as numbered editorial columns.
+ * guest list, adults only, gifts. A deep wine panel: the heading holds the
+ * left side, the notes run down the right as numbered rows. Phones stack.
  */
 import Rich from "./Rich.astro";
 import { NOTES } from "../lib/site";
 ---
 
 <section class="notes" id="notes" aria-labelledby="notes-title">
-  <header class="notes__head">
-    <p class="eyebrow" data-reveal-fade><Rich text={NOTES.eyebrow} /></p>
-    <h2 class="display display--md" id="notes-title" data-reveal><Rich text={NOTES.title} /></h2>
-  </header>
+  <div class="notes__panel">
+    <header class="notes__head">
+      <p class="eyebrow" data-reveal-fade><Rich text={NOTES.eyebrow} /></p>
+      <h2 class="display display--md" id="notes-title" data-reveal><Rich text={NOTES.title} /></h2>
+      <p class="notes__lede" data-reveal-fade>{NOTES.lede}</p>
+    </header>
 
-  <ol class="notes__list">
-    {
-      NOTES.items.map((n) => (
-        <li class="notes__item" data-fade>
-          <span class="notes__n">{n.n}</span>
-          <h3 class="notes__title">{n.title}</h3>
-          <p class="notes__body">{n.body}</p>
-        </li>
-      ))
-    }
-  </ol>
+    <ol class="notes__list">
+      {
+        NOTES.items.map((n) => (
+          <li class="notes__item" data-fade>
+            <span class="notes__n" aria-hidden="true">{n.n}</span>
+            <div class="notes__text">
+              <h3 class="notes__title">{n.title}</h3>
+              <p class="notes__body">{n.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
 </section>
 
 <style>
   .notes {
-    padding: 16vh var(--gutter) 8vh;
+    padding: 16vh var(--gutter) 0;
   }
 
-  .notes__head {
+  .notes__panel {
+    --rule: rgb(244 238 234 / 0.22);
     display: grid;
-    gap: 16px;
-    margin-bottom: 10vh;
-  }
-
-  /*
-   * Vero's centered edito blocks, three abreast in a contained row: room on
-   * both sides, hairlines only between the notes, never at the screen edge.
-   */
-  .notes__list {
-    display: grid;
-    justify-items: center;
-    width: 100%;
-    max-width: 1180px;
+    gap: 56px;
+    max-width: 1320px;
     margin: 0 auto;
-    padding: 0;
-    list-style: none;
+    padding: clamp(56px, 9vw, 120px) clamp(22px, 6vw, 96px);
+    background: var(--wine-deep);
+    color: var(--ivory);
   }
 
-  @media (min-width: 900px) {
-    .notes__list {
-      grid-template-columns: repeat(3, 1fr);
+  @media (min-width: 960px) {
+    .notes__panel {
+      grid-template-columns: 5fr 7fr;
+      gap: clamp(48px, 6vw, 110px);
       align-items: start;
     }
   }
 
-  .notes__item {
+  .notes__head {
     display: grid;
     justify-items: center;
-    align-content: start;
-    gap: 14px;
-    max-width: 380px;
-    padding: 40px 8px;
+    gap: 18px;
     text-align: center;
   }
 
-  /* Phones: stacked, a short centered rule between notes. */
-  .notes__item + .notes__item::before {
-    content: "";
-    display: block;
-    width: 40px;
-    height: 1px;
-    margin: -40px auto 40px;
-    background: var(--ink-faint);
+  @media (min-width: 960px) {
+    .notes__head {
+      justify-items: start;
+      text-align: left;
+    }
+
+    .notes__head .eyebrow,
+    .notes__head .display {
+      text-align: left;
+    }
   }
 
-  @media (min-width: 900px) {
+  .notes__lede {
+    max-width: 30ch;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1.1875rem, 1.5vw, 1.375rem);
+    line-height: 1.45;
+    color: rgb(244 238 234 / 0.86);
+  }
+
+  .notes__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--rule);
+  }
+
+  .notes__item {
+    display: grid;
+    grid-template-columns: 3.2rem 1fr;
+    gap: 12px;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (min-width: 600px) {
     .notes__item {
-      max-width: none;
-      height: 100%;
-      padding: 8px clamp(28px, 4vw, 64px);
-    }
-
-    .notes__item + .notes__item {
-      border-left: 1px solid var(--ink-faint);
-    }
-
-    .notes__item + .notes__item::before {
-      display: none;
+      grid-template-columns: 5rem 1fr;
+      padding: 36px 0;
     }
   }
 
   .notes__n {
     font-family: var(--font-serif);
     font-style: italic;
-    font-size: 1.125rem;
+    font-size: clamp(1.75rem, 2.6vw, 2.5rem);
     line-height: 1;
-    color: var(--wine);
+    color: var(--rose);
+  }
+
+  .notes__text {
+    display: grid;
+    gap: 10px;
   }
 
   .notes__title {
-    font-family: var(--font-sans);
-    font-weight: 500;
+    font-family: var(--font-serif);
+    font-weight: 400;
     font-size: var(--fs-title);
-    line-height: 1.15;
-    letter-spacing: -0.01em;
-    max-width: 20ch;
+    line-height: 1.25;
     text-wrap: balance;
   }
 
   .notes__body {
-    max-width: 34ch;
-    color: var(--ink);
+    max-width: 52ch;
+    color: rgb(244 238 234 / 0.88);
     text-wrap: pretty;
   }
 </style>

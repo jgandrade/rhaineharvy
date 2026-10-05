@@ -15,9 +15,11 @@ const lines = Array.isArray(text) ? text : null;
 
 {
   lines ? (
-    lines.map((l) => (
+    lines.map((l, i) => (
       <span class="line">
-        <span class="line__inner" set:html={rich(l)} />
+        {/* Lines are blocks, so the text itself needs the word break: without
+            it screen readers and search snippets read "MOMENTled". */}
+        <span class="line__inner" set:html={rich(l) + (i < lines.length - 1 ? " " : "")} />
       </span>
     ))
   ) : (

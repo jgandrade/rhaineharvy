@@ -1,100 +1,88 @@
 ---
 /**
- * Vero's footer, row for row:
+ * The close of the invitation, on deep wine:
  *
- *   nav                                    (left)
- *   capture field  ·  quiet details        (left · right)
- *   the name, set as one heavy block wall to wall
- *   in-page links ↗                        ·  © / Back to top
+ *   closing line + the names                     (centered)
+ *   ceremony  ·  reception  ·  reply             (three columns, stacked on phones)
+ *   in-page links ↗                ·  © / Back to top
  *
- * Every item rises out of a mask when the footer comes into view, and links
- * roll to a copy on hover. The capture field is a shortcut into the RSVP:
- * type a name, press the arrow, and the form opens with it filled in.
+ * Every item rises out of a mask the first time the footer comes into view,
+ * and links roll to a copy on hover.
  */
-import { FOOTER, NAV, SITE } from "../lib/site";
+import Rich from "./Rich.astro";
+import { CTA, EVENTS, FOOTER, RSVP, SITE, rich } from "../lib/site";
 
-const details = [SITE.couple, SITE.dateLong];
 const arrow = `<svg class="footer__icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.2 2H8v4.8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
 ---
 
 <footer class="footer" data-footer>
-  <div class="footer__grid">
-    <nav class="footer__primary" aria-label="Footer">
-      {
-        NAV.map((item, i) => (
-          <span class="footer__inner" style={`--index:${i}`}>
-            <a class="footer__link" href={item.href} data-scroll-to>
-              <span class="footer__label">{item.label}</span>
-              <span class="footer__copy" aria-hidden="true">{item.label}</span>
-            </a>
-          </span>
-        ))
-      }
-    </nav>
-
-    <form class="footer__capture" data-footer-capture>
-      <span class="footer__inner" style="--index:0">
-        <label class="footer__capture-label" for="footer-name">{FOOTER.captureLabel}</label>
-      </span>
-      <span class="footer__inner footer__inner--block" style="--index:1">
-        <span class="footer__field">
-          <input
-            id="footer-name"
-            name="name"
-            type="text"
-            autocomplete="name"
-            placeholder={FOOTER.capturePlaceholder}
-          />
-          <button type="submit" aria-label="Continue to RSVP">→</button>
+  <div class="footer__inner-wrap">
+    <div class="footer__close">
+      <p class="footer__closing">
+        {
+          FOOTER.closing.map((l, i) => (
+            <span class="footer__mask" style={`--index:${i}`}>
+              <span set:html={rich(l) + " "} />
+            </span>
+          ))
+        }
+      </p>
+      <p class="footer__names">
+        <span class="footer__mask" style="--index:2">
+          <span>{SITE.bride} <em>&amp;</em> {SITE.groom}</span>
         </span>
-      </span>
-    </form>
-
-    <div class="footer__secondary">
-      {
-        details.map((d, i) => (
-          <span class="footer__inner" style={`--index:${i}`}>
-            <span class="footer__detail">{d}</span>
-          </span>
-        ))
-      }
+      </p>
+      <p class="footer__date">
+        <span class="footer__mask" style="--index:3"><span>{SITE.dateShort} · {SITE.city}</span></span>
+      </p>
     </div>
 
-    <div class="footer__scene" aria-hidden="true">
-      <!-- Two lines at one size: the bride's name flush left, the groom's flush
-           right. footer script re-measures the glyphs and tightens the box. -->
-      <svg class="footer__mark" viewBox="0 -25 3600 1460" data-footer-mark>
-        <text class="footer__line" x="0" y="630" data-line="a">{SITE.bride.toUpperCase()}</text>
-        <text class="footer__line" x="3600" y="1386" text-anchor="end" data-line="b"><tspan class="footer__amp">&amp;</tspan> {SITE.groom.toUpperCase()}</text>
-      </svg>
-    </div>
-
-    <div class="footer__legals">
+    <div class="footer__details">
       {
-        FOOTER.links.map((l, i) => (
-          <span class="footer__inner" style={`--index:${i}`}>
-            <a class="footer__link footer__link--quiet" href={l.href} data-scroll-to>
-              <span class="footer__label">
-                {l.label}
-                <Fragment set:html={arrow} />
+        EVENTS.map((e, i) => (
+          <div class="footer__col" style={`--index:${i + 4}`}>
+            <p class="footer__label">{e.name}</p>
+            <p class="footer__lead">{e.timeShort}</p>
+            <p>{e.place}</p>
+            <p class="footer__soft">{e.address}</p>
+            <a class="footer__link" href={e.map} target="_blank" rel="noopener">
+              <span class="footer__roll">
+                Directions <Fragment set:html={arrow} />
               </span>
-              <span class="footer__copy" aria-hidden="true">
-                {l.label}
-                <Fragment set:html={arrow} />
+              <span class="footer__roll footer__roll--copy" aria-hidden="true">
+                Directions <Fragment set:html={arrow} />
               </span>
             </a>
-          </span>
+          </div>
         ))
       }
+      <div class="footer__col" style="--index:6">
+        <p class="footer__label">Reply</p>
+        <p class="footer__lead">{RSVP.title}</p>
+        <p class="footer__soft">Kindly reply by {SITE.rsvpBy}.</p>
+        <a class="btn footer__btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
+      </div>
     </div>
 
-    <div class="footer__credits">
-      <span class="footer__inner" style="--index:0">
-        <span class="footer__small">© {SITE.year} {SITE.couple}</span>
-      </span>
-      <span class="footer__inner" style="--index:1">
+    <div class="footer__bar">
+      <nav class="footer__links" aria-label="Footer">
+        {
+          FOOTER.links.map((l) => (
+            <a class="footer__link" href={l.href} data-scroll-to>
+              <span class="footer__roll">
+                {l.label} <Fragment set:html={arrow} />
+              </span>
+              <span class="footer__roll footer__roll--copy" aria-hidden="true">
+                {l.label} <Fragment set:html={arrow} />
+              </span>
+            </a>
+          ))
+        }
+      </nav>
+      <div class="footer__credits">
+        <span>© {SITE.year} {SITE.couple}</span>
         <a class="footer__swipe" href="#top" data-scroll-to>{FOOTER.top}</a>
-      </span>
+      </div>
     </div>
   </div>
 </footer>
@@ -111,130 +99,164 @@ const arrow = `<svg class="footer__icon" viewBox="0 0 10 10" aria-hidden="true">
           io.disconnect();
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.1 },
     ).observe(footer);
-
-    // Set both lines at one size - line A flush left, line B flush right -
-    // stacked on the cap height rather than the font's line box, so the two
-    // rows sit as one block of ink like Vero's wordmark.
-    const mark = footer.querySelector<SVGSVGElement>("[data-footer-mark]");
-    const fit = () => {
-      if (!mark) return;
-      const a = mark.querySelector<SVGTextElement>('[data-line="a"]')!;
-      const b = mark.querySelector<SVGTextElement>('[data-line="b"]')!;
-      const style = getComputedStyle(a);
-      const ctx = document.createElement("canvas").getContext("2d");
-      if (!ctx) return;
-      ctx.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      const cap = ctx.measureText("H").actualBoundingBoxAscent;
-
-      b.removeAttribute("text-anchor");
-      a.setAttribute("x", "0");
-      b.setAttribute("x", "0");
-      const wa = a.getComputedTextLength();
-      const wb = b.getComputedTextLength();
-      if (!cap || !wa || !wb) return;
-
-      const width = Math.max(wa, wb);
-      const gap = cap * 0.2;
-      a.setAttribute("y", String(cap));
-      b.setAttribute("x", String(width - wb));
-      b.setAttribute("y", String(cap * 2 + gap));
-      // The italic ampersand rises above the caps; leave it a sliver of room.
-      mark.setAttribute("viewBox", `0 ${-cap * 0.04} ${width} ${cap * 2.1 + gap}`);
-    };
-    document.fonts.ready.then(fit);
-
-    // Name → RSVP, prefilled.
-    const capture = footer.querySelector<HTMLFormElement>("[data-footer-capture]");
-    capture?.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = (capture.elements.namedItem("name") as HTMLInputElement).value.trim();
-      const field = document.querySelector<HTMLInputElement>("#rsvp-name");
-      if (field && name) field.value = name;
-      // Reuse the header's RSVP link so the scroll goes through the smoother.
-      document.querySelector<HTMLAnchorElement>('.header__cta[href="#rsvp"]')?.click();
-      window.setTimeout(() => field?.focus({ preventScroll: true }), 1200);
-    });
   }
 </script>
 
 <style>
   .footer {
+    --rule: rgb(244 238 234 / 0.2);
     position: relative;
-    padding: 30px 0 16px;
-    border-top: 1px solid var(--ink-faint);
     overflow: hidden;
-    color: var(--ink);
+    background: var(--wine-night);
+    color: var(--ivory);
   }
 
-  .footer__grid {
+  .footer__inner-wrap {
     display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 64px;
-    margin-inline: 20px;
-  }
-
-  @media (min-width: 930px) {
-    .footer__grid {
-      grid-template-columns: repeat(12, 1fr);
-      column-gap: var(--grid-gap);
-      row-gap: 54px;
-      margin-inline: 30px;
-    }
+    gap: clamp(64px, 9vw, 110px);
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: clamp(80px, 12vw, 150px) var(--gutter) 28px;
   }
 
   /* ---------- Mask reveal ---------- */
 
-  .footer__inner {
-    position: relative;
-    display: inline-flex;
+  .footer__mask {
+    display: block;
     overflow: hidden;
+    padding-bottom: 0.08em;
   }
 
-  .footer__inner--block {
-    display: flex;
+  .footer__mask > span {
+    display: block;
   }
 
-  :global(.js) .footer__inner > * {
+  :global(.js) .footer__mask > span,
+  :global(.js) .footer__col {
+    transition:
+      transform 1s var(--ease-out-expo) calc(var(--index, 0) * 0.08s),
+      opacity 1s var(--ease-out-expo) calc(var(--index, 0) * 0.08s);
+  }
+
+  :global(.js) .footer:not(.is-visible) .footer__mask > span {
     transform: translateY(105%);
-    transition: transform 0.8s var(--ease-in-out-quart) calc(var(--index, 0) * 0.1s);
   }
 
-  :global(.js) .footer.is-visible .footer__inner > * {
-    transform: none;
+  :global(.js) .footer:not(.is-visible) .footer__col {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+
+  /* ---------- Closing ---------- */
+
+  .footer__close {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .footer__closing {
+    font-family: var(--font-serif);
+    font-size: var(--fs-display-2);
+    line-height: 1.1;
+    text-transform: uppercase;
+    color: rgb(244 238 234 / 0.9);
+  }
+
+  .footer__closing :global(em),
+  .footer__names em {
+    font-style: italic;
+    text-transform: none;
+  }
+
+  .footer__names {
+    font-family: var(--font-serif);
+    font-size: clamp(3rem, 10.5vw, 9.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .footer__names em {
+    color: var(--rose);
+  }
+
+  .footer__date {
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgb(244 238 234 / 0.82);
+  }
+
+  /* ---------- Details ---------- */
+
+  .footer__details {
+    display: grid;
+    gap: 40px;
+    padding-top: 48px;
+    border-top: 1px solid var(--rule);
+  }
+
+  @media (min-width: 800px) {
+    .footer__details {
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(28px, 4vw, 64px);
+    }
+  }
+
+  .footer__col {
+    display: grid;
+    align-content: start;
+    justify-items: start;
+    gap: 4px;
+  }
+
+  .footer__label {
+    margin-bottom: 8px;
+    font-size: var(--fs-tiny);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rose);
+  }
+
+  .footer__lead {
+    font-family: var(--font-serif);
+    font-size: var(--fs-title);
+    line-height: 1.25;
+  }
+
+  .footer__soft {
+    color: rgb(244 238 234 / 0.8);
+  }
+
+  .footer__btn {
+    margin-top: 16px;
   }
 
   /* ---------- Links: roll to a copy on hover ---------- */
-
-  .footer__primary,
-  .footer__secondary {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .footer__primary {
-    grid-column: 1 / -1;
-  }
 
   .footer__link {
     position: relative;
     display: inline-block;
     overflow: hidden;
-    font: 500 1.125rem / 1.5 var(--font-sans);
-    letter-spacing: 0.04em;
+    margin-top: 8px;
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 
-  .footer__label,
-  .footer__copy {
+  .footer__roll {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
+    gap: 5px;
+    padding: 4px 0;
     transition: transform 0.65s var(--ease-out-quart);
   }
 
-  .footer__copy {
+  .footer__roll--copy {
     position: absolute;
     top: 0;
     left: 0;
@@ -242,184 +264,55 @@ const arrow = `<svg class="footer__icon" viewBox="0 0 10 10" aria-hidden="true">
   }
 
   @media (hover: hover) {
-    .footer__link:hover .footer__label {
+    .footer__link:hover .footer__roll {
       transform: translateY(-100%);
     }
 
-    .footer__link:hover .footer__copy {
+    .footer__link:hover .footer__roll--copy {
       transform: none;
     }
   }
 
-  .footer__link--quiet {
-    font: 400 0.9375rem / 1.2 var(--font-sans);
-    letter-spacing: 0.03em;
-    color: var(--ink-soft);
+  .footer__link :global(.footer__icon) {
+    width: 9px;
+    height: 9px;
   }
 
-  .footer__link--quiet :global(.footer__icon) {
-    width: 10px;
-    height: 10px;
+  /* ---------- Foot bar ---------- */
+
+  .footer__bar {
+    display: grid;
+    gap: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+    font-size: var(--fs-tiny);
+    color: rgb(244 238 234 / 0.82);
   }
 
-  /* ---------- Capture field ---------- */
+  @media (min-width: 800px) {
+    .footer__bar {
+      grid-template-columns: 1fr auto;
+      align-items: center;
+    }
+  }
 
-  .footer__capture {
+  .footer__links {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    width: 100%;
-    max-width: 360px;
+    flex-wrap: wrap;
+    gap: 4px 32px;
   }
 
-  .footer__capture-label {
-    font: 400 12px / 1.2 var(--font-sans);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .footer__field {
-    display: flex;
-    width: 100%;
-    border-bottom: 1px solid currentColor;
-  }
-
-  .footer__field input {
-    flex: 1;
-    min-width: 0;
-    padding: 8px 0;
-    background: none;
-    border: 0;
-    font: 400 15px / 1.2 var(--font-sans);
-    letter-spacing: 0.02em;
-  }
-
-  .footer__field input::placeholder {
-    color: currentColor;
-    opacity: 0.55;
-  }
-
-  .footer__field input:focus {
-    outline: none;
-  }
-
-  .footer__field button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 32px;
-    padding: 0 4px;
-    font-size: 18px;
-    transition: opacity 0.15s;
-  }
-
-  @media (hover: hover) {
-    .footer__field button:hover {
-      opacity: 0.7;
-    }
-  }
-
-  /* ---------- Details: grey, beside the field on desktop ---------- */
-
-  .footer__detail {
-    font: 500 1.125rem / 1.5 var(--font-sans);
-    letter-spacing: 0.04em;
-    color: var(--ink-soft);
-  }
-
-  @media (min-width: 930px) {
-    .footer__primary .footer__link,
-    .footer__detail {
-      font-size: 0.9375rem;
-    }
-
-    .footer__capture {
-      grid-column: 1 / 6;
-    }
-
-    .footer__secondary {
-      grid-column: -4 / -1;
-      align-items: flex-end;
-      text-align: right;
-    }
-  }
-
-  /* ---------- Wordmark ---------- */
-
-  .footer__scene {
-    grid-column: 1 / -1;
-    overflow: hidden;
-  }
-
-  .footer__mark {
-    display: block;
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-
-  .footer__line {
-    font-family: var(--font-serif);
-    font-weight: 700;
-    font-size: 1000px;
-    letter-spacing: -0.035em;
-    fill: var(--ink);
-  }
-
-  .footer__amp {
-    font-style: italic;
-    font-weight: 600;
-    fill: var(--wine);
-  }
-
-  :global(.js) .footer__mark {
-    transform: translateY(100%);
-    transition: transform 1.4s var(--ease-out-expo) 0.15s;
-  }
-
-  :global(.js) .footer.is-visible .footer__mark {
-    transform: none;
-  }
-
-  /* ---------- Foot row ---------- */
-
-  .footer__legals,
-  .footer__credits {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    grid-column: 1 / -1;
+  .footer__links .footer__link {
+    margin-top: 0;
   }
 
   .footer__credits {
-    flex-direction: column-reverse;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
   }
 
-  @media (min-width: 930px) {
-    .footer__legals {
-      flex-direction: row;
-      grid-column: 1 / span 6;
-      gap: 45px;
-    }
-
-    .footer__credits {
-      flex-direction: row;
-      grid-column: span 6 / -1;
-      justify-content: flex-end;
-      gap: 70px;
-      margin-right: 15px;
-    }
-  }
-
-  .footer__small,
-  .footer__swipe {
-    font: 400 0.9375rem / 1.2 var(--font-sans);
-    letter-spacing: 0.03em;
-    color: var(--ink-soft);
-  }
-
-  /* Vero's "Credits" underline: wipes out to the right, back in from the left. */
+  /* Underline wipes out to the right, back in from the left. */
   .footer__swipe {
     position: relative;
     padding-bottom: 3px;

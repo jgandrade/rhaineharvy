@@ -1,65 +1,62 @@
 /* ================================================================
  * Rhaine & Harvy - design system
  *
- * Vero's structure, re-toned to burgundy: warm ivory ground, ink
- * type, wine for the photographic moments. Cormorant Garamond sets
- * every headline in CAPS with *italic* lowercase asides; Hanken
- * Grotesk carries titles, labels and forms. All fonts self-hosted.
+ * Warm ivory ground, ink type, wine for the photographic moments.
+ * Two faces, matched to the couple's reference invitation
+ * (wedding20251012-ny.studio.site, which pairs CaslonMO Pro Light
+ * Italic with Lato):
+ *   - Libre Caslon Text: every heading - CAPS with *italic*
+ *     lowercase asides - plus titles and buttons. Open-licence
+ *     stand-in for CaslonMO, which is a Morisawa TypeSquare font
+ *     we can't self-host.
+ *   - Lato: body copy, labels and forms.
+ * All fonts self-hosted, latin subset.
  * ================================================================ */
 
 @font-face {
-	font-family: 'Cormorant Garamond';
-	src: url('/fonts/cormorant-garamond-500-normal.woff2') format('woff2');
-	font-weight: 500;
+	font-family: 'Libre Caslon Text';
+	src: url('/fonts/libre-caslon-text-400-normal.woff2') format('woff2');
+	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Cormorant Garamond';
-	src: url('/fonts/cormorant-garamond-500-italic.woff2') format('woff2');
-	font-weight: 500;
-	font-style: italic;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Cormorant Garamond';
-	src: url('/fonts/cormorant-garamond-400-italic.woff2') format('woff2');
+	font-family: 'Libre Caslon Text';
+	src: url('/fonts/libre-caslon-text-400-italic.woff2') format('woff2');
 	font-weight: 400;
 	font-style: italic;
 	font-display: swap;
 }
 
-/* Heavier cuts, only for the footer wordmark. */
 @font-face {
-	font-family: 'Cormorant Garamond';
-	src: url('/fonts/cormorant-garamond-700-normal.woff2') format('woff2');
+	font-family: 'Libre Caslon Text';
+	src: url('/fonts/libre-caslon-text-700-normal.woff2') format('woff2');
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Cormorant Garamond';
-	src: url('/fonts/cormorant-garamond-600-italic.woff2') format('woff2');
-	font-weight: 600;
-	font-style: italic;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Hanken Grotesk';
-	src: url('/fonts/hanken-grotesk-400-normal.woff2') format('woff2');
+	font-family: 'Lato';
+	src: url('/fonts/lato-400-normal.woff2') format('woff2');
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
 }
 
 @font-face {
-	font-family: 'Hanken Grotesk';
-	src: url('/fonts/hanken-grotesk-500-normal.woff2') format('woff2');
-	font-weight: 500;
+	font-family: 'Lato';
+	src: url('/fonts/lato-400-italic.woff2') format('woff2');
+	font-weight: 400;
+	font-style: italic;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Lato';
+	src: url('/fonts/lato-700-normal.woff2') format('woff2');
+	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
 }
@@ -69,10 +66,10 @@
 	--ivory: #f4eeea;
 	--blush: #eadbd5;
 	--white: #fffdfb;
-	/* Ink */
+	/* Ink. Soft is for secondary lines - dark enough to read at body size. */
 	--ink: #1e1416;
-	--ink-soft: rgb(30 20 22 / 0.62);
-	--ink-faint: rgb(30 20 22 / 0.14);
+	--ink-soft: rgb(30 20 22 / 0.78);
+	--ink-faint: rgb(30 20 22 / 0.16);
 	/* Burgundy */
 	--wine: #6e1a2b;
 	--wine-mid: #8f2b3c;
@@ -82,18 +79,18 @@
 	/* The grey studio tone Vero uses for its sculpture shots. */
 	--stone: #7d7476;
 
-	--font-serif: 'Cormorant Garamond', 'Garamond', 'Times New Roman', serif;
-	--font-sans: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif;
+	--font-serif: 'Libre Caslon Text', 'Big Caslon', 'Times New Roman', serif;
+	--font-sans: 'Lato', 'Helvetica Neue', Arial, sans-serif;
 
-	/* Type scale - mobile first, Vero's ratios. */
-	--fs-display-1: clamp(2.875rem, 9vw, 7.5rem);
+	/* Type scale - mobile first. Nothing the guest has to read sits below 15px. */
+	--fs-display-1: clamp(2.5rem, 7.4vw, 6.5rem);
 	--fs-display-2: clamp(1.75rem, 3.2vw, 2.75rem);
-	--fs-display-3: clamp(2.25rem, 6vw, 5rem);
-	--fs-title: clamp(1.25rem, 1.6vw, 1.5rem);
-	--fs-body: 1.0625rem;
-	--fs-button: 0.9375rem;
-	--fs-tiny: 0.8125rem;
-	--fs-micro: 0.6875rem;
+	--fs-display-3: clamp(2.125rem, 5.4vw, 4.5rem);
+	--fs-title: clamp(1.375rem, 1.8vw, 1.75rem);
+	--fs-body: 1.125rem;
+	--fs-button: 1rem;
+	--fs-tiny: 0.9375rem;
+	--fs-micro: 0.8125rem;
 
 	--ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 	--ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
@@ -128,7 +125,7 @@ body {
 	min-height: 100dvh;
 	background: var(--ivory);
 	color: var(--ink);
-	font: 400 var(--fs-body) / 1.5 var(--font-serif);
+	font: 400 var(--fs-body) / 1.6 var(--font-sans);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	text-rendering: optimizeLegibility;
@@ -186,10 +183,10 @@ h3 {
 /* CAPS with italic lowercase asides - the signature setting. */
 .display {
 	font-family: var(--font-serif);
-	font-weight: 500;
+	font-weight: 400;
 	font-size: var(--fs-display-1);
-	line-height: 0.98;
-	letter-spacing: -0.01em;
+	line-height: 1.04;
+	letter-spacing: -0.015em;
 	text-transform: uppercase;
 	text-align: center;
 }
@@ -213,32 +210,36 @@ h3 {
 
 .eyebrow {
 	font-family: var(--font-serif);
-	font-weight: 500;
+	font-weight: 400;
 	font-size: var(--fs-tiny);
-	letter-spacing: 0.02em;
+	letter-spacing: 0.08em;
 	text-transform: uppercase;
 	text-align: center;
 }
 
 .title {
-	font-family: var(--font-sans);
-	font-weight: 500;
+	font-family: var(--font-serif);
+	font-weight: 400;
 	font-size: var(--fs-title);
-	line-height: 1.15;
-	letter-spacing: -0.01em;
+	line-height: 1.25;
+	letter-spacing: 0;
 	text-align: center;
 	white-space: pre-line;
 }
 
 .prose {
 	font-size: var(--fs-body);
-	line-height: 1.5;
+	line-height: 1.6;
 	text-align: center;
 	color: var(--ink);
 }
 
+/* Italic asides set in the heading serif, a step up from body so they read. */
 .prose--italic {
+	font-family: var(--font-serif);
 	font-style: italic;
+	font-size: clamp(1.1875rem, 1.5vw, 1.375rem);
+	line-height: 1.45;
 }
 
 /* Line masks: each `.line` clips its inner span so it can rise into place. */
@@ -263,12 +264,12 @@ h3 {
 	align-items: center;
 	justify-content: center;
 	gap: 0.3em;
-	min-height: 32px;
-	padding: 8px 22px;
+	min-height: 44px;
+	padding: 12px 26px;
 	background: var(--white);
 	color: var(--ink);
 	font-family: var(--font-serif);
-	font-weight: 500;
+	font-weight: 400;
 	font-size: var(--fs-button);
 	line-height: 1;
 	text-transform: uppercase;

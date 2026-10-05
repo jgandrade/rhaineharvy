@@ -14,19 +14,46 @@ export const SITE = {
   couple: "Rhaine & Harvy",
   monogram: "R&H",
   description:
-    "Rhaine & Harvy are getting married. Join us for an intimate celebration of love - kindly RSVP.",
-  // TODO: confirm every value below.
-  dateLong: "Date to be announced",
-  dateShort: "TBA",
+    "You’re invited to the wedding of Rhaine & Harvy - Saturday, February 13, 2027, in Manila. Kindly RSVP.",
+  dateLong: "Saturday, February 13, 2027",
+  dateShort: "02 · 13 · 2027",
+  city: "Ermita, Manila",
+  // TODO: confirm the reply-by date with the couple.
   rsvpBy: "the date on your invitation",
   contact: "",
   /** Optional hero loop (CloudFront URL). Falls back to the hero photo. */
   heroVideo: "",
-  year: "2026",
+  year: "2027",
 };
 
 /** `*word*` → <em>word</em>. Copy is authored here, so no escaping needed. */
 export const rich = (s: string) => s.replace(/\*(.+?)\*/g, "<em>$1</em>");
+
+/** Google Maps search link for a place. */
+const maps = (q: string) =>
+  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+
+/** The two halves of the day - read by the schedule, the RSVP card and the footer. */
+export const EVENTS = [
+  {
+    n: "I.",
+    name: "The Ceremony",
+    time: "2:00 in the afternoon",
+    timeShort: "2:00 PM",
+    place: "San Vicente de Paul Parish",
+    address: "959 San Marcelino St., Ermita, Manila",
+    map: maps("San Vicente de Paul Parish, 959 San Marcelino St., Ermita, Manila"),
+  },
+  {
+    n: "II.",
+    name: "The Reception",
+    time: "Immediately after the ceremony",
+    timeShort: "To follow",
+    place: "Manila Prince Hotel - Sapphire Hall C",
+    address: "1000 San Marcelino St., Ermita, Manila",
+    map: maps("Manila Prince Hotel, 1000 San Marcelino St., Ermita, Manila"),
+  },
+];
 
 export const NAV = [
   { n: "I.", label: "Home", href: "#top" },
@@ -45,14 +72,14 @@ export const PRELOADER = {
 };
 
 export const HERO = {
-  sub: "*are getting* MARRIED.",
+  sub: "*you’re* INVITED",
 };
 
 export const PROMISE = {
   top: ["TWO *hearts,*", "ONE PROMISE"],
   bottom: ["TO KEEP", "*for* ALWAYS."],
-  title: "Rhaine and Harvy are getting married - and we would love for you to be there.",
-  body: "Together with our families, we invite you to witness the day we say our vows: an afternoon of promises, a long table of the people we love most, and an evening we hope you will remember as fondly as we will.",
+  title: "You’re invited to celebrate the wedding of Rhaine and Harvy.",
+  body: "Together with our families, we invite you to witness the day we say our vows - Saturday, the thirteenth of February, 2027, at San Vicente de Paul Parish in Manila - and to stay for dinner and dancing with the people we love most.",
 };
 
 export const STORY = {
@@ -70,27 +97,39 @@ export const DAY = {
   eyebrow: "*a* DAY BUILT *for* LOVE",
   title: ["*so* THAT TWO", "BECOME ONE."],
   intro: {
-    title: "The ceremony.\nThe celebration.",
-    lede: "One afternoon, two parts, and every person we love in one place.",
+    title: "Saturday,\nFebruary 13, 2027",
+    lede: "One afternoon in Ermita, two parts, and every person we love in one place.",
   },
-  // TODO: times, venues and addresses.
-  events: [
-    {
-      n: "I.",
-      name: "The Ceremony",
-      time: "Time to follow",
-      place: "Venue to be announced",
-    },
-    {
-      n: "II.",
-      name: "The Reception",
-      time: "Immediately after",
-      place: "Venue to be announced",
-    },
-  ],
-  attire: {
-    label: "Attire",
-    value: "Formal. Shades of wine, blush and ivory are warmly welcome.",
+  directions: "Directions",
+  dressCode: {
+    n: "III.",
+    label: "Dress code",
+    groups: [
+      {
+        who: "Principal sponsors",
+        items: [
+          { role: "Ninongs", value: "Barong and black shoes" },
+          {
+            role: "Ninangs",
+            value: "Modern Filipiniana or long gown",
+            colors: [
+              { name: "Champagne", hex: "#e3cfa8" },
+              { name: "Taupe", hex: "#8b7b6b" },
+            ],
+          },
+        ],
+      },
+      {
+        who: "Guests",
+        items: [
+          {
+            role: "",
+            value: "Semi-formal attire",
+            colors: [{ name: "Shades of burgundy", hex: "#6e1a2b" }],
+          },
+        ],
+      },
+    ],
   },
   quote:
     "“We never wanted a big day. We wanted the right people in the room - and that means you.”",
@@ -100,6 +139,7 @@ export const DAY = {
 export const MOMENTS = {
   eyebrow: "*our* MOMENTS",
   title: ["*every* MOMENT", "*led us* HERE."],
+  lede: "Studio days, late nights, a question asked under city lights - a few frames from the road to February.",
 };
 
 /** Sonnet 43 - Elizabeth Barrett Browning (public domain). */
@@ -117,6 +157,7 @@ export const VERSE = {
 export const NOTES = {
   eyebrow: "*a few* GENTLE NOTES",
   title: ["*before* YOU", "ARRIVE."],
+  lede: "Three small things that will help the day feel the way we hope it will.",
   items: [
     {
       n: "I.",
@@ -137,6 +178,7 @@ export const NOTES = {
 };
 
 export const RSVP = {
+  eyebrow: "*kindly* RSVP",
   title: "Will you join us?",
   sub: `We would be honored to celebrate with you. Kindly reply by ${SITE.rsvpBy}.`,
   accept: "*Joyfully* ACCEPTS",
@@ -149,13 +191,13 @@ export const RSVP = {
 };
 
 export const FOOTER = {
-  captureLabel: "Kindly RSVP",
-  capturePlaceholder: "Your full name",
-  /** Quiet ↗ links along the foot, like Vero's legals. */
+  closing: ["*we can’t wait*", "TO SEE YOU."],
+  /** Quiet ↗ links along the foot. */
   links: [
-    { label: "The ceremony", href: "#the-day" },
+    { label: "The day", href: "#the-day" },
     { label: "Gentle notes", href: "#notes" },
     { label: "Our story", href: "#story" },
+    { label: "RSVP", href: "#rsvp" },
   ],
   top: "Back to top",
 };

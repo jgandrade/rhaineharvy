@@ -287,27 +287,6 @@ function pins(isDesktop: boolean) {
       invalidateOnRefresh: true,
     });
   }
-
-  // Moments: like Vero's "Explore the gallery", the button only shows while
-  // the grid is under it - it fades in as it pins mid-screen, holds while the
-  // grid drifts past, and fades out as the grid leaves.
-  const field = q("[data-moments-field]");
-  const cta = q("[data-pin-cta]");
-  const btn = cta && q(".btn", cta);
-  if (field && cta && btn) {
-    gsap.set(btn, { autoAlpha: 0 });
-    const show = (on: boolean) =>
-      gsap.to(btn, { autoAlpha: on ? 1 : 0, duration: 0.5, ease: "power2.out", overwrite: true });
-    ScrollTrigger.create({
-      trigger: cta,
-      start: "top 50%",
-      endTrigger: field,
-      end: "bottom 60%",
-      pin: true,
-      pinSpacing: false,
-      onToggle: (self) => show(self.isActive),
-    });
-  }
 }
 
 function story(isDesktop: boolean) {
@@ -375,32 +354,6 @@ function story(isDesktop: boolean) {
     const t = tl.time();
     setStep(marks.filter((m) => t >= m).length);
   });
-}
-
-function moments(isDesktop: boolean) {
-  const items = qa(".moments__item");
-  if (!items.length) return;
-  const grid = q(".moments__grid")!;
-  // Each column drifts at its own pace, like Vero's staggered grid.
-  const speeds = isDesktop ? [0.04, 0.2, 0.1, 0.26, 0.07] : [0.05, 0.18, 0.1, 0.18, 0.05];
-  for (const item of items) {
-    const col = Number(item.dataset.col ?? 0) % (isDesktop ? 5 : 3);
-    gsap.fromTo(
-      item,
-      { y: () => vh() * speeds[col]! },
-      {
-        y: () => -vh() * speeds[col]!,
-        ease: "none",
-        scrollTrigger: {
-          trigger: grid,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      },
-    );
-  }
 }
 
 function verse() {
@@ -486,7 +439,6 @@ async function init() {
       // below the story's pin spacer.
       pins(desktop);
       reveals();
-      moments(desktop);
       verse();
       rsvpSeal();
 

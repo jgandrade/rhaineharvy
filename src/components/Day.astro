@@ -6,7 +6,9 @@
  */
 import Media from "./Media.astro";
 import Rich from "./Rich.astro";
-import { CTA, DAY } from "../lib/site";
+import { CTA, DAY, EVENTS } from "../lib/site";
+
+const arrow = `<svg class="schedule__icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.2 2H8v4.8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
 ---
 
 <section class="day" id="the-day" aria-labelledby="day-title">
@@ -39,25 +41,54 @@ import { CTA, DAY } from "../lib/site";
 
         <dl class="schedule">
           {
-            DAY.events.map((e) => (
+            EVENTS.map((e) => (
               <div class="schedule__row">
                 <dt>
                   <span class="schedule__n">{e.n}</span>
                   {e.name}
                 </dt>
                 <dd>
-                  <span>{e.time}</span>
-                  <span>{e.place}</span>
+                  <span class="schedule__time">{e.time}</span>
+                  <span class="schedule__place">{e.place}</span>
+                  <span class="schedule__address">{e.address}</span>
+                  <a class="schedule__map" href={e.map} target="_blank" rel="noopener">
+                    {DAY.directions}
+                    <Fragment set:html={arrow} />
+                  </a>
                 </dd>
               </div>
             ))
           }
           <div class="schedule__row">
             <dt>
-              <span class="schedule__n">III.</span>
-              {DAY.attire.label}
+              <span class="schedule__n">{DAY.dressCode.n}</span>
+              {DAY.dressCode.label}
             </dt>
-            <dd><span>{DAY.attire.value}</span></dd>
+            <dd class="dress">
+              {
+                DAY.dressCode.groups.map((g) => (
+                  <div class="dress__group">
+                    <p class="dress__who">{g.who}</p>
+                    {g.items.map((it) => (
+                      <p class="dress__item">
+                        {it.role && <span class="dress__role">{it.role}</span>}
+                        <span>{it.value}</span>
+                        {it.colors && (
+                          <span class="dress__colors">
+                            {it.colors.map((c) => (
+                              <span class="dress__color">
+                                <span class="dress__swatch" style={`--swatch:${c.hex}`} aria-hidden="true" />
+                                {c.name}
+                              </span>
+                            ))}
+                          </span>
+                        )}
+                      </p>
+                    ))}
+                  </div>
+                ))
+              }
+            </dd>
           </div>
         </dl>
       </div>
@@ -145,52 +176,140 @@ import { CTA, DAY } from "../lib/site";
     display: grid;
     justify-items: center;
     gap: 14px;
-    max-width: 420px;
+    max-width: 480px;
     margin: 0 auto;
     padding: 14vh 0 12vh;
   }
 
   .schedule {
     width: 100%;
-    margin: 28px 0 0;
+    margin: 32px 0 0;
     border-top: 1px solid var(--ink-faint);
   }
 
   .schedule__row {
     display: grid;
-    grid-template-columns: 1fr 1.25fr;
-    gap: 16px;
-    padding: 14px 0;
+    gap: 10px;
+    padding: 24px 0;
     border-bottom: 1px solid var(--ink-faint);
     text-align: left;
   }
 
+  @media (min-width: 600px) {
+    .schedule__row {
+      grid-template-columns: 0.8fr 1.4fr;
+      gap: 20px;
+    }
+  }
+
   .schedule dt {
     font-family: var(--font-sans);
-    font-weight: 500;
+    font-weight: 700;
     font-size: var(--fs-tiny);
-    letter-spacing: 0.04em;
+    line-height: 1.4;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
+    color: var(--ink);
   }
 
   .schedule__n {
     display: inline-block;
     width: 2.4em;
     font-family: var(--font-serif);
-    font-weight: 500;
-    color: var(--ink-soft);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0;
+    color: var(--wine);
   }
 
   .schedule dd {
     display: grid;
+    gap: 2px;
     margin: 0;
     font-size: var(--fs-body);
-    line-height: 1.35;
+    line-height: 1.45;
   }
 
-  .schedule dd span + span {
-    font-style: italic;
+  .schedule__time {
+    font-family: var(--font-serif);
+    font-size: var(--fs-title);
+    line-height: 1.25;
+  }
+
+  .schedule__place {
+    font-weight: 700;
+    margin-top: 4px;
+  }
+
+  .schedule__address {
     color: var(--ink-soft);
+  }
+
+  .schedule__map {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    justify-self: start;
+    margin-top: 8px;
+    padding: 6px 0;
+    font-size: var(--fs-tiny);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--wine);
+    border-bottom: 1px solid currentColor;
+  }
+
+  .schedule__map :global(.schedule__icon) {
+    width: 9px;
+    height: 9px;
+  }
+
+  .dress {
+    gap: 18px !important;
+  }
+
+  .dress__group {
+    display: grid;
+    gap: 8px;
+  }
+
+  .dress__who {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--fs-title);
+    line-height: 1.25;
+  }
+
+  .dress__item {
+    display: grid;
+    gap: 2px;
+  }
+
+  .dress__role {
+    font-weight: 700;
+  }
+
+  .dress__colors {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 4px;
+    font-size: var(--fs-tiny);
+    color: var(--ink-soft);
+  }
+
+  .dress__color {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dress__swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--swatch);
+    box-shadow: inset 0 0 0 1px rgb(30 20 22 / 0.15);
   }
 
   .diptych__cta {
