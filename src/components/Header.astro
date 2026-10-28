@@ -1,24 +1,26 @@
 ---
 /**
- * Fixed chrome: MENU left, the couple's name centre (appears once the hero
- * has gone), RSVP right. Over the hero the buttons are frosted glass; past it
- * they turn into solid ivory slabs.
+ * Fixed chrome, as the Figma "B - Polished" header draws it: MENU as a light
+ * text link on the left, the couple's names in the middle (desktop only) and
+ * the ivory "On photo" reply button on the right. Over the hero it is clear;
+ * once the hero has gone it turns into an ivory bar with ink type and the
+ * wine primary button, so it still reads over every section.
  */
 import Rich from "./Rich.astro";
-import { CTA, NAV, SITE } from "../lib/site";
+import { CTA, HEADER, NAV, SITE } from "../lib/site";
 ---
 
 <header class="header" data-header>
   <button
-    class="btn btn--glass header__menu"
+    class="bv2 bv2--link-light header__menu"
     type="button"
     aria-expanded="false"
     aria-controls="menu"
     data-menu-toggle
   >
     <span class="header__swap">
-      <span class="header__swap-a">Menu</span>
-      <span class="header__swap-b" aria-hidden="true"><i>•</i> Close</span>
+      <span class="header__swap-a">{HEADER.menu}</span>
+      <span class="header__swap-b" aria-hidden="true">{HEADER.close}</span>
     </span>
   </button>
 
@@ -26,8 +28,9 @@ import { CTA, NAV, SITE } from "../lib/site";
     {SITE.bride} <em>&amp;</em> {SITE.groom}
   </a>
 
-  <a class="btn btn--glass header__cta" href={CTA.href} data-scroll-to>
-    <Rich text={CTA.label} />
+  <a class="bv2 bv2--photo header__cta" href={CTA.href} data-scroll-to>
+    <span class="header__cta-long">{CTA.label}</span>
+    <span class="header__cta-short" aria-hidden="true">{CTA.short}</span>
   </a>
 </header>
 
@@ -64,80 +67,94 @@ import { CTA, NAV, SITE } from "../lib/site";
     position: fixed;
     inset: 0 0 auto;
     z-index: 120;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    display: flex;
     align-items: center;
-    padding: 16px var(--gutter);
-    pointer-events: none;
+    justify-content: space-between;
+    height: 72px;
+    padding: 0 16px;
+    color: var(--ivory);
+    transition:
+      background-color 0.5s var(--ease-out-expo),
+      color 0.5s var(--ease-out-expo),
+      box-shadow 0.5s var(--ease-out-expo);
   }
 
-  .header > * {
-    pointer-events: auto;
-  }
-
-  .header__menu {
-    justify-self: start;
-    min-width: 80px;
-  }
-
-  .header__cta {
-    grid-column: 3;
-    justify-self: end;
-  }
-
-  :global(.header.is-solid) .btn--glass,
-  :global(html.menu-open) .header .btn--glass {
-    background: var(--white);
-    color: var(--ink);
-    box-shadow: 0 4px 24px rgb(58 13 22 / 0.08);
-  }
-
-  @media (hover: hover) {
-    :global(.header.is-solid) .btn--glass:hover,
-    :global(html.menu-open) .header .btn--glass:hover {
-      color: var(--ivory);
+  @media (min-width: 900px) {
+    .header {
+      height: 88px;
+      padding: 0 40px;
     }
   }
 
-  .header__brand {
-    font-family: var(--font-serif);
-    font-weight: 500;
-    font-size: clamp(1.05rem, 1.6vw, 1.4rem);
-    text-transform: uppercase;
-    letter-spacing: 0.01em;
-    white-space: nowrap;
-    opacity: 0;
-    transform: translateY(-6px);
-    transition:
-      opacity 0.6s var(--ease-out-expo),
-      transform 0.8s var(--ease-out-expo);
+  /* Past the hero: an ivory bar, ink type, the wine primary button. */
+  :global(.header.is-solid),
+  :global(html.menu-open) .header {
+    background: var(--ivory);
+    color: var(--ink);
+    box-shadow: 0 1px 0 var(--ink-faint);
   }
 
-  .header__brand em {
-    font-style: italic;
-    font-weight: 400;
-    text-transform: none;
+  .header__menu {
+    color: inherit;
   }
 
-  :global(.header.is-solid.has-brand) .header__brand,
-  :global(html.menu-open) .header__brand {
-    opacity: 1;
-    transform: none;
+  :global(.header.is-solid) .header__cta,
+  :global(html.menu-open) .header__cta {
+    background: var(--wine);
+    color: var(--ivory);
   }
 
-  @media (max-width: 599px) {
-    .header__brand {
+  /* Phones: a 48px "RSVP →". Desktop: the full 56px "KINDLY RSVP →". */
+  .header__cta {
+    height: 48px;
+    padding: 0 20px;
+  }
+
+  .header__cta-long {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .header__cta {
+      height: 56px;
+      padding: 0 32px;
+    }
+
+    .header__cta-long {
+      display: inline;
+    }
+
+    .header__cta-short {
       display: none;
     }
   }
 
-  /* MENU ↔ CLOSE roll. */
-  /* Both labels share one grid cell, so the button fits the wider one. */
+  .header__brand {
+    display: none;
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    font-family: var(--font-serif);
+    font-size: 28px;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+
+  .header__brand em {
+    font-style: italic;
+  }
+
+  @media (min-width: 900px) {
+    .header__brand {
+      display: block;
+    }
+  }
+
+  /* MENU <-> CLOSE roll. Both labels share one grid cell. */
   .header__swap {
     display: grid;
-    justify-items: center;
+    justify-items: start;
     overflow: hidden;
-    height: 1em;
     white-space: nowrap;
   }
 
@@ -149,12 +166,6 @@ import { CTA, NAV, SITE } from "../lib/site";
 
   .header__swap-b {
     transform: translateY(110%);
-  }
-
-  .header__swap-b i {
-    font-style: normal;
-    font-size: 0.7em;
-    vertical-align: 0.15em;
   }
 
   :global(html.menu-open) .header__swap-a {
@@ -215,6 +226,7 @@ import { CTA, NAV, SITE } from "../lib/site";
       align-items: end;
     }
   }
+
 
   .menu__list {
     list-style: none;

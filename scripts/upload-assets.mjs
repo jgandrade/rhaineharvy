@@ -73,22 +73,22 @@ const MASTER_MAX = 3200;
  * Keep the slugs; swap the files.
  */
 const CATALOG = [
-  // https://unsplash.com/photos/man-and-woman-kissing-on-brown-grass-field-during-daytime-haRyBAihS_0
-  { file: "hero.jpg", category: "gallery", slug: "hero", title: "Hero", tag: "Unsplash" },
-  // https://unsplash.com/photos/a-black-and-white-photo-of-a-womans-dress-LAnaayWiBuw
-  { file: "preloader-1.jpg", category: "gallery", slug: "preloader-1", title: "Preloader 1", tag: "Unsplash" },
-  // https://unsplash.com/photos/woman-in-white-floral-dress-holding-green-plant-QKYxgkaTmQk
-  { file: "preloader-2.jpg", category: "gallery", slug: "preloader-2", title: "Preloader 2", tag: "Unsplash" },
+  // Couple (shared in chat)
+  { file: "hero.png", category: "gallery", slug: "hero", title: "Rhaine and Harvy in black, glancing at each other by a white wall", tag: "Couple" },
+  // Couple (shared in chat)
+  { file: "preloader-1.png", category: "gallery", slug: "preloader-1", title: "Rhaine and Harvy in black, seated against a white wall", tag: "Couple" },
+  // Couple (shared in chat)
+  { file: "preloader-2.png", category: "gallery", slug: "preloader-2", title: "Rhaine leaning on Harvy's shoulders in a studio spotlight", tag: "Couple" },
   // https://unsplash.com/photos/woman-touching-chest-of-man-BOhDR9n4u2s
   { file: "preloader-3.jpg", category: "gallery", slug: "preloader-3", title: "Preloader 3", tag: "Unsplash" },
   // Couple (Drive): https://drive.google.com/file/d/14yqqZeGakG9NFA_TI5J0PMeqHVuUMM6T
   { file: "promise-portrait.jpg", category: "gallery", slug: "promise-portrait", title: "Rhaine and Harvy standing together in the studio", tag: "Couple" },
-  // https://unsplash.com/photos/couple-looks-at-each-other-lovingly-in-a-field-3qKpnFMcNdM
-  { file: "story-1.jpg", category: "gallery", slug: "story-1", title: "Story 1", tag: "Unsplash" },
-  // https://unsplash.com/photos/woman-touch-mans-hand-N1CZNuM_Fd8
-  { file: "story-2.jpg", category: "gallery", slug: "story-2", title: "Story 2", tag: "Unsplash" },
-  // https://unsplash.com/photos/grayscale-shot-of-bride-and-groom-FTW8ADj5igs
-  { file: "story-3.jpg", category: "gallery", slug: "story-3", title: "Story 3", tag: "Unsplash" },
+  // Couple (shared in chat)
+  { file: "story-1.png", category: "gallery", slug: "story-1", title: "Harvy kissing Rhaine on the forehead", tag: "Couple" },
+  // Couple (shared in chat)
+  { file: "story-2.png", category: "gallery", slug: "story-2", title: "Rhaine showing her ring on the night of the proposal", tag: "Couple" },
+  // Couple (shared in chat)
+  { file: "story-3.png", category: "gallery", slug: "story-3", title: "Harvy holding Rhaine's hand, ring close up", tag: "Couple" },
   // Couple (Drive): https://drive.google.com/file/d/1xLPJJhNNJKf86dWYLIyuXLx7XhzqrzrV
   { file: "day-portrait.jpg", category: "gallery", slug: "day-portrait", title: "Rhaine's hand and ring on Harvy's shoulder, bouquet in hand", tag: "Couple" },
   // Couple (Drive): https://drive.google.com/file/d/1ECDGDfTbKMsYKZ43ubDiZ8odRUUnuyjc
@@ -141,6 +141,8 @@ const CATALOG = [
   { file: "moment-19.jpg", category: "gallery", slug: "moment-19", title: "Rhaine and Harvy leaning on a white wall", tag: "Couple" },
   // Couple (Drive): https://drive.google.com/file/d/12elqNkTRwHuaMDTsxOMwvI2ExXcDCwDc
   { file: "moment-20.jpg", category: "gallery", slug: "moment-20", title: "Rhaine and Harvy hand in hand", tag: "Couple" },
+  // Couple (shared in chat)
+  { file: "footer.png", category: "gallery", slug: "footer", title: "Rhaine leaning on Harvy's shoulders in a studio spotlight", tag: "Couple" },
 ];
 
 const s3 = new S3Client({

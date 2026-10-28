@@ -1,9 +1,8 @@
 ---
 /**
- * Vero's "YOUR MOST important DRESS / DESERVES TO LAST forever." beat: the
- * first line sits above a tall portrait, the second rises in over the
- * portrait and travels with it, then the portrait dissolves into the
- * invitation copy.
+ * The invitation, Figma "B - Polished": the head, a portrait, and the second
+ * half of the line ("TO KEEP for ALWAYS.") set over the portrait's lower
+ * edge, then the invitation copy and the one primary button on the screen.
  */
 import Media from "./Media.astro";
 import Rich from "./Rich.astro";
@@ -11,108 +10,110 @@ import { CTA, PROMISE } from "../lib/site";
 ---
 
 <section class="promise" aria-labelledby="promise-title">
-  <h2 class="display promise__top" id="promise-title" data-reveal>
-    <Rich text={PROMISE.top} />
-  </h2>
+  <header class="v2-head">
+    <p class="v2-label">{PROMISE.eyebrow}</p>
+    <h2 class="v2-display-l" id="promise-title" data-reveal><Rich text={PROMISE.top} /></h2>
+  </header>
 
   <div class="promise__stage" data-promise-stage>
     <Media
       slug="promise-portrait"
-      label="Portrait - full length"
+      label="Portrait"
       tone="stone"
-      sizes="(min-width: 900px) 34vw, 80vw"
-      class="promise__figure"
+      sizes="(min-width: 900px) 460px, 300px"
+      class="promise__portrait"
     />
-    <div class="promise__lane">
-      <!-- Two copies of the line: ink everywhere, ivory clipped to the photo's
-           width, so it reads on both the ground and the picture. -->
-      <div class="promise__bottom" aria-hidden="true" data-promise-bottom>
-        <p class="display promise__ink"><Rich text={PROMISE.bottom} /></p>
-        <p class="display promise__light"><Rich text={PROMISE.bottom} /></p>
-      </div>
-    </div>
+    <p class="v2-display-l promise__bottom" data-promise-bottom><Rich text={PROMISE.bottom} /></p>
   </div>
 
-  <div class="promise__copy" data-fade>
-    <p class="title">{PROMISE.title}</p>
-    <p class="prose">{PROMISE.body}</p>
-    <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
+  <div class="promise__invite">
+    <p class="v2-title">{PROMISE.title}</p>
+    <p class="v2-body">{PROMISE.body}</p>
+    <a class="bv2 bv2--primary promise__cta" href={CTA.href} data-scroll-to>{CTA.label}</a>
   </div>
 </section>
 
 <style>
   .promise {
-    /* Portrait width, shared by the photo and the ivory copy's clip. */
-    --fig-w: min(80vw, 520px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 96px var(--gutter);
+    background: var(--ivory);
+    color: var(--ink);
+  }
+
+  .promise__stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .promise__stage :global(.promise__portrait) {
+    width: 300px;
+    height: 440px;
+    max-width: 100%;
+  }
+
+  /* The line sits over the photo's last 40px (130px on desktop). */
+  .promise__bottom {
     position: relative;
-    padding: 22vh var(--gutter) 18vh;
+    margin-top: -40px;
+    text-align: center;
+  }
+
+  .promise__invite {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+  }
+
+  /* Body to button: gap 16 + spacer 8 + gap 16 on phones. */
+  .promise__invite .v2-body {
+    margin-bottom: 24px;
+  }
+
+  .promise__cta {
+    width: 100%;
   }
 
   @media (min-width: 900px) {
     .promise {
-      --fig-w: min(34vw, 560px);
+      gap: 0;
+      padding: 160px var(--gutter);
     }
-  }
 
-  .promise__top {
-    position: relative;
-    z-index: 2;
-  }
+    .promise__stage {
+      margin-top: 27px;
+    }
 
-  .promise__stage {
-    position: relative;
-    display: grid;
-    justify-items: center;
-    margin-top: -0.6em;
-  }
+    .promise__stage :global(.promise__portrait) {
+      width: 460px;
+      height: 640px;
+    }
 
-  .promise__stage :global(.promise__figure) {
-    width: var(--fig-w);
-    height: 150vh;
-    /* Dissolve into the ground like Vero's cut-out sculpture. */
-    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
-    mask-image: linear-gradient(to bottom, #000 0%, #000 72%, transparent 100%);
-  }
+    .promise__bottom {
+      margin-top: -130px;
+      white-space: nowrap;
+    }
 
-  /*
-   * A lane over the portrait. The second line sits well down it and rises in
-   * as it arrives, then travels with the portrait.
-   */
-  .promise__lane {
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    padding-top: 62vh;
-    padding-bottom: 30vh;
-  }
+    .promise__invite {
+      margin-top: 78px;
+    }
 
-  .promise__bottom {
-    display: grid;
-    font-size: var(--fs-display-1);
-  }
+    .promise__invite .v2-body {
+      opacity: 0.82;
+      margin-bottom: 40px;
+    }
 
-  .promise__ink,
-  .promise__light {
-    grid-area: 1 / 1;
-  }
-
-  .promise__light {
-    color: var(--ivory);
-    text-shadow: 0 2px 30px rgb(34 7 13 / 0.35);
-    clip-path: inset(-10% calc((100% - var(--fig-w)) / 2));
-  }
-
-  .promise__copy {
-    position: relative;
-    z-index: 2;
-    display: grid;
-    justify-items: center;
-    gap: 18px;
-    max-width: 440px;
-    margin: -6vh auto 0;
-  }
-
-  .promise__copy .btn {
-    margin-top: 18px;
+    .promise__cta {
+      width: auto;
+    }
   }
 </style>

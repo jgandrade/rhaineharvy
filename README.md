@@ -35,6 +35,7 @@ slug below (category `gallery`), run `npm run assets:upload`.
 | `day-portrait`                     | Pinned left half of "The day"               |
 | `day-1` … `day-5`                  | Right column of "The day"                   |
 | `moment-01` … `moment-20`          | Moments masonry wall (any aspect ratio)     |
+| `footer`                           | Behind the closing names in the footer      |
 
 A hero video can replace the hero photo: set `SITE.heroVideo` to its URL.
 

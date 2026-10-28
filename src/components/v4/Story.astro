@@ -1,0 +1,336 @@
+---
+/**
+ * V4 "Our story" as the pinned scroll stepper (scripts/v4.ts, story()):
+ * a small photo card sits under the headline; scrolling grows it to fill the
+ * screen while the headline lifts away, then chapters II and III wipe in from
+ * the right. Each photo carries its own phrase - "from Hello," / "to Yes," /
+ * "to I do." - and nothing else: no chapter bar, no label, no counter.
+ *
+ * Then "So that two become One." over the two of them, a full screen with
+ * the menu bar away: the apart photo splits down the middle, its halves slide
+ * toward each other, then blur away into the side-by-side photo underneath
+ * while "become One." rises in (scripts/v4.ts, together()).
+ *
+ * No JS or reduced motion: the chapters simply stack, and the close shows
+ * the side-by-side photo.
+ */
+import Media from "../Media.astro";
+import { V4 } from "../../lib/site";
+
+const S = V4.story;
+const tones = ["wine", "stone", "wine"] as const;
+---
+
+<section class="story" id="story" aria-labelledby="story-title" data-v4-story>
+  <div class="story__pin" data-story-pin>
+    <div class="story__intro" data-story-intro>
+      <h2 class="v4-script story__title" id="story-title">
+        {S.title.map((l) => <span class="story__line">{l}</span>)}
+      </h2>
+    </div>
+
+    <div class="story__frame" data-story-frame>
+      {
+        S.steps.map((s, i) => (
+          <div class="story__slide" data-story-slide>
+            <Media slug={`story-${i + 1}`} label={s.label} tone={tones[i]} sizes="100vw" class="story__media" />
+            <div class="story__shade" aria-hidden="true"></div>
+            <p class="v4-script story__caption">
+              {s.lead} {s.word}
+            </p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="story__end" data-story-end>
+    <p class="v4-script story__close">
+      <span class="story__close-line" data-v4-rise>{S.close[0]}</span>{" "}
+      <span class="story__close-line" data-story-one>{S.close[1]}</span>
+    </p>
+    <div class="story__scene">
+      <div class="story__plate">
+      <img
+        class="story__bg story__bg--close"
+        src={`${S.together.src}-1280.webp`}
+        srcset={`${S.together.src}-1280.webp 1280w, ${S.together.src}-2400.webp 2400w`}
+        sizes="100vw"
+        alt={S.together.alt}
+        width="2400"
+        height="1350"
+        loading="lazy"
+      />
+      {
+        // Painted bottom to top: the bare wall between them, Harvy, then Rhaine
+        // (her arm lands over his shoulder, as in the photo underneath).
+        ["mid", "right", "left"].map((side) => (
+          <div class={`story__half story__half--${side}`} data-story-half={side}>
+            <img
+              class="story__bg"
+              src={`${S.apart.src}-1280.webp`}
+              srcset={`${S.apart.src}-1280.webp 1280w, ${S.apart.src}-2400.webp 2400w`}
+              sizes="100vw"
+              alt={side === "mid" ? S.apart.alt : ""}
+              width="2400"
+              height="1350"
+              loading="lazy"
+            />
+          </div>
+        ))
+      }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .story {
+    position: relative;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .story__pin {
+    position: relative;
+    height: 100svh;
+    min-height: 560px;
+    overflow: hidden;
+  }
+
+  /* ---------- Intro: the headline ---------- */
+
+  .story__intro {
+    position: absolute;
+    inset: 0 0 auto;
+    padding-top: 16px;
+  }
+
+  .story__title {
+    display: flex;
+    flex-direction: column;
+    margin: 40px var(--gutter) 0;
+    font-size: 52px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-align: center;
+  }
+
+  /* ---------- The frame: a small card that grows to the full screen ---------- */
+
+  .story__frame {
+    position: absolute;
+    inset: 0;
+    color: var(--ivory);
+    /* Starts as a card under the headline; scripts/v4.ts opens it. */
+    clip-path: inset(var(--t, 62%) var(--x, 34%) var(--b, 10%) var(--x, 34%));
+  }
+
+  /* Each chapter is its own layer, so its caption stays under the next photo. */
+  .story__slide {
+    position: absolute;
+    inset: 0;
+    isolation: isolate;
+  }
+
+  .story__slide + .story__slide {
+    clip-path: inset(0 0 0 100%);
+  }
+
+  .story__slide :global(.story__media) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .story__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgb(34 7 13 / 0.68), rgb(34 7 13 / 0.2) 34%, transparent 55%);
+    pointer-events: none;
+  }
+
+  .story__caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 6vh;
+    z-index: 1;
+    margin: 0;
+    padding-inline: var(--gutter);
+    font-size: 44px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    text-align: center;
+    text-shadow: 0 2px 24px rgb(34 7 13 / 0.4);
+  }
+
+  /* ---------- The close: "So that two become One." over the two of them ---------- */
+
+  /* The wall's own tone, so the photo fades into the page without a seam. */
+  .story__end {
+    display: grid;
+    overflow: hidden;
+    background: var(--studio);
+  }
+
+  .story__close {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: 64px var(--gutter) 8px;
+    font-size: 44px;
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    text-align: center;
+  }
+
+  .story__close-line {
+    display: inline-block;
+  }
+
+  /* Phones: a 3:2 strip under the headline, fading up into the wall tone. */
+  .story__scene {
+    position: relative;
+    overflow: hidden;
+    container-type: size;
+    /* 3:2 still keeps both of them in frame when they sit apart. */
+    aspect-ratio: 3 / 2;
+    mask-image: linear-gradient(to bottom, transparent, #000 22%);
+  }
+
+  /*
+   * Both photos share one 16:9 plate that always covers the scene - no gaps
+   * at any screen shape - so the strips' travel (scripts/v4.ts) is measured
+   * in the photo, not the screen. Narrower screens crop the sides; wider ones
+   * crop top and bottom, 40/60, keeping the feet in and the heads clear of
+   * the headline.
+   */
+  .story__plate {
+    position: absolute;
+    left: 50%;
+    top: calc((100cqh - max(56.25cqw, 100cqh)) * 0.4);
+    width: max(100cqw, 177.78cqh);
+    aspect-ratio: 16 / 9;
+    translate: -50% 0;
+  }
+
+  .story__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .story__half {
+    will-change: transform, opacity;
+  }
+
+  /*
+   * The apart photo in three soft-edged strips: Rhaine's (left), the bare wall
+   * between them (mid, still), Harvy's (right). The side-by-side photo sits
+   * under all three; its sides are bare wall, so the gaps the strips open as
+   * they slide in are the same studio. The strips stop exactly where the two
+   * of them sit in that photo, so the closing crossfade lines up.
+   */
+  .story__half {
+    position: absolute;
+    inset: 0;
+  }
+
+  .story__half--left {
+    /* Ends right at her elbow: once they meet, this edge rides over Harvy. */
+    mask-image: linear-gradient(to right, transparent, #000 3% 24.5%, transparent 26.5%);
+  }
+
+  .story__half--mid {
+    /* Bare wall only: her elbow ends near 24.4%, his arm starts near 70%. */
+    mask-image: linear-gradient(to right, transparent 24.5%, #000 27% 66%, transparent 69%);
+  }
+
+  .story__half--right {
+    mask-image: linear-gradient(to right, transparent 66%, #000 69% 97%, transparent);
+  }
+
+  /* No JS / reduced motion: just the two of them together. */
+  :global(html:not(.js)) .story__half,
+  :global(html.reduce-motion) .story__half {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .story__title {
+      margin-top: calc(134 * var(--px));
+      font-size: calc(100 * var(--px));
+      letter-spacing: calc(-1.5 * var(--px));
+    }
+
+    .story__caption {
+      bottom: 7vh;
+      font-size: calc(96 * var(--px));
+      letter-spacing: calc(-1 * var(--px));
+    }
+
+    /*
+     * A full screen, pinned while the two of them come together, with the
+     * menu bar away (scripts/v4.ts). The photo fills it head to feet; the
+     * headline sits on one line in the bare wall above their heads.
+     */
+    .story__end {
+      position: relative;
+      display: block;
+      height: 100svh;
+      min-height: 640px;
+    }
+
+    .story__scene {
+      position: absolute;
+      inset: 0;
+      aspect-ratio: auto;
+      mask-image: none;
+    }
+
+    .story__close {
+      position: absolute;
+      z-index: 2;
+      top: 2.5svh;
+      left: 0;
+      right: 0;
+      padding: 0 var(--gutter);
+      /*
+       * Fits the bare wall above their heads. On screens wider than 16:9 the
+       * plate crops its top, and the heads sit at 40svh - 13.67vw from the top
+       * (15.7% down the photo, less the 40% share of the crop).
+       */
+      font-size: min(calc(80 * var(--px)), 8svh, max(36px, calc((40svh - 13.67vw) * 0.6)));
+      letter-spacing: calc(-1.2 * var(--px));
+      white-space: nowrap;
+    }
+  }
+
+  /* No JS / reduced motion: the chapters stack, every word lit. */
+  :global(html:not(.js)) .story__pin,
+  :global(html.reduce-motion) .story__pin {
+    height: auto;
+    min-height: 0;
+  }
+
+  :global(html:not(.js)) .story__intro,
+  :global(html.reduce-motion) .story__intro {
+    position: static;
+    padding-bottom: 40px;
+  }
+
+  :global(html:not(.js)) .story__frame,
+  :global(html.reduce-motion) .story__frame {
+    position: relative;
+    clip-path: none;
+  }
+
+  :global(html:not(.js)) .story__slide,
+  :global(html.reduce-motion) .story__slide {
+    position: relative;
+    height: 80svh;
+    clip-path: none;
+  }
+</style>

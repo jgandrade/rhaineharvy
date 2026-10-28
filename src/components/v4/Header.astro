@@ -1,0 +1,223 @@
+---
+/**
+ * V4 top bar: a dark slab with rounded lower corners and a wine hairline,
+ * MENU + hamburger on the left, the wine reply button on the right. It stays
+ * put while scrolling; only the full-screen story close sends it away.
+ * MENU opens a full-screen wine panel with the chapters set in Androgy.
+ */
+import { V4 } from "../../lib/site";
+
+const links = [
+  { label: "Our story", href: "#story" },
+  { label: "The day", href: "#the-day" },
+  { label: "Moments", href: "#moments" },
+  { label: "Good to know", href: "#notes" },
+  { label: "Reply", href: "#rsvp" },
+];
+---
+
+<header class="bar" data-v4-bar>
+  <button class="bar__menu" type="button" aria-expanded="false" aria-controls="v4-menu" data-v4-menu-toggle>
+    <span class="bar__menu-label">{V4.header.menu}</span>
+    <span class="bar__burger" aria-hidden="true"><i></i><i></i><i></i></span>
+  </button>
+  <a class="bv2 bv2--primary bar__cta" href="#rsvp">
+    <span class="bar__cta-long">{V4.header.cta}</span>
+    <span class="bar__cta-short" aria-hidden="true">RSVP →</span>
+  </a>
+</header>
+
+<nav class="panel" id="v4-menu" aria-label="Primary" data-v4-menu hidden>
+  <ol class="panel__list">
+    {
+      links.map((l, i) => (
+        <li style={`--i:${i}`}>
+          <a class="v4-script panel__link" href={l.href} data-v4-menu-link>
+            {l.label}
+          </a>
+        </li>
+      ))
+    }
+  </ol>
+  <p class="panel__foot">Saturday, February 13, 2027 · Ermita, Manila</p>
+</nav>
+
+<style>
+  .bar {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    padding: 0 var(--gutter);
+    background: var(--ink);
+    border: 1px solid var(--wine);
+    border-top: 0;
+    border-radius: 0 0 16px 16px;
+    color: #fff;
+    transition: transform 0.6s var(--ease-out-expo);
+  }
+
+  /*
+   * Tucked away from the first paint until the entrance brings it in
+   * (scripts/v4.ts adds bar-in), so it never flashes in place first.
+   * bar-away: a full-screen section (Story's close) has the screen to itself.
+   */
+  :global(html.js:not(.reduce-motion):not(.bar-in)) .bar,
+  :global(html.bar-away:not(.menu-open)) .bar {
+    transform: translateY(-110%);
+  }
+
+  @media (min-width: 900px) {
+    .bar {
+      height: 92px;
+      padding: 0 calc(58 * var(--px)) 0 calc(111 * var(--px));
+      border-radius: 0 0 20px 20px;
+    }
+  }
+
+  .bar__menu {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 44px;
+    color: inherit;
+  }
+
+  .bar__menu-label {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.4;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  @media (min-width: 900px) {
+    .bar__menu {
+      gap: 20px;
+    }
+
+    .bar__menu-label {
+      font-size: 20px;
+      letter-spacing: 3.2px;
+    }
+  }
+
+  .bar__burger {
+    display: grid;
+    gap: 3px;
+    width: 27px;
+  }
+
+  .bar__burger i {
+    display: block;
+    height: 3px;
+    background: currentColor;
+    transition: transform 0.5s var(--ease-out-expo), opacity 0.3s;
+  }
+
+  :global(html.menu-open) .bar__burger i:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  :global(html.menu-open) .bar__burger i:nth-child(2) {
+    opacity: 0;
+  }
+
+  :global(html.menu-open) .bar__burger i:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .bar__cta {
+    height: 44px;
+    padding: 0 18px;
+  }
+
+  .bar__cta-long {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .bar__cta {
+      width: 254px;
+      height: 56px;
+    }
+
+    .bar__cta-long {
+      display: inline;
+    }
+
+    .bar__cta-short {
+      display: none;
+    }
+  }
+
+  /* ---------- Menu panel ---------- */
+
+  .panel {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 40px;
+    padding: 96px var(--gutter) 40px;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgb(143 43 60 / 0.45), transparent 70%),
+      var(--wine-night);
+    color: var(--ivory);
+    clip-path: inset(0 0 100% 0);
+    transition: clip-path 0.8s var(--ease-in-out-quart);
+  }
+
+  .panel:not([hidden]) {
+    display: flex;
+  }
+
+  :global(html.menu-open) .panel {
+    clip-path: inset(0 0 0 0);
+  }
+
+  .panel__list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: center;
+  }
+
+  .panel__link {
+    display: inline-block;
+    font-size: clamp(48px, 9vw, 112px);
+    line-height: 1;
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.6s var(--ease-out-expo),
+      transform 0.8s var(--ease-out-expo),
+      color 0.3s;
+  }
+
+  :global(html.menu-open) .panel__link {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.25s + var(--i) * 0.06s);
+  }
+
+  @media (hover: hover) {
+    .panel__link:hover {
+      color: var(--rose);
+    }
+  }
+
+  .panel__foot {
+    font-family: var(--f-dm);
+    text-align: center;
+    opacity: 0.7;
+  }
+</style>

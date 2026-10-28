@@ -1,24 +1,24 @@
 ---
-import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from "../components/Hero.astro";
-import PromiseSection from "../components/Promise.astro";
-import Story from "../components/Story.astro";
-import Day from "../components/Day.astro";
-import Moments from "../components/Moments.astro";
-import Verse from "../components/Verse.astro";
-import Notes from "../components/Notes.astro";
-import Rsvp from "../components/Rsvp.astro";
-import Footer from "../components/Footer.astro";
+import V4Layout from "../layouts/V4Layout.astro";
+import Header from "../components/v4/Header.astro";
+import Hero from "../components/v4/Hero.astro";
+import Band from "../components/v4/Band.astro";
+import Story from "../components/v4/Story.astro";
+import Day from "../components/v4/Day.astro";
+import Moments from "../components/v4/Moments.astro";
+import Notes from "../components/v4/Notes.astro";
+import Reply from "../components/v4/Reply.astro";
+import Footer from "../components/v4/Footer.astro";
 ---
 
-<BaseLayout>
+<V4Layout>
+  <Header slot="header" />
   <Hero />
-  <PromiseSection />
+  <Band />
   <Story />
   <Day />
   <Moments />
-  <Verse />
   <Notes />
-  <Rsvp />
+  <Reply />
   <Footer slot="footer" />
-</BaseLayout>
+</V4Layout>

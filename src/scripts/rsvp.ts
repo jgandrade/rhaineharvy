@@ -28,16 +28,44 @@ if (form) {
     status.textContent = msg;
   };
 
+  // Swap the form for the thank-you and a ledger of what we received.
+  const showThanks = (data: Record<string, string>) => {
+    const yes = data.attending === "yes";
+    const text = thanks.querySelector<HTMLElement>("[data-rsvp-thanks-text]")!;
+    text.textContent = (yes ? thanks.dataset.yes : thanks.dataset.no) ?? "";
+
+    const set = (key: string, value: string) => {
+      const dd = thanks.querySelector<HTMLElement>(`[data-ledger="${key}"]`);
+      if (dd) dd.textContent = value;
+    };
+    set("name", data.name ?? "");
+    set("attending", yes ? "Joyfully accepts" : "Regretfully declines");
+    set("guests", data.guests?.trim() ?? "");
+    const guestsRow = thanks.querySelector<HTMLElement>('[data-ledger-row="guests"]');
+    if (guestsRow) guestsRow.hidden = !yes || !data.guests?.trim();
+    for (const el of thanks.querySelectorAll<HTMLElement>("[data-ledger-yes]")) el.hidden = !yes;
+
+    form.hidden = true;
+    thanks.hidden = false;
+  };
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     say("");
 
-    for (const el of form.querySelectorAll(".is-invalid")) el.classList.remove("is-invalid");
+    for (const el of form.querySelectorAll(".is-invalid")) {
+      el.classList.remove("is-invalid");
+      el.removeAttribute("aria-invalid");
+    }
     const invalid = [...form.querySelectorAll<HTMLInputElement>("[required]")].filter(
       (el) => !el.checkValidity(),
     );
     if (invalid.length) {
-      for (const el of invalid) if (el.type !== "radio") el.classList.add("is-invalid");
+      for (const el of invalid) {
+        if (el.type === "radio") continue;
+        el.classList.add("is-invalid");
+        el.setAttribute("aria-invalid", "true");
+      }
       say(
         attending()
           ? "Kindly fill in your name and how we can reach you."
@@ -50,6 +78,13 @@ if (form) {
     const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
     if (data.company) return; // Honeypot: a bot filled the hidden field.
     delete data.company;
+
+    if (!ENDPOINT && import.meta.env.DEV) {
+      // Dev preview only: show the confirmation without sending anything.
+      console.warn("[rsvp] Dev preview - PUBLIC_RSVP_ENDPOINT is not set; nothing was sent.", data);
+      showThanks(data);
+      return;
+    }
 
     if (!ENDPOINT) {
       say("Replies open soon - thank you for your patience.");
@@ -67,10 +102,7 @@ if (form) {
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-      const text = thanks.querySelector<HTMLElement>("[data-rsvp-thanks-text]")!;
-      text.textContent = (data.attending === "yes" ? thanks.dataset.yes : thanks.dataset.no) ?? "";
-      form.hidden = true;
-      thanks.hidden = false;
+      showThanks(data);
     } catch (err) {
       console.error("[rsvp]", err);
       say("Something went wrong sending your reply. Kindly try again in a moment.");

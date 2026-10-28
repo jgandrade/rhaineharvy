@@ -1,0 +1,15 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Rhaine & Harvy//Wedding//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:rhaine-harvy-20270213@wedding
+DTSTAMP:20261015T000000Z
+DTSTART:20270213T060000Z
+DTEND:20270213T140000Z
+SUMMARY:Rhaine & Harvy’s wedding
+LOCATION:San Vicente de Paul Parish\, 959 San Marcelino St.\, Ermita\, Manila
+DESCRIPTION:Ceremony at 2:00 PM\, San Vicente de Paul Parish. Reception to follow at Manila Prince Hotel\, Sapphire Hall C.
+END:VEVENT
+END:VCALENDAR

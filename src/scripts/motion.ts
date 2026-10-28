@@ -37,7 +37,7 @@ function preloader(): Promise<void> {
     el?.remove();
     root.classList.remove("is-loading");
   };
-  if (!el || reduced()) {
+  if (!el || reduced() || root.classList.contains("skip-intro")) {
     done();
     return Promise.resolve();
   }
@@ -185,6 +185,25 @@ function chrome() {
       toggleClass: { targets: header, className: "has-brand" },
     });
   }
+
+  // Chapter rail: light the numeral for whichever section holds mid-screen.
+  const railLinks = qa<HTMLAnchorElement>("[data-rail-link]");
+  const setRail = (on: HTMLAnchorElement) => {
+    for (const l of railLinks) {
+      if (l === on) l.setAttribute("aria-current", "true");
+      else l.removeAttribute("aria-current");
+    }
+  };
+  for (const link of railLinks) {
+    const target = q(link.getAttribute("href")!);
+    if (!target) continue;
+    ScrollTrigger.create({
+      trigger: target,
+      start: "top center",
+      end: "bottom center",
+      onToggle: (self) => self.isActive && setRail(link),
+    });
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -257,7 +276,7 @@ function hero() {
       { clipPath: "inset(8% 4% 0% 4%)", ease: "none" },
       0,
     )
-    .to(q(".hero__media, .hero__video", frame), { yPercent: 18, scale: 1.08, ease: "none" }, 0)
+    .to(qa(".hero__media", frame), { yPercent: 18, scale: 1.08, ease: "none" }, 0)
     .to(brand, { yPercent: 35, autoAlpha: 0, ease: "power1.in" }, 0);
 }
 
@@ -356,9 +375,27 @@ function story(isDesktop: boolean) {
   });
 }
 
-function verse() {
+/** The Day: the line between ceremony and reception draws itself on scroll. */
+function route() {
+  const map = q("[data-route-map]");
+  if (!map) return;
+  for (const path of qa<SVGPathElement>("[data-route-path]", map)) {
+    gsap.fromTo(
+      path,
+      { strokeDashoffset: 1 },
+      {
+        strokeDashoffset: 0,
+        ease: "none",
+        scrollTrigger: { trigger: map, start: "top 80%", end: "bottom 45%", scrub: 0.6 },
+      },
+    );
+  }
+}
+
+function verse(isDesktop: boolean) {
   const body = q("[data-verse]");
-  if (!body) return;
+  // Phones set the verse as still, stacked stanzas.
+  if (!body || !isDesktop) return;
   const seal = q("[data-verse-seal]", body)!;
   const svg = q("svg", seal)!;
 
@@ -366,9 +403,9 @@ function verse() {
     const dir = i % 2 ? -1 : 1;
     gsap.fromTo(
       line,
-      { xPercent: 6 * dir },
+      { xPercent: 3 * dir },
       {
-        xPercent: -6 * dir,
+        xPercent: -3 * dir,
         ease: "none",
         scrollTrigger: { trigger: body, start: "top bottom", end: "bottom top", scrub: true },
       },
@@ -438,8 +475,9 @@ async function init() {
       // After story(): pins are measured in creation order, and these sit
       // below the story's pin spacer.
       pins(desktop);
+      route();
       reveals();
-      verse();
+      verse(desktop);
       rsvpSeal();
 
       return () => {

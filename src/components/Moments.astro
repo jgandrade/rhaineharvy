@@ -1,108 +1,138 @@
 ---
 /**
- * The couple's own photos as a masonry wall: every frame keeps its true
- * shape (studio portraits, the odd landscape, phone snaps from the road), so
- * nothing is cropped to a grid. Two columns on phones, up to four on desktop.
- * Each frame opens upward as it arrives; the RSVP button closes the section.
+ * Our moments, Figma "B - Polished": the head and a masonry wall of all
+ * twenty photos, each in the crop the frame gives it. Desktop runs four
+ * columns, phones two, in their own order - both arrangements are the
+ * frame's, so each is laid out here as explicit columns. The wall for the
+ * other width is display:none, so its lazy photos never load.
  */
 import Media from "./Media.astro";
 import Rich from "./Rich.astro";
-import { CTA, MOMENTS } from "../lib/site";
+import { MOMENTS } from "../lib/site";
 
-const COUNT = 20;
+type Tile = [n: number, h: number];
+/** [moment number, height] down each column; width 342.5 desktop, 174 phone. */
+const desktop: Tile[][] = [
+  [[1, 514], [2, 229], [3, 514], [4, 514], [5, 456]],
+  [[6, 229], [7, 514], [8, 456], [9, 456], [10, 229]],
+  [[11, 514], [12, 456], [13, 514], [14, 229], [15, 514]],
+  [[16, 421], [17, 514], [18, 514], [19, 229], [20, 514]],
+];
+const phone: Tile[][] = [
+  [[10, 116], [12, 231], [14, 116], [15, 261], [17, 261], [19, 116], [1, 261], [3, 261], [5, 231], [8, 231]],
+  [[11, 261], [13, 261], [16, 214], [18, 261], [20, 261], [2, 116], [4, 261], [6, 116], [7, 261], [9, 231]],
+];
 const tones = ["wine", "blush", "stone"] as const;
-const items = Array.from({ length: COUNT }, (_, i) => ({
-  slug: `moment-${String(i + 1).padStart(2, "0")}`,
-  tone: tones[i % tones.length]!,
-}));
+const slug = (n: number) => `moment-${String(n).padStart(2, "0")}`;
 ---
 
 <section class="moments" id="moments" aria-labelledby="moments-title">
-  <header class="moments__head">
-    <p class="eyebrow" data-reveal-fade><Rich text={MOMENTS.eyebrow} /></p>
-    <h2 class="display display--md" id="moments-title" data-reveal><Rich text={MOMENTS.title} /></h2>
-    <p class="prose prose--italic moments__lede" data-reveal-fade>{MOMENTS.lede}</p>
+  <header class="v2-head">
+    <p class="v2-label">{MOMENTS.eyebrow}</p>
+    <h2 class="v2-display-l" id="moments-title" data-reveal><Rich text={MOMENTS.title} /></h2>
+    <p class="v2-lede moments__lede">{MOMENTS.lede}</p>
   </header>
 
-  <ul class="moments__wall">
-    {
-      items.map((it, i) => (
-        <li class="moments__item">
-          <Media
-            slug={it.slug}
-            label={`Moment ${i + 1}`}
-            tone={it.tone}
-            sizes="(min-width: 1100px) 24vw, (min-width: 700px) 32vw, 48vw"
-            data-mask
-          />
-        </li>
-      ))
-    }
-  </ul>
+  {
+    [
+      { cols: desktop, w: 342.5, cls: "moments__wall--desktop", sizes: "(min-width: 900px) 24vw, 1px" },
+      { cols: phone, w: 174, cls: "moments__wall--phone", sizes: "48vw" },
+    ].map(({ cols, w, cls, sizes }) => (
+      <div class={`moments__wall ${cls}`}>
+        {cols.map((col) => (
+          <ul class="moments__col">
+            {col.map(([n, h]) => (
+              <li class="moments__tile" style={`aspect-ratio:${w}/${h}`}>
+                <Media slug={slug(n)} label={`Moment ${n}`} tone={tones[n % 3]!} sizes={sizes} class="moments__img" data-mask />
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    ))
+  }
 
-  <div class="moments__cta" data-fade>
-    <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
-  </div>
+  {
+    MOMENTS.moreHref && (
+      <a class="bv2 bv2--secondary moments__more" href={MOMENTS.moreHref} target="_blank" rel="noopener">
+        {MOMENTS.more}
+      </a>
+    )
+  }
 </section>
 
 <style>
   .moments {
-    padding: 22vh var(--gutter) 0;
-  }
-
-  .moments__head {
-    display: grid;
-    justify-items: center;
-    gap: 18px;
-    margin-bottom: 9vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 96px var(--gutter);
+    background: var(--ivory);
+    color: var(--ink);
   }
 
   .moments__lede {
-    max-width: 36ch;
-    margin-top: 6px;
-    color: var(--ink-soft);
+    max-width: 560px;
+    opacity: 0.82;
   }
 
-  /* Masonry by columns: frames flow top to bottom, then across. */
   .moments__wall {
-    columns: 2;
-    column-gap: var(--grid-gap);
-    max-width: 1480px;
-    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .moments__wall--desktop {
+    display: none;
+  }
+
+  .moments__col {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  @media (min-width: 700px) {
-    .moments__wall {
-      columns: 3;
+  .moments__tile {
+    position: relative;
+  }
+
+  .moments__tile :global(.moments__img) {
+    position: absolute;
+    inset: 0;
+  }
+
+  .moments__more {
+    width: 100%;
+  }
+
+  @media (min-width: 900px) {
+    .moments {
+      gap: 0;
+      padding: 160px var(--gutter);
     }
-  }
 
-  @media (min-width: 1100px) {
-    .moments__wall {
-      columns: 4;
+    .moments .v2-head {
+      margin-bottom: 95px;
     }
-  }
 
-  .moments__item {
-    break-inside: avoid;
-    margin-bottom: var(--grid-gap);
-  }
+    .moments__wall--desktop {
+      display: flex;
+    }
 
-  /* No fixed ratio: the photo's own width/height sets the frame. Placeholders
-     (no photo yet) fall back to a portrait. */
-  .moments__item :global(.media--ph) {
-    aspect-ratio: 4 / 5;
-  }
+    .moments__wall--phone {
+      display: none;
+    }
 
-  .moments__item :global(.media__img) {
-    height: auto;
-  }
-
-  .moments__cta {
-    display: flex;
-    justify-content: center;
-    padding: 10vh 0 4vh;
+    .moments__more {
+      width: auto;
+      margin-top: 64px;
+    }
   }
 </style>

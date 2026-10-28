@@ -1,0 +1,253 @@
+---
+/**
+ * V4 back cover: the couple photo under a shade that sinks into wine-night,
+ * "Rhaine & Harvy" in white Androgy on the left, "We can't wait to see you."
+ * in caps, the reply button, then the colophon. Phones: the two of them
+ * centred at the top with their faces clear, the names starting below
+ * them, then the closing, the button and the links in a centred grid.
+ */
+import Media from "../Media.astro";
+import { CTA, V4 } from "../../lib/site";
+
+const F = V4.footer;
+---
+
+<footer class="cover" data-v4-cover>
+  <Media slug="footer" label="Footer - couple portrait" tone="wine" class="cover__photo" />
+  <div class="cover__shade" aria-hidden="true"></div>
+
+  <div class="cover__inner">
+    <p class="cover__names" aria-label="Rhaine and Harvy">
+      <span class="v4-script cover__first" data-v4-rise>Rhaine</span>
+      <span class="cover__amp" data-v4-rise>&amp;</span>
+      <span class="v4-script cover__second" data-v4-rise>Harvy</span>
+    </p>
+    <p class="cover__closing" data-v4-rise>{F.closing}</p>
+
+    <a class="bv2 bv2--photo cover__btn" href={CTA.href} data-v4-rise>{CTA.label}</a>
+
+    <div class="cover__colophon">
+      <p class="cover__copy">{F.colophon}</p>
+      <nav class="cover__links" aria-label="Footer">
+        {F.links.map((l) => <a class="bv2 bv2--link-light" href={l.href}>{l.label}</a>)}
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .cover {
+    position: relative;
+    overflow: hidden;
+    background: var(--wine-night);
+    color: var(--ivory);
+  }
+
+  /* Phones: the couple centred at the top, faces clear of every word. */
+  .cover :global(.cover__photo) {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 580px;
+  }
+
+  .cover :global(.cover__photo .media__img) {
+    object-position: 50% 0%;
+  }
+
+  /* Light over their faces, deepening where the names begin. */
+  .cover__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgb(34 7 13 / 0.1),
+      rgb(34 7 13 / 0.25) 220px,
+      rgb(34 7 13 / 0.8) 440px,
+      var(--wine-night) 580px
+    );
+  }
+
+  .cover__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 300px var(--gutter) 28px;
+    text-align: center;
+  }
+
+  .cover__names {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cover__first,
+  .cover__second {
+    font-size: clamp(72px, 22vw, 104px);
+    letter-spacing: -0.03em;
+    color: #fff;
+  }
+
+  .cover__amp {
+    margin: -0.2em 0 -0.1em;
+    font-family: var(--f-amp);
+    font-size: 44px;
+    line-height: 1;
+    color: var(--rose);
+  }
+
+  .cover__closing {
+    margin-top: 22px;
+    font-family: var(--f-dm);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 1.15;
+    text-transform: uppercase;
+  }
+
+  /* The one thing left to do: reply. */
+  .cover__btn {
+    margin-top: 28px;
+  }
+
+  /* Phones: the links as a centred two-by-two grid, the colophon under it. */
+  .cover__colophon {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 22px;
+    width: 100%;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--ivory-faint);
+    text-align: center;
+  }
+
+  .cover__copy {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    opacity: 0.7;
+  }
+
+  .cover__links {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
+    justify-items: center;
+    gap: 16px 32px;
+  }
+
+  /* ---------- Desktop: the frame at 1440 ---------- */
+
+  @media (min-width: 900px) {
+    /*
+     * Figma's photo frame is 2217 x 1692 from the page's left edge, wider than
+     * the 1440 page, so the couple land on the right beside the names.
+     */
+    .cover :global(.cover__photo) {
+      inset: 0 auto auto calc(50% - 720 * var(--px));
+      width: calc(2217 * var(--px));
+      height: calc(1692 * var(--px));
+    }
+
+    .cover :global(.cover__photo .media__img) {
+      object-position: 50% 50%;
+    }
+
+    .cover__shade {
+      inset: 0 0 auto;
+      height: calc(1692 * var(--px));
+      background: linear-gradient(
+        to bottom,
+        rgb(34 7 13 / 0.5),
+        rgb(34 7 13 / 0.72) 50%,
+        var(--wine-night) 85%
+      );
+    }
+
+    .cover__inner {
+      display: block;
+      max-width: 1440px;
+      height: calc(1180 * var(--px));
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .cover__names {
+      position: absolute;
+      inset: 0;
+      display: block;
+    }
+
+    .cover__first,
+    .cover__second,
+    .cover__amp {
+      position: absolute;
+      translate: -50% 0;
+      white-space: nowrap;
+    }
+
+    .cover__first,
+    .cover__second {
+      font-size: calc(160 * var(--px));
+      letter-spacing: calc(-4.8 * var(--px));
+    }
+
+    .cover__first {
+      left: calc(390.5 * var(--px));
+      top: calc(241 * var(--px));
+    }
+
+    .cover__amp {
+      left: calc(426.5 * var(--px));
+      top: calc(364 * var(--px));
+      margin: 0;
+      font-size: calc(60 * var(--px));
+      line-height: 0.88;
+    }
+
+    .cover__second {
+      left: calc(382 * var(--px));
+      top: calc(427 * var(--px));
+    }
+
+    .cover__closing {
+      position: absolute;
+      left: calc(413.5 * var(--px));
+      top: calc(691 * var(--px));
+      width: calc(725 * var(--px));
+      margin: 0;
+      translate: -50% 0;
+      font-size: calc(40 * var(--px));
+      line-height: 1.05;
+      letter-spacing: calc(-0.4 * var(--px));
+    }
+
+    /* Centred under the closing line, where the names' column sits. */
+    .cover__btn {
+      position: absolute;
+      left: calc(413.5 * var(--px));
+      top: calc(782 * var(--px));
+      margin: 0;
+      translate: -50% 0;
+    }
+
+    .cover__colophon {
+      position: absolute;
+      width: auto;
+      left: var(--gutter);
+      right: var(--gutter);
+      top: calc(1094 * var(--px));
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0;
+    }
+
+    .cover__links {
+      display: flex;
+      gap: 28px;
+    }
+  }
+</style>

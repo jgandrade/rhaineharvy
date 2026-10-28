@@ -37,6 +37,16 @@
 	font-display: swap;
 }
 
+/* Display cut for the big headlines (Figma "B - Polished"). Roman only:
+   the italic asides inside them stay in Libre Caslon Text italic. */
+@font-face {
+	font-family: 'Libre Caslon Display';
+	src: url('/fonts/libre-caslon-display-400-normal.woff2') format('woff2');
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
 @font-face {
 	font-family: 'Lato';
 	src: url('/fonts/lato-400-normal.woff2') format('woff2');
@@ -99,6 +109,26 @@
 	--gutter: 16px;
 	--grid-gap: 10px;
 	--header-h: 72px;
+
+	/* ---- Figma "B - Polished" (v2) ----
+	   Phone values are the base; .v2 type steps up at 900px, and the big
+	   sizes then scale with the viewport so 900-1440 never overflows. */
+	--font-display: 'Libre Caslon Display', 'Libre Caslon Text', 'Big Caslon', serif;
+	--ivory-faint: rgb(244 238 234 / 0.2);
+	--track-label: 1.92px;
+
+	/* Glass chrome: mobile bottom bar, hero card, chapter rail. */
+	--glass: rgb(244 238 234 / 0.78);
+	--glass-blur: 14px;
+	--bar-h: 64px;
+
+	/* The route in The Day, and small catalogue labels. */
+	--route-stroke: var(--wine);
+	--route-width: 1.5px;
+	--mist: linear-gradient(to bottom, transparent, var(--ivory) 92%);
+	--fs-figure: clamp(2.75rem, 8vw, 6rem);
+	--fs-label: 0.75rem;
+	--tracking-label: 0.18em;
 }
 
 @media (min-width: 900px) {
@@ -255,7 +285,9 @@ h3 {
 }
 
 /* ----------------------------------------------------------------
- * Button - small ivory slab, serif label, soft lift.
+ * Button - the one action on the page. Wine slab, ivory serif label;
+ * a deeper wine rises from below on hover. `.btn--light` is the ivory
+ * version for dark grounds.
  * ---------------------------------------------------------------- */
 
 .btn {
@@ -264,40 +296,61 @@ h3 {
 	align-items: center;
 	justify-content: center;
 	gap: 0.3em;
-	min-height: 44px;
-	padding: 12px 26px;
-	background: var(--white);
-	color: var(--ink);
+	min-height: 48px;
+	padding: 14px 30px;
+	background: var(--wine);
+	color: var(--ivory);
 	font-family: var(--font-serif);
 	font-weight: 400;
 	font-size: var(--fs-button);
 	line-height: 1;
 	text-transform: uppercase;
-	letter-spacing: 0.01em;
-	box-shadow: 0 4px 24px rgb(58 13 22 / 0.08);
+	letter-spacing: 0.04em;
+	box-shadow: 0 10px 30px -12px rgb(58 13 22 / 0.45);
 	overflow: hidden;
 	isolation: isolate;
-	transition: color 0.5s var(--ease-out-expo);
+	transition:
+		color 0.5s var(--ease-out-expo),
+		box-shadow 0.5s var(--ease-out-expo);
 }
 
-/* Wine fills up from below on hover. */
 .btn::before {
 	content: '';
 	position: absolute;
 	inset: 0;
 	z-index: -1;
-	background: var(--wine);
+	background: var(--wine-deep);
 	transform: translateY(101%);
 	transition: transform 0.6s var(--ease-out-expo);
 }
 
 @media (hover: hover) {
-	.btn:hover {
-		color: var(--ivory);
-	}
-
 	.btn:hover::before {
 		transform: translateY(0);
+	}
+
+	.btn:hover {
+		box-shadow: 0 14px 34px -12px rgb(58 13 22 / 0.55);
+	}
+}
+
+.btn:active {
+	translate: 0 1px;
+}
+
+.btn--light {
+	background: var(--white);
+	color: var(--ink);
+	box-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.5);
+}
+
+.btn--light::before {
+	background: var(--wine);
+}
+
+@media (hover: hover) {
+	.btn--light:hover {
+		color: var(--ivory);
 	}
 }
 
@@ -333,6 +386,14 @@ h3 {
 	top: 12px;
 }
 
+/* Small italic caption: hero card terms, story chapter labels. */
+.label {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-size: var(--fs-tiny);
+	letter-spacing: 0;
+}
+
 .visually-hidden {
 	position: absolute;
 	width: 1px;
@@ -361,5 +422,213 @@ html.menu-open body {
 	*::after {
 		animation-duration: 0.01ms !important;
 		transition-duration: 0.01ms !important;
+	}
+}
+
+/* ================================================================
+ * v2 type - the Figma "B - Polished" text styles, phone first.
+ * ================================================================ */
+
+.v2-label {
+	font-family: var(--font-sans);
+	font-weight: 700;
+	font-size: 12px;
+	/* Figma rounds every line box to whole pixels: 12 x 1.4 = 16.8 -> 17. */
+	line-height: 17px;
+	letter-spacing: var(--track-label);
+	text-transform: uppercase;
+}
+
+/* Display: CAPS in Libre Caslon Display; *asides* in Caslon Text italic. */
+.v2-display-l,
+.v2-display-m,
+.v2-display-xl {
+	font-family: var(--font-display);
+	font-weight: 400;
+	text-transform: none;
+}
+
+.v2-display-l em,
+.v2-display-m em,
+.v2-display-xl em {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-weight: 400;
+	/* Caslon Text's taller metrics would grow the Display line box by ~1px;
+	   the line keeps the Display cut's height, as Figma draws it. */
+	line-height: 0;
+}
+
+.v2-display-l {
+	font-size: 48px;
+	line-height: 1;
+	letter-spacing: -0.48px;
+}
+
+.v2-display-m {
+	font-size: 36px;
+	line-height: 40px;
+	letter-spacing: -0.18px;
+}
+
+.v2-display-xl {
+	font-size: 64px;
+	line-height: 0.95;
+	letter-spacing: -0.96px;
+}
+
+.v2-title {
+	font-family: var(--font-serif);
+	font-weight: 400;
+	font-size: 22px;
+	line-height: 29px;
+}
+
+.v2-lede {
+	font-family: var(--font-serif);
+	font-style: italic;
+	font-weight: 400;
+	font-size: 19px;
+	line-height: 28px;
+}
+
+.v2-body {
+	font-family: var(--font-sans);
+	font-size: 17px;
+	line-height: 27px;
+}
+
+.v2-small {
+	font-family: var(--font-sans);
+	font-size: 15px;
+	line-height: 23px;
+}
+
+@media (min-width: 900px) {
+	.v2-display-l {
+		font-size: min(112px, 7.78vw);
+		line-height: 0.9464; /* 106px lines at 112 */
+		letter-spacing: -0.015em;
+	}
+
+	.v2-display-m {
+		font-size: min(64px, 4.45vw);
+		line-height: 1.047; /* 67px lines at 64 */
+		letter-spacing: -0.01em;
+	}
+
+	.v2-display-xl {
+		font-size: min(168px, 11.67vw);
+		line-height: 0.9;
+		letter-spacing: -0.02em;
+	}
+
+	.v2-title {
+		font-size: 28px;
+		line-height: 35px;
+	}
+
+	.v2-lede {
+		font-size: 22px;
+		line-height: 32px;
+	}
+
+	.v2-body {
+		font-size: 18px;
+		line-height: 29px;
+	}
+}
+
+/* ================================================================
+ * Button v2 - Figma's CTA system. Primary: one per screen. Secondary:
+ * Directions / View all. On photo: CTAs over images. Link: inline and
+ * footer links (light on wine or photo).
+ * ================================================================ */
+
+.bv2 {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 56px;
+	padding: 0 32px;
+	font-family: var(--font-sans);
+	font-weight: 700;
+	font-size: 12px;
+	line-height: 1.4;
+	letter-spacing: var(--track-label);
+	text-transform: uppercase;
+	white-space: nowrap;
+	transition:
+		background-color 0.4s var(--ease-out-expo),
+		color 0.4s var(--ease-out-expo),
+		box-shadow 0.4s var(--ease-out-expo),
+		opacity 0.3s;
+}
+
+.bv2--primary {
+	background: var(--wine);
+	color: var(--ivory);
+}
+
+/* An INSIDE stroke takes no layout space, so it is an inset shadow. */
+.bv2--secondary {
+	box-shadow: inset 0 0 0 1px var(--ink);
+	color: var(--ink);
+}
+
+.bv2--photo {
+	background: var(--ivory);
+	color: var(--ink);
+}
+
+.bv2--link,
+.bv2--link-light {
+	height: auto;
+	padding: 4px 0 6px;
+	border-bottom: 1px solid currentColor;
+}
+
+.bv2--link {
+	color: var(--ink);
+}
+
+.bv2--link-light {
+	color: var(--ivory);
+}
+
+@media (hover: hover) {
+	.bv2--primary:hover {
+		background: var(--wine-deep);
+	}
+
+	.bv2--secondary:hover {
+		background: var(--ink);
+		color: var(--ivory);
+	}
+
+	.bv2--photo:hover {
+		background: var(--wine);
+		color: var(--ivory);
+	}
+
+	.bv2--link:hover,
+	.bv2--link-light:hover {
+		opacity: 0.7;
+	}
+}
+
+/* Section head shared by every v2 section: label, then the display lines. */
+.v2-head {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	color: var(--ink);
+	text-align: center;
+}
+
+@media (min-width: 900px) {
+	.v2-head {
+		gap: 24px;
 	}
 }

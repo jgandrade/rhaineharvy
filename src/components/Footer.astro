@@ -1,347 +1,261 @@
 ---
 /**
- * The close of the invitation, on deep wine:
- *
- *   closing line + the names                     (centered)
- *   ceremony  ·  reception  ·  reply             (three columns, stacked on phones)
- *   in-page links ↗                ·  © / Back to top
- *
- * Every item rises out of a mask the first time the footer comes into view,
- * and links roll to a copy on hover.
+ * The close, Figma "B - Polished": a couple photo sinking into wine-night,
+ * the closing line and the names over it, then three columns - ceremony,
+ * reception, reply - and the foot bar of in-page links. Phones stack it all.
  */
+import Media from "./Media.astro";
 import Rich from "./Rich.astro";
-import { CTA, EVENTS, FOOTER, RSVP, SITE, rich } from "../lib/site";
+import { CTA, EVENTS, FOOTER, SITE } from "../lib/site";
 
-const arrow = `<svg class="footer__icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.2 2H8v4.8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
+const cols = [
+  { label: FOOTER.ceremony, ev: EVENTS[0]! },
+  { label: FOOTER.reception, ev: EVENTS[1]! },
+];
 ---
 
 <footer class="footer" data-footer>
-  <div class="footer__inner-wrap">
-    <div class="footer__close">
-      <p class="footer__closing">
-        {
-          FOOTER.closing.map((l, i) => (
-            <span class="footer__mask" style={`--index:${i}`}>
-              <span set:html={rich(l) + " "} />
-            </span>
-          ))
-        }
-      </p>
-      <p class="footer__names">
-        <span class="footer__mask" style="--index:2">
-          <span>{SITE.bride} <em>&amp;</em> {SITE.groom}</span>
-        </span>
-      </p>
-      <p class="footer__date">
-        <span class="footer__mask" style="--index:3"><span>{SITE.dateShort} · {SITE.city}</span></span>
-      </p>
-    </div>
+  <Media slug="footer" label="Footer - couple portrait" tone="wine" class="footer__media" />
+  <div class="footer__shade" aria-hidden="true"></div>
 
-    <div class="footer__details">
-      {
-        EVENTS.map((e, i) => (
-          <div class="footer__col" style={`--index:${i + 4}`}>
-            <p class="footer__label">{e.name}</p>
-            <p class="footer__lead">{e.timeShort}</p>
-            <p>{e.place}</p>
-            <p class="footer__soft">{e.address}</p>
-            <a class="footer__link" href={e.map} target="_blank" rel="noopener">
-              <span class="footer__roll">
-                Directions <Fragment set:html={arrow} />
-              </span>
-              <span class="footer__roll footer__roll--copy" aria-hidden="true">
-                Directions <Fragment set:html={arrow} />
-              </span>
-            </a>
-          </div>
-        ))
-      }
-      <div class="footer__col" style="--index:6">
-        <p class="footer__label">Reply</p>
-        <p class="footer__lead">{RSVP.title}</p>
-        <p class="footer__soft">Kindly reply by {SITE.rsvpBy}.</p>
-        <a class="btn footer__btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
-      </div>
-    </div>
+  <div class="footer__close">
+    <p class="v2-display-m footer__closing"><Rich text={FOOTER.closing} /></p>
+    <p class="footer__names">
+      <span>{SITE.bride}</span> <span><em>&amp;</em> {SITE.groom}</span>
+    </p>
+    <p class="v2-label footer__date">{FOOTER.date}</p>
+  </div>
 
-    <div class="footer__bar">
-      <nav class="footer__links" aria-label="Footer">
-        {
-          FOOTER.links.map((l) => (
-            <a class="footer__link" href={l.href} data-scroll-to>
-              <span class="footer__roll">
-                {l.label} <Fragment set:html={arrow} />
-              </span>
-              <span class="footer__roll footer__roll--copy" aria-hidden="true">
-                {l.label} <Fragment set:html={arrow} />
-              </span>
-            </a>
-          ))
-        }
-      </nav>
-      <div class="footer__credits">
-        <span>© {SITE.year} {SITE.couple}</span>
-        <a class="footer__swipe" href="#top" data-scroll-to>{FOOTER.top}</a>
-      </div>
+  <div class="footer__details">
+    {
+      cols.map(({ label, ev }) => (
+        <div class="footer__col">
+          <p class="v2-label footer__label">{label}</p>
+          <p class="v2-title">{ev.timeShort}</p>
+          <p class="v2-body">{ev.place}</p>
+          <p class="v2-body footer__soft">{ev.address}</p>
+          <a class="bv2 bv2--link-light footer__link" href={ev.map} target="_blank" rel="noopener">
+            {FOOTER.directions}
+            <span class="visually-hidden"> to {ev.venue} (opens Google Maps)</span>
+          </a>
+        </div>
+      ))
+    }
+    <div class="footer__col">
+      <p class="v2-label footer__label">{FOOTER.reply.label}</p>
+      <p class="v2-title">{FOOTER.reply.title}</p>
+      <p class="v2-body footer__soft">{FOOTER.reply.sub}</p>
+      <a class="bv2 bv2--photo footer__btn" href={CTA.href} data-scroll-to>{CTA.label}</a>
+    </div>
+  </div>
+
+  <div class="footer__bar">
+    <nav class="footer__links" aria-label="Footer">
+      {FOOTER.links.map((l) => <a class="bv2 bv2--link-light" href={l.href} data-scroll-to>{l.label}</a>)}
+    </nav>
+    <div class="footer__credits">
+      <span class="v2-small footer__copy">{FOOTER.copyright}</span>
+      <a class="bv2 bv2--link-light" href="#top" data-scroll-to>{FOOTER.top}</a>
     </div>
   </div>
 </footer>
 
-<script>
-  const footer = document.querySelector<HTMLElement>("[data-footer]");
-
-  if (footer) {
-    // Rise in once, the first time the footer shows.
-    new IntersectionObserver(
-      (entries, io) => {
-        if (entries.some((e) => e.isIntersecting)) {
-          footer.classList.add("is-visible");
-          io.disconnect();
-        }
-      },
-      { threshold: 0.1 },
-    ).observe(footer);
-  }
-</script>
-
 <style>
   .footer {
-    --rule: rgb(244 238 234 / 0.2);
     position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 96px var(--gutter);
     overflow: hidden;
     background: var(--wine-night);
     color: var(--ivory);
   }
 
-  .footer__inner-wrap {
-    display: grid;
-    gap: clamp(64px, 9vw, 110px);
-    max-width: 1320px;
-    margin: 0 auto;
-    padding: clamp(80px, 12vw, 150px) var(--gutter) 28px;
+  .footer > :not(.footer__shade, :global(.footer__media)) {
+    position: relative;
   }
 
-  /* ---------- Mask reveal ---------- */
-
-  .footer__mask {
-    display: block;
-    overflow: hidden;
-    padding-bottom: 0.08em;
+  .footer :global(.footer__media) {
+    position: absolute;
+    inset: 0;
   }
 
-  .footer__mask > span {
-    display: block;
+  .footer :global(.footer__media .media__img) {
+    object-position: 50% 20%;
   }
 
-  :global(.js) .footer__mask > span,
-  :global(.js) .footer__col {
-    transition:
-      transform 1s var(--ease-out-expo) calc(var(--index, 0) * 0.08s),
-      opacity 1s var(--ease-out-expo) calc(var(--index, 0) * 0.08s);
-  }
-
-  :global(.js) .footer:not(.is-visible) .footer__mask > span {
-    transform: translateY(105%);
-  }
-
-  :global(.js) .footer:not(.is-visible) .footer__col {
-    transform: translateY(24px);
-    opacity: 0;
+  .footer__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgb(34 7 13 / 0.5),
+      rgb(34 7 13 / 0.7) 35%,
+      var(--wine-night) 60%
+    );
   }
 
   /* ---------- Closing ---------- */
 
   .footer__close {
-    display: grid;
-    justify-items: center;
-    gap: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
     text-align: center;
   }
 
-  .footer__closing {
-    font-family: var(--font-serif);
-    font-size: var(--fs-display-2);
-    line-height: 1.1;
-    text-transform: uppercase;
-    color: rgb(244 238 234 / 0.9);
-  }
-
-  .footer__closing :global(em),
-  .footer__names em {
-    font-style: italic;
-    text-transform: none;
-  }
-
+  /* m/Display XL 64 on two lines; Display XL 168 on one. */
   .footer__names {
-    font-family: var(--font-serif);
-    font-size: clamp(3rem, 10.5vw, 9.5rem);
-    line-height: 1;
-    letter-spacing: -0.02em;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    font-size: 64px;
+    line-height: 0.95;
+    letter-spacing: -0.96px;
   }
 
   .footer__names em {
+    font-family: var(--font-serif);
+    font-style: italic;
     color: var(--rose);
   }
 
   .footer__date {
-    font-size: var(--fs-tiny);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: rgb(244 238 234 / 0.82);
+    opacity: 0.82;
   }
 
-  /* ---------- Details ---------- */
+  /* ---------- Columns ---------- */
 
   .footer__details {
-    display: grid;
-    gap: 40px;
-    padding-top: 48px;
-    border-top: 1px solid var(--rule);
-  }
-
-  @media (min-width: 800px) {
-    .footer__details {
-      grid-template-columns: repeat(3, 1fr);
-      gap: clamp(28px, 4vw, 64px);
-    }
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
+    padding-top: 40px;
+    border-top: 1px solid var(--ivory-faint);
   }
 
   .footer__col {
-    display: grid;
-    align-content: start;
-    justify-items: start;
-    gap: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
   }
 
   .footer__label {
-    margin-bottom: 8px;
-    font-size: var(--fs-tiny);
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
     color: var(--rose);
   }
 
-  .footer__lead {
-    font-family: var(--font-serif);
-    font-size: var(--fs-title);
-    line-height: 1.25;
-  }
-
   .footer__soft {
-    color: rgb(244 238 234 / 0.8);
+    opacity: 0.78;
   }
 
   .footer__btn {
-    margin-top: 16px;
-  }
-
-  /* ---------- Links: roll to a copy on hover ---------- */
-
-  .footer__link {
-    position: relative;
-    display: inline-block;
-    overflow: hidden;
-    margin-top: 8px;
-    font-size: var(--fs-tiny);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .footer__roll {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 0;
-    transition: transform 0.65s var(--ease-out-quart);
-  }
-
-  .footer__roll--copy {
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: translateY(100%);
-  }
-
-  @media (hover: hover) {
-    .footer__link:hover .footer__roll {
-      transform: translateY(-100%);
-    }
-
-    .footer__link:hover .footer__roll--copy {
-      transform: none;
-    }
-  }
-
-  .footer__link :global(.footer__icon) {
-    width: 9px;
-    height: 9px;
+    width: 100%;
+    margin-top: 14px;
   }
 
   /* ---------- Foot bar ---------- */
 
   .footer__bar {
-    display: grid;
-    gap: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
     padding-top: 24px;
-    border-top: 1px solid var(--rule);
-    font-size: var(--fs-tiny);
-    color: rgb(244 238 234 / 0.82);
-  }
-
-  @media (min-width: 800px) {
-    .footer__bar {
-      grid-template-columns: 1fr auto;
-      align-items: center;
-    }
+    border-top: 1px solid var(--ivory-faint);
   }
 
   .footer__links {
     display: flex;
     flex-wrap: wrap;
-    gap: 4px 32px;
-  }
-
-  .footer__links .footer__link {
-    margin-top: 0;
+    gap: 12px 24px;
   }
 
   .footer__credits {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px 40px;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  /* Underline wipes out to the right, back in from the left. */
-  .footer__swipe {
-    position: relative;
-    padding-bottom: 3px;
-    overflow: hidden;
+  .footer__copy {
+    opacity: 0.7;
   }
 
-  .footer__swipe::before,
-  .footer__swipe::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 1px;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transition: transform 0.8s var(--ease-out-quart);
-  }
+  /* ---------- Desktop ---------- */
 
-  .footer__swipe::before {
-    transform: translateX(calc(-100% - 50px));
-  }
-
-  @media (hover: hover) {
-    .footer__swipe:hover::before {
-      transform: none;
+  @media (min-width: 900px) {
+    .footer {
+      gap: 0;
+      padding: 160px 80px 40px;
     }
 
-    .footer__swipe:hover::after {
-      transform: translateX(100%);
+    .footer__shade {
+      background: linear-gradient(
+        to bottom,
+        rgb(34 7 13 / 0.5),
+        rgb(34 7 13 / 0.65) 45%,
+        var(--wine-night) 80%
+      );
+    }
+
+    .footer__close {
+      gap: 24px;
+    }
+
+    .footer__names {
+      display: block;
+      font-size: min(168px, 11.67vw);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .footer__details {
+      flex-direction: row;
+      gap: 64px;
+      max-width: 1280px;
+      margin-top: 121px;
+      padding-top: 48px;
+    }
+
+    .footer__col {
+      flex: 1 1 0;
+      min-width: 0;
+      gap: 8px;
+    }
+
+    /* Label, spacer 4, title: 8 + 4 + 8. */
+    .footer__col > .v2-title {
+      margin-top: 12px;
+    }
+
+    .footer__link {
+      margin-top: 16px;
+    }
+
+    .footer__btn {
+      width: auto;
+      margin-top: 24px;
+    }
+
+    .footer__bar {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1280px;
+      margin-top: 96px;
+    }
+
+    .footer__links {
+      gap: 32px;
+    }
+
+    .footer__credits {
+      gap: 40px;
     }
   }
 </style>

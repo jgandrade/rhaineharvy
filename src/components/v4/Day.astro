@@ -1,0 +1,382 @@
+---
+/**
+ * V4 "The day": the date in Androgy, the church and the hotel stacked on the
+ * left beside the two schedule rows, then the wine dress-code band - three
+ * swatch cards and who wears what. Phones put each venue photo over its row
+ * and stack the swatches three across.
+ */
+import { EVENTS, V4 } from "../../lib/site";
+---
+
+<section class="day" id="the-day" aria-labelledby="day-title">
+  <h2 class="v4-script day__title" id="day-title" data-v4-rise>{V4.day.title}</h2>
+
+  <div class="day__grid">
+    {
+      EVENTS.map((ev, i) => (
+        <>
+          <img class={`day__venue day__venue--${i + 1}`} src={V4.day.venues[i]!.src} alt={V4.day.venues[i]!.alt} loading="lazy" decoding="async" data-v4-wipe />
+          <div class={`row row--${i + 1}`} data-v4-row>
+            <p class="v2-label row__label">
+              <span class="row__n">{ev.n}</span>
+              <span>{V4.day.rows[i]}</span>
+            </p>
+            <div class="row__content">
+              <p class="v2-title">{ev.time}</p>
+              <p class="row__place">{ev.place}</p>
+              <p class="row__address">{ev.address}</p>
+              <a class="bv2 bv2--secondary row__btn" href={ev.map} target="_blank" rel="noopener">
+                {V4.day.directions}
+                <span class="visually-hidden"> to {ev.venue} (opens Google Maps)</span>
+              </a>
+            </div>
+          </div>
+        </>
+      ))
+    }
+  </div>
+</section>
+
+<section class="dress" aria-labelledby="dress-title">
+  <h2 class="v4-script dress__title" id="dress-title" data-v4-rise>{V4.dress.title}</h2>
+  <ul class="dress__cards">
+    {
+      V4.dress.cards.map((c, i) => (
+        <li class="card" style={`--chip:${c.hex}; --i:${i}`} data-v4-card>
+          <span class={`card__chip ${c.name === "Burgundy" ? "card__chip--edge" : ""}`} aria-hidden="true" />
+          <span class="card__label">
+            <span class="card__name">{c.name}</span>
+            <span class="v2-label">{c.who}</span>
+            <span class="card__hex">{c.hex}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+  <figure class="dress__look" data-v4-rise>
+    <img
+      src={`${V4.dress.lookbook.src}-1400.webp`}
+      srcset={`${V4.dress.lookbook.src}-1400.webp 1400w, ${V4.dress.lookbook.src}-2600.webp 2600w`}
+      sizes="(min-width: 900px) 860px, 100vw"
+      alt={V4.dress.lookbook.alt}
+      width="2600"
+      height="922"
+      loading="lazy"
+    />
+  </figure>
+  <p class="dress__lines" data-v4-rise>
+    {
+      V4.dress.lines.map(([who, what]) => (
+        <span class="dress__line">
+          <strong>{who}</strong> {what}
+        </span>
+      ))
+    }
+  </p>
+</section>
+
+<style>
+  .day {
+    /* The schedule rows slide in from the right; never let them widen the page. */
+    overflow: clip;
+    padding: 34px 0 72px;
+    background: var(--ivory);
+    color: var(--ink);
+  }
+
+  .day__title {
+    margin: 48px var(--gutter) 0;
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    text-align: center;
+  }
+
+  /* ---------- Phones: photo, then its row ---------- */
+
+  .day__grid {
+    display: grid;
+    gap: 0;
+    margin: 32px var(--gutter) 0;
+    border-top: 1px solid var(--ink-faint);
+  }
+
+  .day__venue {
+    width: 100%;
+    aspect-ratio: 331 / 248;
+    margin-top: 24px;
+    object-fit: cover;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px 0 28px;
+    border-bottom: 1px solid var(--ink-faint);
+  }
+
+  .row__label {
+    display: flex;
+    gap: 10px;
+    color: var(--wine);
+  }
+
+  .row__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .row__place {
+    font-family: var(--f-dm);
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  .row__address {
+    font-family: var(--f-dm);
+    font-size: 17px;
+    line-height: 1.6;
+    opacity: 0.78;
+  }
+
+  .row__btn {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  /* ---------- Desktop ---------- */
+
+  @media (min-width: 900px) {
+    .day {
+      padding: calc(37 * var(--px)) 0 calc(134 * var(--px));
+    }
+
+    .day__title {
+      margin-top: calc(116 * var(--px));
+      font-size: calc(100 * var(--px));
+      line-height: 0.88;
+      letter-spacing: calc(-3 * var(--px));
+    }
+
+    .day__grid {
+      grid-template-columns: calc(331 * var(--px)) 1fr;
+      grid-template-rows: auto auto;
+      column-gap: calc(45 * var(--px));
+      row-gap: calc(1 * var(--px));
+      max-width: calc(1178 * var(--px));
+      margin: calc(59 * var(--px)) auto 0;
+      border-top: 0;
+    }
+
+    .day__venue {
+      grid-column: 1;
+      height: calc(248 * var(--px));
+      aspect-ratio: auto;
+      margin: 0;
+    }
+
+    .day__venue--1 {
+      grid-row: 1;
+    }
+
+    .day__venue--2 {
+      grid-row: 2;
+      height: calc(249 * var(--px));
+    }
+
+    .row {
+      grid-column: 2;
+      flex-direction: row;
+      gap: 24px;
+      min-height: calc(248 * var(--px));
+      padding: 32px 0;
+    }
+
+    .row--1 {
+      grid-row: 1;
+      margin-top: calc(3 * var(--px));
+      border-top: 1px solid var(--ink-faint);
+    }
+
+    .row--2 {
+      grid-row: 2;
+    }
+
+    .row__label {
+      flex: none;
+      flex-direction: column;
+      gap: 6px;
+      width: 170px;
+    }
+
+    .row__label span:last-child {
+      color: var(--ink);
+    }
+
+    .row__place,
+    .row__address {
+      font-size: 18px;
+    }
+
+    .row__btn {
+      width: auto;
+      margin-top: 10px;
+    }
+  }
+
+  /* ================= Dress band ================= */
+
+  .dress {
+    /* The swatch cards flip up in 3D; their projection never widens the page. */
+    overflow-x: clip;
+    padding: 64px var(--gutter) 72px;
+    background: var(--wine-deep);
+    color: #fff;
+    text-align: center;
+  }
+
+  .dress__title {
+    font-size: 44px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .dress__cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin: 32px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    color: var(--ink);
+    text-align: left;
+    box-shadow: 0 8px 24px rgb(58 13 22 / 0.06);
+  }
+
+  .card__chip {
+    aspect-ratio: 276.67 / 220;
+    background: var(--chip);
+  }
+
+  .card__chip--edge {
+    box-shadow: inset 0 0 0 1px #fff;
+  }
+
+  .card__label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px;
+  }
+
+  .card__name {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    line-height: 1.25;
+  }
+
+  .card__label .v2-label {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+
+  .card__hex {
+    font-family: var(--font-sans);
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /*
+   * The outfit guide, straight on the wine band (the PNG is transparent). A
+   * faint warm glow behind and a soft light rim keep the black trousers and
+   * burgundy gowns from sinking into the wine.
+   */
+  .dress__look {
+    margin: 32px 0 0;
+    background: radial-gradient(ellipse 60% 55% at 50% 55%, rgb(244 238 234 / 0.1), transparent 70%);
+  }
+
+  .dress__look img {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 1px rgb(244 238 234 / 0.35)) drop-shadow(0 10px 18px rgb(0 0 0 / 0.35));
+  }
+
+  .dress__lines {
+    display: flex;
+    flex-direction: column;
+    margin-top: 28px;
+    font-family: var(--f-dm);
+    font-size: 18px;
+    line-height: 1.7;
+  }
+
+  /* The frame sets these in Title Case ("Barong And Black Shoes"). */
+  .dress__line {
+    text-transform: capitalize;
+  }
+
+  @media (min-width: 900px) {
+    .dress {
+      padding: calc(118 * var(--px)) var(--gutter) calc(111 * var(--px));
+    }
+
+    .dress__title {
+      font-size: calc(80 * var(--px));
+      letter-spacing: calc(-0.8 * var(--px));
+    }
+
+    .dress__cards {
+      grid-template-columns: repeat(3, calc(276.67 * var(--px)));
+      /* The frame sets the row 14px left of centre (271 -> 1141). */
+      justify-content: center;
+      translate: calc(-14 * var(--px)) 0;
+      gap: calc(20 * var(--px));
+      margin-top: calc(43 * var(--px));
+    }
+
+    .card__chip {
+      height: calc(220 * var(--px));
+      aspect-ratio: auto;
+    }
+
+    .card__label {
+      padding: 16px;
+    }
+
+    .card__name {
+      font-size: 28px;
+    }
+
+    .card__label .v2-label {
+      font-size: 12px;
+      letter-spacing: var(--track-label);
+    }
+
+    .card__hex {
+      font-size: 15px;
+    }
+
+    .dress__look {
+      max-width: calc(860 * var(--px));
+      margin: calc(56 * var(--px)) auto 0;
+    }
+
+    .dress__lines {
+      margin-top: calc(43 * var(--px));
+      font-size: max(18px, calc(26 * var(--px)));
+      line-height: 1.89;
+    }
+  }
+</style>
