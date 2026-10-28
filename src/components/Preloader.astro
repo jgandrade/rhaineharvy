@@ -46,6 +46,11 @@ const frames = [
     display: none;
   }
 
+  /* Second view this visit: no intro, so nothing flashes before motion.ts removes it. */
+  :global(.js.skip-intro) .preloader {
+    display: none !important;
+  }
+
   :global(.js) .preloader {
     position: fixed;
     inset: 0;

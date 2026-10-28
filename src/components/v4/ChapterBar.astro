@@ -1,0 +1,16 @@
+---
+/** "№ 02 · OUR STORY · RHAINE & HARVY · VOL. I" - the rule that opens a chapter. */
+import { V4 } from "../../lib/site";
+
+interface Props {
+  chapter: readonly string[];
+  light?: boolean;
+}
+const { chapter, light = false } = Astro.props;
+---
+
+<p class:list={["v4-chapter", { "v4-chapter--light": light }]}>
+  <span>{chapter[0]}</span>
+  <span>{chapter[1]}</span>
+  <span>{V4.chapters.issue}</span>
+</p>

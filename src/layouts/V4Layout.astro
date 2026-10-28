@@ -1,0 +1,57 @@
+---
+/**
+ * Page shell for V4. Lean on purpose: no preloader and no smooth-scroll
+ * wrapper - the motion is entrance and scroll reveals (scripts/v4.ts), all
+ * of it skipped under prefers-reduced-motion.
+ */
+import { SITE } from "../lib/site";
+import { getArtwork } from "../lib/assets";
+import "../styles/global.css";
+import "../styles/v4.css";
+
+const title = `${SITE.couple} - Kindly RSVP`;
+const ogImage = getArtwork("hero")?.src(1280);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={SITE.description} />
+    <meta name="theme-color" content="#1e1416" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={SITE.description} />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <link rel="preload" href="/fonts/androgy-demo.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/dm-sans-700-normal.woff2" as="font" type="font/woff2" crossorigin />
+
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        root.classList.add("js");
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) root.classList.add("reduce-motion");
+      })();
+    </script>
+  </head>
+
+  <body class="v4">
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot name="header" />
+    <main id="main">
+      <slot />
+    </main>
+    <slot name="footer" />
+
+    <script>
+      import "../scripts/v4";
+      import "../scripts/rsvp";
+    </script>
+  </body>
+</html>

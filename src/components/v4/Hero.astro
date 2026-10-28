@@ -1,0 +1,259 @@
+---
+/**
+ * V4 hero. Desktop: the frame's composition at 1440, scaled by --px - the
+ * two cut-outs either side, "Rhaine & Harvy" in wine Androgy between them,
+ * the rings, the date and the lede. Phones: the names stack at the top and
+ * the two cut-outs stand side by side underneath.
+ *
+ * Entrance (scripts/v4.ts): letters rise, the & pops, the two of them slide
+ * in from either side, the rings beat once.
+ */
+import { V4 } from "../../lib/site";
+
+const letters = (w: string) => [...w].map((c) => `<span class="ch">${c}</span>`).join("");
+---
+
+<section class="hero" id="top" aria-labelledby="hero-names" data-v4-hero>
+  <div class="hero__wash" aria-hidden="true"></div>
+  <div class="hero__stage">
+    <img class="hero__cut hero__cut--left" src="/v4/couple-left.webp" alt="Rhaine" width="387" height="644" fetchpriority="high" data-v4-cut="left" />
+    <img class="hero__cut hero__cut--right" src="/v4/couple-right.webp" alt="Harvy" width="505" height="644" fetchpriority="high" data-v4-cut="right" />
+
+    <h1 class="hero__names" id="hero-names">
+      <span class="v4-script hero__first" set:html={letters(V4.hero.first)} data-v4-letters />
+      <span class="hero__amp" data-v4-amp>&amp;</span>
+      <span class="v4-script hero__second" set:html={letters(V4.hero.second)} data-v4-letters />
+    </h1>
+
+    <img class="v4-rings hero__rings" src="/v4/rings.webp" alt="" width="256" height="256" data-v4-beat />
+    <p class="hero__date" data-v4-hero-line>{V4.hero.date}</p>
+    <p class="hero__lede" data-v4-hero-line>{V4.hero.lede}</p>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-top: 64px;
+    background: var(--paper);
+  }
+
+  .hero__wash {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(2.6deg, rgb(74 18 32 / 0.2) 0.5%, rgb(244 238 234 / 0) 50%);
+  }
+
+  /* ---------- Phones: names on top, the two of them below ---------- */
+
+  .hero__stage {
+    position: relative;
+    display: grid;
+    /* minmax(0, ...): the wide cut-outs spill outward, never widen a column. */
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+    justify-items: center;
+    padding: 32px var(--gutter) 0;
+  }
+
+  .hero__names,
+  .hero__rings,
+  .hero__date,
+  .hero__lede {
+    grid-column: 1 / -1;
+  }
+
+  .hero__names {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    color: var(--wine);
+    text-align: center;
+  }
+
+  .hero__first,
+  .hero__second {
+    font-size: clamp(64px, 19vw, 96px);
+    letter-spacing: -0.03em;
+  }
+
+  .hero__first :global(.ch),
+  .hero__second :global(.ch) {
+    display: inline-block;
+  }
+
+  .hero__amp {
+    margin: -0.25em 0 -0.1em;
+    font-family: var(--f-amp);
+    font-size: clamp(36px, 11vw, 48px);
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .hero__rings {
+    margin-top: 14px;
+    width: 46px;
+  }
+
+  /*
+   * When and where, kept quiet under the script names: the date in spaced
+   * caps, the place smaller and softer. text-indent balances the tracking
+   * the last letter carries, so both lines sit truly centred.
+   */
+  .hero__date {
+    margin-top: 12px;
+    font-family: var(--f-dm);
+    font-weight: 500;
+    font-size: 17px;
+    line-height: 1.2;
+    letter-spacing: 0.32em;
+    text-indent: 0.32em;
+    color: var(--wine);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .hero__lede {
+    margin: 8px 0 14px;
+    font-family: var(--f-dm);
+    font-weight: 700;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+    opacity: 0.6;
+    text-align: center;
+  }
+
+  /*
+   * The two of them, large, meeting in the middle - Rhaine looking right,
+   * Harvy left - each cropped at the screen's outer edge, never the centre.
+   */
+  .hero__cut {
+    grid-row: 5;
+    width: auto;
+    max-width: none;
+    height: min(50svh, 430px);
+  }
+
+  .hero__cut--left {
+    grid-column: 1;
+    justify-self: end;
+    margin-right: -6%;
+  }
+
+  .hero__cut--right {
+    grid-column: 2;
+    justify-self: start;
+    margin-left: -6%;
+  }
+
+  /* ---------- Desktop: the 1440 frame, scaled ---------- */
+
+  @media (min-width: 900px) {
+    .hero {
+      padding-top: 0;
+    }
+
+    .hero__wash {
+      top: calc(158 * var(--px));
+    }
+
+    .hero__stage {
+      display: block;
+      max-width: 1440px;
+      height: calc(890 * var(--px));
+      margin: 0 auto;
+      padding: 0;
+    }
+
+    .hero__stage > * {
+      position: absolute;
+    }
+
+    .hero__cut {
+      top: calc(175 * var(--px));
+      width: auto;
+      height: calc(723 * var(--px));
+      margin: 0;
+      transform: none;
+    }
+
+    .hero__cut--left {
+      left: calc(77 * var(--px));
+    }
+
+    .hero__cut--right {
+      left: calc(906 * var(--px));
+    }
+
+    .hero__names {
+      inset: calc(174 * var(--px)) 0 auto;
+      display: block;
+      height: 0;
+    }
+
+    .hero__first,
+    .hero__second,
+    .hero__amp {
+      position: absolute;
+      translate: -50% 0;
+      white-space: nowrap;
+    }
+
+    .hero__first,
+    .hero__second {
+      font-size: calc(160 * var(--px));
+      letter-spacing: calc(-4.8 * var(--px));
+    }
+
+    .hero__first {
+      left: calc(699.5 * var(--px));
+      top: 0;
+    }
+
+    .hero__amp {
+      left: calc(735.5 * var(--px));
+      top: calc(123 * var(--px));
+      margin: 0;
+      font-size: calc(60 * var(--px));
+      line-height: 0.88;
+    }
+
+    .hero__second {
+      left: calc(691 * var(--px));
+      top: calc(186 * var(--px));
+    }
+
+    .hero__rings {
+      left: calc(671 * var(--px));
+      top: calc(536 * var(--px));
+      width: calc(89 * var(--px));
+      margin: 0;
+    }
+
+    .hero__date {
+      left: calc(716 * var(--px));
+      top: calc(672 * var(--px));
+      width: calc(398 * var(--px));
+      max-width: none;
+      margin: 0;
+      translate: -50% 0;
+      font-size: max(18px, calc(28 * var(--px)));
+    }
+
+    .hero__lede {
+      left: calc(715.5 * var(--px));
+      top: calc(718 * var(--px));
+      width: calc(433 * var(--px));
+      max-width: none;
+      margin: 0;
+      translate: -50% 0;
+      font-size: max(11px, calc(13 * var(--px)));
+    }
+  }
+</style>

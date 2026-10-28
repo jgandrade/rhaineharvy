@@ -58,8 +58,13 @@ export interface Artwork {
   reference?: boolean;
 }
 
-/** Absolute CloudFront URL for any key under the bucket. */
-export const cdn = (key: string) => `${CDN}/${key.replace(/^\/+/, "")}`;
+/**
+ * Absolute CloudFront URL for any key under the bucket. A key that starts
+ * with "/" is a local file in `public/` (photos not yet uploaded) and is
+ * served as-is.
+ */
+export const cdn = (key: string) =>
+  key.startsWith("/") ? key : `${CDN}/${key}`;
 
 function toArtwork(entry: MediaEntry): Artwork {
   const master = entry.widths[entry.widths.length - 1]!;

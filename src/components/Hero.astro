@@ -1,8 +1,11 @@
 ---
 /**
- * Full-bleed opener. The preloader window lands here; on scroll the frame
- * draws in to a card while the name sinks and fades, and the header picks the
- * name up.
+ * Full-bleed opener, Figma "B - Polished": the photo under a wine shade, and
+ * low on it the invitation line, the names and the date. Phones get their own
+ * photo (moment-07, the portrait in black) and break the names after RHAINE.
+ *
+ * The preloader window lands here; on scroll the frame draws in to a card
+ * while the names sink and fade (motion.ts).
  */
 import Media from "./Media.astro";
 import Rich from "./Rich.astro";
@@ -13,53 +16,49 @@ import { HERO, SITE } from "../lib/site";
   <div class="hero__frame" data-hero-frame>
     {
       SITE.heroVideo ? (
-        <video
-          class="hero__video"
-          src={SITE.heroVideo}
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="auto"
-        />
+        <video class="hero__media hero__video" src={SITE.heroVideo} autoplay muted loop playsinline preload="auto" />
       ) : (
-        <Media slug="hero" label="Hero - couple portrait" tone="wine" eager class="hero__media" />
+        <>
+          <Media slug="hero" label="Hero - couple portrait" tone="wine" class="hero__media hero__media--wide" />
+          <Media slug="moment-07" label="Hero - couple portrait" tone="wine" sizes="100vw" class="hero__media hero__media--tall" />
+        </>
       )
     }
     <div class="hero__shade" aria-hidden="true"></div>
   </div>
 
   <div class="hero__brand" data-hero-brand>
-    <h1 class="hero__title">
-      {SITE.bride} <em>&amp;</em> {SITE.groom}
-    </h1>
-    <p class="hero__sub"><Rich text={HERO.sub} /></p>
-    <p class="hero__date">{SITE.dateShort}<span aria-hidden="true"> · </span><span class="hero__city">{SITE.city}</span></p>
+    <p class="v2-label">{HERO.kicker}</p>
+    <h1 class="hero__names"><Rich text={HERO.names} /></h1>
+    <p class="v2-label">
+      <span class="hero__date-long">{HERO.date}</span>
+      <span class="hero__date-short">{HERO.dateShort}</span>
+    </p>
   </div>
-
-  <svg class="hero__cue" viewBox="0 0 12 7" aria-hidden="true">
-    <path d="M1 1l5 5 5-5" fill="none" stroke="currentColor"></path>
-  </svg>
 </section>
 
 <style>
   .hero {
     position: relative;
-    height: 100svh;
-    min-height: 520px;
+    height: 780px;
     color: var(--ivory);
+    background: var(--wine-deep);
+  }
+
+  @media (min-width: 900px) {
+    .hero {
+      height: 900px;
+    }
   }
 
   .hero__frame {
     position: absolute;
     inset: 0;
     overflow: hidden;
-    background: var(--wine-deep);
     will-change: clip-path;
   }
 
-  .hero__frame :global(.hero__media),
-  .hero__video {
+  .hero__frame :global(.hero__media) {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -67,72 +66,101 @@ import { HERO, SITE } from "../lib/site";
     object-fit: cover;
   }
 
+  .hero__frame :global(.hero__media--wide) {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero__frame :global(.hero__media--wide) {
+      display: block;
+    }
+
+    .hero__frame :global(.hero__media--tall) {
+      display: none;
+    }
+  }
+
   .hero__shade {
     position: absolute;
     inset: 0;
-    background: radial-gradient(70% 50% at 50% 50%, rgb(34 7 13 / 0.28), transparent 75%);
+    background: linear-gradient(
+      to bottom,
+      rgb(34 7 13 / 0.35),
+      rgb(34 7 13 / 0.2) 45%,
+      rgb(34 7 13 / 0.7)
+    );
+  }
+
+  @media (min-width: 900px) {
+    .hero__shade {
+      background: linear-gradient(
+        to bottom,
+        rgb(34 7 13 / 0.35),
+        rgb(34 7 13 / 0.25) 50%,
+        rgb(34 7 13 / 0.6)
+      );
+    }
   }
 
   .hero__brand {
     position: absolute;
-    inset: 0;
-    display: grid;
-    place-content: center;
-    gap: 0.5em;
+    left: 0;
+    right: 0;
+    bottom: 64px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 0 var(--gutter);
     text-align: center;
     pointer-events: none;
   }
 
-  .hero__title {
-    font-family: var(--font-serif);
+  @media (min-width: 900px) {
+    .hero__brand {
+      bottom: 160px;
+      gap: 24px;
+    }
+  }
+
+  /* m/Display XL 64 on phones (two lines), Display L 112 on one line. */
+  .hero__names {
+    font-family: var(--font-display);
     font-weight: 400;
-    font-size: clamp(2.5rem, 6.6vw, 6.25rem);
+    font-size: 64px;
     line-height: 0.95;
-    letter-spacing: -0.01em;
-    text-transform: uppercase;
+    letter-spacing: -0.96px;
   }
 
-  .hero__title em {
-    font-style: italic;
-    font-weight: 400;
-    text-transform: none;
-  }
-
-  .hero__sub {
+  .hero__names :global(em) {
     font-family: var(--font-serif);
-    font-weight: 400;
-    font-size: clamp(1.25rem, 1.8vw, 1.75rem);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .hero__date {
-    font-family: var(--font-sans);
-    font-size: clamp(0.9375rem, 1vw, 1.0625rem);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    text-shadow: 0 1px 18px rgb(34 7 13 / 0.45);
-  }
-
-  .hero__sub :global(em) {
     font-style: italic;
-    font-weight: 400;
-    text-transform: none;
   }
 
-  .hero__cue {
-    position: absolute;
-    left: 50%;
-    bottom: 22px;
-    width: 10px;
-    translate: -50% 0;
-    opacity: 0.8;
-    animation: cue 2.4s var(--ease-in-out-quart) infinite;
+  @media (min-width: 900px) {
+    .hero__names {
+      font-size: min(112px, 7.78vw);
+      letter-spacing: -0.015em;
+      white-space: nowrap;
+    }
+
+    .hero__names :global(.line),
+    .hero__names :global(.line__inner) {
+      display: inline;
+    }
   }
 
-  @keyframes cue {
-    50% {
-      transform: translateY(4px);
+  .hero__date-long {
+    display: none;
+  }
+
+  @media (min-width: 900px) {
+    .hero__date-long {
+      display: inline;
+    }
+
+    .hero__date-short {
+      display: none;
     }
   }
 </style>

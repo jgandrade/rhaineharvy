@@ -1,0 +1,168 @@
+/* ================================================================
+ * V4 - the "New Version - Website" frame (Figma 86:646).
+ *
+ * Desktop compositions are measured on the 1440 frame and scale with
+ * --px (1px at 1440, smaller below it), so 900-1440 is the same picture
+ * shrunk. Under 900px every section has its own phone layout.
+ *
+ * Androgy and Catalish Huntera are the designer's DEMO fonts (personal use
+ * only). Before the site is used commercially, buy licences and replace
+ * the two files - the names below stay the same.
+ * ================================================================ */
+
+@font-face {
+	font-family: 'Androgy';
+	src: url('/fonts/androgy-demo.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Catalish Huntera';
+	src: url('/fonts/catalish-huntera-demo.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	src: url('/fonts/dm-sans-400-normal.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	src: url('/fonts/dm-sans-500-normal.woff2') format('woff2');
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	src: url('/fonts/dm-sans-700-normal.woff2') format('woff2');
+	font-weight: 700;
+	font-display: swap;
+}
+
+:root {
+	/* Androgy has no curly quotes or apostrophe: those fall back to Caslon. */
+	--f-script: 'Androgy', 'Libre Caslon Display', serif;
+	--f-amp: 'Catalish Huntera', 'Libre Caslon Text', serif;
+	--f-dm: 'DM Sans', 'Lato', system-ui, sans-serif;
+
+	--cream: #fbf4e1;
+	--paper: #ffffff;
+	/* "Good to know" cards: numeral + icon sand, title shell, body mist. */
+	--sand: #d9b9a8;
+	--shell: #fff7f2;
+	--mist: #d8c0c4;
+	/* The studio wall in the "two become One" photos, so the page meets it. */
+	--studio: #f2f4f6;
+	--px: 1px;
+}
+
+@media (min-width: 900px) {
+	:root {
+		--px: min(1px, calc(100vw / 1440));
+	}
+}
+
+/*
+ * One sans for the whole page: DM Sans also takes over the labels and
+ * buttons the shared styles set in Lato (--font-sans). With Androgy for
+ * display, Catalish for the ampersand and Caslon for the venue titles,
+ * that is the full set.
+ */
+body.v4 {
+	--font-sans: var(--f-dm);
+	background: var(--paper);
+	font-family: var(--f-dm);
+}
+
+/* Androgy display lines. */
+/* Heading words while they rise (scripts/v4.ts): each clipped at its own
+ * line's foot, open at the top and sides for the swashes; .is-in lifts it. */
+.wd {
+	display: inline-block;
+	clip-path: inset(-0.6em -0.4em 0 -0.4em);
+}
+
+.wd__i,
+.wd__i .c {
+	display: inline-block;
+}
+
+.is-in .wd {
+	clip-path: none;
+}
+
+.v4-script {
+	font-family: var(--f-script);
+	font-weight: 400;
+	line-height: 0.88;
+	text-transform: none;
+}
+
+/* Section chapter bar: № 02 · OUR STORY · RHAINE & HARVY · VOL. I */
+.v4-chapter {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 12px;
+	margin: 0 var(--gutter);
+	padding-top: 16px;
+	border-top: 1px solid var(--ink-faint);
+	font-family: var(--font-sans);
+	font-weight: 700;
+	font-size: 12px;
+	line-height: 17px;
+	letter-spacing: var(--track-label);
+	text-transform: uppercase;
+}
+
+.v4-chapter > :last-child {
+	opacity: 0.7;
+}
+
+.v4-chapter--light {
+	border-top-color: var(--ivory-faint);
+	color: var(--ivory);
+}
+
+@media (max-width: 599px) {
+	.v4-chapter > :last-child {
+		display: none;
+	}
+}
+
+/* The rings-and-heart mark. */
+.v4-rings {
+	display: block;
+	width: calc(89 * var(--px));
+	min-width: 64px;
+	height: auto;
+}
+
+/* Reveal hooks - motion lives in scripts/v4.ts; no JS or reduced motion
+   means everything is simply visible. */
+html.js:not(.reduce-motion) [data-v4-rise] {
+	opacity: 0;
+}
+
+/* The hero waits for its entrance (scripts/v4.ts, hero()), so it never
+   paints fully formed and then jumps back to animate in. */
+html.js:not(.reduce-motion) .hero__stage {
+	visibility: hidden;
+}
+
+/* In-page links land below the fixed bar, not under it. */
+body.v4 [id] {
+	scroll-margin-top: 72px;
+}
+
+@media (min-width: 900px) {
+	body.v4 [id] {
+		scroll-margin-top: 100px;
+	}
+}

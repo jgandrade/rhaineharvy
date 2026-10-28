@@ -1,60 +1,60 @@
 [
 	{
 		"slug": "hero",
-		"title": "Hero",
+		"title": "Rhaine and Harvy in black, glancing at each other by a white wall",
 		"category": "gallery",
-		"tag": "Unsplash",
-		"width": 3200,
-		"height": 2133,
+		"tag": "Couple",
+		"width": 2752,
+		"height": 1536,
 		"widths": [
 			640,
 			1280,
 			1920,
 			2560,
-			3200
+			2752
 		],
-		"base": "rhaine-harvy/work/gallery/hero/0fd5f1c451",
-		"lqip": "data:image/webp;base64,UklGRqgAAABXRUJQVlA4IJwAAADwAwCdASoYABAAPsFOoUqnpCMhsAgA8BgJQBOgBDwbdekYL+WtLPQAAP7xz7nN/G6r0cv+z716zbiqxp655RyOOVvCfZIfGOqEw7r2F/v3ErbnQt3ncRky+qnbe9ccpTJXOhE7iEpaGwrhyT7KErY+XkfE1oKUC27KOUJ8cTWtKi/UJvepDRMubQWLP2MAKj+IMdWo+QOTDpQEAAA=",
-		"color": "#e8e8d8",
-		"bytes": 3983814
+		"base": "/media/gallery/hero/5d678af25c",
+		"lqip": "data:image/webp;base64,UklGRoIAAABXRUJQVlA4IHYAAADQAwCdASoYAA0APsFOoUqnpCMhsAgA8BgJaQAAW+zCjjpPz+nZIfAA/vT5j0R6lotbjT52bBNvFnRCFIj8RZ7CnpM5bP3LChDNje9ehyahhFtIyGkIrOblCrjkXveb+NLfrm7NZ+xjk6aOT5k7gAsULYi8MwAA",
+		"color": "#e8e8e8",
+		"bytes": 378084
 	},
 	{
 		"slug": "preloader-1",
-		"title": "Preloader 1",
+		"title": "Rhaine and Harvy in black, seated against a white wall",
 		"category": "gallery",
-		"tag": "Unsplash",
-		"width": 3200,
-		"height": 4001,
+		"tag": "Couple",
+		"width": 2752,
+		"height": 1536,
 		"widths": [
 			640,
 			1280,
 			1920,
 			2560,
-			3200
+			2752
 		],
-		"base": "rhaine-harvy/work/gallery/preloader-1/350e740afa",
-		"lqip": "data:image/webp;base64,UklGRrgAAABXRUJQVlA4IKwAAADwBACdASoYAB4APsFWpU0npKOiKAqo8BgJaQAALH9F+n81YlSHOzA7YAQKjmO3YsAA/vG7zEucu8wNKjn4vJBG4T2ipxUxUdE8VD6I3/DYiO0D16clRLK+ezsCZ09u/Gh/RxjCLzA/Jie00gX0+ZwVk3DTwwuSax+O6zXEcpJ878eDrvs4qJ/3zHnGHuwIR4aw0kHoCsIpepgPpcXtybMMgUz163J30SoMYAAA",
-		"color": "#080808",
-		"bytes": 1849014
+		"base": "/media/gallery/preloader-1/01071ab24c",
+		"lqip": "data:image/webp;base64,UklGRmYAAABXRUJQVlA4IFoAAADQAwCdASoYAA0APsFOoUqnpCMhsAgA8BgJaQAAWkgG3EPnpePUlAAA/vTYA9ioRQTPEV1nHNvK85kvHbNu4sPYeLM74VIHBkJWTxR3IDC9n0NflOyUhQKAAAA=",
+		"color": "#e8e8e8",
+		"bytes": 432704
 	},
 	{
 		"slug": "preloader-2",
-		"title": "Preloader 2",
+		"title": "Rhaine leaning on Harvy's shoulders in a studio spotlight",
 		"category": "gallery",
-		"tag": "Unsplash",
-		"width": 3200,
-		"height": 3186,
+		"tag": "Couple",
+		"width": 2688,
+		"height": 1520,
 		"widths": [
 			640,
 			1280,
 			1920,
 			2560,
-			3200
+			2688
 		],
-		"base": "rhaine-harvy/work/gallery/preloader-2/426958e250",
-		"lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAAAQBQCdASoYABgAPsFKoEsno6MhsBgMAPAYCWMAxNgQqn6XE73xS+4UsBevYhVmMbagAP7018P0P/QwVLP62IXXHZBNkiTgMiimm/OpAzVOLRKJAz9C5nG9KGX1lm4Ukced2xg9U0xtUivI27VMRCOk0kgAAA==",
-		"color": "#f8f8f8",
-		"bytes": 1287720
+		"base": "/media/gallery/preloader-2/fba361125b",
+		"lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoYAA4APsFOoEqnpCMhsAgA8BgJZwCAAAUtDMqX3JSaiy+AAPtRJVcgYhyp0thtAlPe6SjAtJ0Hk0j7xJs7AFTecYKrj1Wuy877FQ6rtYzZ+ZFWHs8Y79nPHnb3AyBvRgmEKPChCHXFebhF2LQBEfx+C/LEdtb0gySFAr4IAAA=",
+		"color": "#888888",
+		"bytes": 536406
 	},
 	{
 		"slug": "preloader-3",
@@ -94,60 +94,60 @@
 	},
 	{
 		"slug": "story-1",
-		"title": "Story 1",
+		"title": "Harvy kissing Rhaine on the forehead",
 		"category": "gallery",
-		"tag": "Unsplash",
-		"width": 3200,
-		"height": 2136,
+		"tag": "Couple",
+		"width": 2688,
+		"height": 1520,
 		"widths": [
 			640,
 			1280,
 			1920,
 			2560,
-			3200
+			2688
 		],
-		"base": "rhaine-harvy/work/gallery/story-1/dbd68792e5",
-		"lqip": "data:image/webp;base64,UklGRowAAABXRUJQVlA4IIAAAABQBACdASoYABAAPsFOoUqnpCMhsAgA8BgJQBYheABgiStp1TLtczYELEN8AP7vyjeTGgA2v8PKT0VRtObSGm3XbRoBCzSh9RbhdZY7a8JUkdIiyqt2IZRglHnV1uFywbtSC6nW+BdRfR6QshxVXM5qXxfKjDiKHoMRHUXfpwAAAA==",
-		"color": "#e8e8e8",
-		"bytes": 1467408
+		"base": "/media/gallery/story-1/23ae9cb725",
+		"lqip": "data:image/webp;base64,UklGRroAAABXRUJQVlA4IK4AAADQBACdASoYAA4APsFOoEqnpCMhsAgA8BgJaACdMoA5TtcgIu4d9W4u64VAgIcAAADLQ2uWLZ+eFuT0/cR9TUwpf1idVjRFWQiYwUsHXaln90lqo/4pWmLvRhs8bqbolRIfBIamEcYDg3rWD5CNny+YLA1THfSopA1yFQ/l3IJxig4WXceHP3lL+okMtx2LM6Gs0zpRDeEnHWwryzNrokHPvI+PopXeNL9qsBfm3AA=",
+		"color": "#180808",
+		"bytes": 1153692
 	},
 	{
 		"slug": "story-2",
-		"title": "Story 2",
+		"title": "Rhaine showing her ring on the night of the proposal",
 		"category": "gallery",
-		"tag": "Unsplash",
-		"width": 3200,
-		"height": 2136,
+		"tag": "Couple",
+		"width": 2752,
+		"height": 1536,
 		"widths": [
 			640,
 			1280,
 			1920,
 			2560,
-			3200
+			2752
 		],
-		"base": "rhaine-harvy/work/gallery/story-2/334f632711",
-		"lqip": "data:image/webp;base64,UklGRpoAAABXRUJQVlA4II4AAACQBACdASoYABAAPsFOoEqnpCMhsAgA8BgJYgC7ABn2okuG7xBeqnsvb30PDQAA/onIPCN0Yd/zj0QxpdotIlDvCkKTOqx8tuU0LSUjaBGwljRlBbbAe6H+CnP3OcZ+wYunVfs2t6WjZrmnbkJ1vg9pXM6CR7f3TyDLIGLzy6Ko8DhVvOY+zw2qyZtqAAAA",
-		"color": "#c8b8b8",
-		"bytes": 599718
+		"base": "/media/gallery/story-2/d5fabcfb65",
+		"lqip": "data:image/webp;base64,UklGRpIAAABXRUJQVlA4IIYAAACwAwCdASoYAA0APsFOoEqnpCMhsAgA8BgJQAAKGpsv9QfBwp7AgAD+9dzG/xP+nhCNETlBvq7nMKn8nUmyeVzeLM4vqXvEso2ZdzyJmqdjlX+QN0Wb48gmmcAn9Y16PmpYZjjRmJl0qCucn6m/DNf5Mv4QLIhalEy5WVfIKLWKhresrc8AAA==",
+		"color": "#080808",
+		"bytes": 1226080
 	},
 	{
 		"slug": "story-3",
-		"title": "Story 3",
+		"title": "Harvy holding Rhaine's hand, ring close up",
 		"category": "gallery",
-		"tag": "Unsplash",
-		"width": 3200,
-		"height": 1866,
+		"tag": "Couple",
+		"width": 2752,
+		"height": 1536,
 		"widths": [
 			640,
 			1280,
 			1920,
 			2560,
-			3200
+			2752
 		],
-		"base": "rhaine-harvy/work/gallery/story-3/76cc18accf",
-		"lqip": "data:image/webp;base64,UklGRq4AAABXRUJQVlA4IKIAAABQBACdASoYAA4APsFOoUqnpCMhsAgA8BgJaQAD5PoF/Ltw/tkK8QaivfAAAP7raPsmxmCA/S2FueF/uvJGHj118De/ivqqUkbpy1SC0A/CLTeH5s79pECSNMFrfMtMY+UXAfnFgWq7SBPjjcrwj1/kd/nV/Fwpf92/1XxYVeJEOoX0aXOy85mMrAJpWo/4ZgA79q8H37KZGrALSJJ4CB4AAAA=",
-		"color": "#d8d8d8",
-		"bytes": 995052
+		"base": "/media/gallery/story-3/1a28ae7207",
+		"lqip": "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAACQBACdASoYAA0APsFQoEqnpKMhsAgA8BgJZACdH8IwAAt/jhwbIc6NguD8OAAA/uiT+bL3AGVV3OwI6cUCZv+oF99eptOUCHgbb6V5Mmu0Jvuo6CPKyyhJCEmtsMoZpDb5fOh6Qn2z/nwMebdV3qii984h32vPSHPNaB/VDadOuyMsQOLqIWjKRGtNJWq0gUF/jhhBhFj4JCH6DtHHl0I2LlAVX7FWT1cAAA==",
+		"color": "#f8f8f8",
+		"bytes": 681492
 	},
 	{
 		"slug": "day-portrait",
@@ -590,5 +590,24 @@
 		"lqip": "data:image/webp;base64,UklGRrwAAABXRUJQVlA4ILAAAAAQBQCdASoYACQAPr1OnUqnJCKhtVgIAOAXiWUAx+RFbrPmNjQo/DGiQWRtpZ4Ic6NQAP72UOUahoOFXjklTXC1vsSML92S6jvDPj276dRFFoKbuserthRD58dZyqW17ZudaFSx/A01AYW7dmUdTwWrx3o7dCA3pNBz9RR8U0lvGg+ILWRjZTK/mY75XClqO9JdorUzEn8+e07Hv6uNI3UpSxXyGsN7vnvUP9LEOEQAAA==",
 		"color": "#e8e8e8",
 		"bytes": 341382
+	},
+	{
+		"slug": "footer",
+		"title": "Rhaine leaning on Harvy's shoulders in a studio spotlight",
+		"category": "gallery",
+		"tag": "Couple",
+		"width": 2688,
+		"height": 1520,
+		"widths": [
+			640,
+			1280,
+			1920,
+			2560,
+			2688
+		],
+		"base": "/media/gallery/footer/fba361125b",
+		"lqip": "data:image/webp;base64,UklGRpAAAABXRUJQVlA4IIQAAADwAwCdASoYAA4APsFOoEqnpCMhsAgA8BgJZwCAAAUtDMqX3JSaiy+AAPtRJVcgYhyp0thtAlPe6SjAtJ0Hk0j7xJs7AFTecYKrj1Wuy877FQ6rtYzZ+ZFWHs8Y79nPHnb3AyBvRgmEKPChCHXFebhF2LQBEfx+C/LEdtb0gySFAr4IAAA=",
+		"color": "#888888",
+		"bytes": 536406
 	}
 ]

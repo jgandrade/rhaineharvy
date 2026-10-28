@@ -1,0 +1,171 @@
+---
+/**
+ * V4 "Moments": the headline, one wide frame (moment-06) and two tall ones
+ * (moment-01, moment-03) fading into cream under the couple's quote, then
+ * the reply button. The wide frame drifts slower than the page (parallax)
+ * and the quote's words settle in on scroll (scripts/v4.ts).
+ */
+import Media from "../Media.astro";
+import { V4 } from "../../lib/site";
+
+const words = V4.moments.quote.split(" ");
+---
+
+<section class="moments" id="moments" aria-labelledby="moments-title">
+  <h2 class="v4-script moments__title" id="moments-title" data-v4-rise>{V4.moments.title}</h2>
+
+  <div class="moments__wide" data-v4-parallax>
+    <Media slug="moment-06" label="Moment 6" tone="blush" sizes="(min-width: 900px) 97vw, 100vw" class="moments__img" />
+  </div>
+
+  <div class="moments__pair">
+    <Media slug="moment-01" label="Moment 1" tone="stone" sizes="(min-width: 900px) 48vw, 50vw" class="moments__tall" data-v4-wipe />
+    <Media slug="moment-03" label="Moment 3" tone="blush" sizes="(min-width: 900px) 48vw, 50vw" class="moments__tall" data-v4-wipe />
+    <div class="moments__fade" aria-hidden="true"></div>
+  </div>
+
+  <figure class="moments__quote">
+    <blockquote class="v4-script" data-v4-words>
+      {words.map((w) => <span class="w">{w} </span>)}
+    </blockquote>
+    <figcaption class="moments__by">{V4.moments.by}</figcaption>
+    <a class="bv2 bv2--primary moments__cta" href="#rsvp" data-v4-rise>{V4.moments.cta}</a>
+  </figure>
+</section>
+
+<style>
+  .moments {
+    overflow: clip;
+    padding: 50px 0 64px;
+    background: linear-gradient(to bottom, var(--ivory) 40%, var(--cream) 60%);
+    color: var(--ink);
+  }
+
+  .moments__title {
+    margin: 48px var(--gutter) 24px;
+    font-size: 52px;
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    text-align: center;
+  }
+
+  .moments__wide {
+    position: relative;
+    margin: 0 var(--gutter);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+  }
+
+  .moments__wide :global(.moments__img) {
+    position: absolute;
+    inset: -8% 0;
+  }
+
+  .moments__pair {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 10px var(--gutter) 0;
+  }
+
+  .moments__pair :global(.moments__tall) {
+    aspect-ratio: 690 / 860;
+  }
+
+  /* Cream rises over the bottom of the pair, under the quote. */
+  .moments__fade {
+    position: absolute;
+    inset: 15% calc(var(--gutter) * -1) -2px;
+    background: linear-gradient(to top, var(--cream) 20%, rgb(251 244 225 / 0) 82%);
+    pointer-events: none;
+  }
+
+  .moments__quote {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin: -48px var(--gutter) 0;
+    text-align: center;
+  }
+
+  .moments__quote blockquote {
+    margin: 0;
+    font-size: 36px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+  }
+
+  .moments__quote :global(.w) {
+    display: inline-block;
+    white-space: pre;
+  }
+
+  .moments__by {
+    font-family: var(--f-dm);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    color: var(--wine);
+  }
+
+  .moments__cta {
+    width: 100%;
+    max-width: 320px;
+    margin-top: 16px;
+  }
+
+  @media (min-width: 900px) {
+    .moments {
+      padding: calc(34 * var(--px)) 0 calc(84 * var(--px));
+      background: var(--ivory);
+    }
+
+    .moments__title {
+      margin: calc(125 * var(--px)) var(--gutter) calc(20 * var(--px));
+      font-size: calc(120 * var(--px));
+      letter-spacing: calc(-1.8 * var(--px));
+    }
+
+    .moments__wide {
+      max-width: calc(1400 * var(--px));
+      height: calc(700 * var(--px));
+      margin: 0 auto;
+      aspect-ratio: auto;
+    }
+
+    .moments__pair {
+      gap: calc(10 * var(--px));
+      max-width: calc(1390 * var(--px));
+      margin: calc(18 * var(--px)) auto 0;
+    }
+
+    .moments__fade {
+      inset: calc(-197 * var(--px)) calc(-30 * var(--px)) calc(-158 * var(--px));
+    }
+
+    .moments__quote {
+      gap: 0;
+      margin: calc(-324 * var(--px)) auto 0;
+      max-width: calc(1163 * var(--px));
+    }
+
+    .moments__quote blockquote {
+      font-size: calc(80 * var(--px));
+      letter-spacing: calc(-0.8 * var(--px));
+    }
+
+    .moments__by {
+      margin-top: calc(19 * var(--px));
+      font-size: 16px;
+      letter-spacing: 2.56px;
+    }
+
+    .moments__cta {
+      width: 254px;
+      margin-top: calc(46 * var(--px));
+    }
+  }
+</style>

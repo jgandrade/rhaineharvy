@@ -12,3 +12,6 @@ assets-src/
 assets-ref/
 public/ref/
 src/data/reference.json
+
+# Figma QA captures and ledgers
+.qa/

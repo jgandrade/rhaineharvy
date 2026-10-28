@@ -22,7 +22,7 @@ const ogImage = getArtwork("hero")?.src(1280);
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#f4eeea" />
+    <meta name="theme-color" content="#6e1a2b" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -32,7 +32,9 @@ const ogImage = getArtwork("hero")?.src(1280);
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
     <link rel="preload" href="/fonts/libre-caslon-text-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/libre-caslon-display-400-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/lato-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/lato-700-normal.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preconnect" href="https://d2jd2y2utwgsqv.cloudfront.net" crossorigin />
 
     <script is:inline>
@@ -49,6 +51,12 @@ const ogImage = getArtwork("hero")?.src(1280);
           root.classList.add("reduce-motion");
         }
         if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        // The preloader plays once per visit; a reload or a return from a
+        // map link goes straight to the hero.
+        try {
+          if (sessionStorage.getItem("rh-intro")) root.classList.add("skip-intro");
+          sessionStorage.setItem("rh-intro", "1");
+        } catch {}
       })();
     </script>
   </head>

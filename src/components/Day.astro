@@ -1,340 +1,359 @@
 ---
 /**
- * Secondary hero + Vero's diptych. Left: one tall portrait that stays pinned.
- * Right: a column that scrolls past it - photo pairs, the schedule, a small
- * photo with the RSVP button, another pair, and a quote from the couple.
+ * The day, Figma "B - Polished": the head, then the tall portrait beside the
+ * details - the date, a line on the day, and three ruled rows (ceremony,
+ * reception, dress code) - then a strip of five photos (a 2 x 2 + 1 grid on
+ * phones) and the couple's quote.
  */
 import Media from "./Media.astro";
 import Rich from "./Rich.astro";
-import { CTA, DAY, EVENTS } from "../lib/site";
+import { DAY, EVENTS } from "../lib/site";
 
-const arrow = `<svg class="schedule__icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 8 8 2M3.2 2H8v4.8" fill="none" stroke="currentColor" stroke-width="1"/></svg>`;
+const rows = [
+  { ev: EVENTS[0]!, name: DAY.rows.ceremony },
+  { ev: EVENTS[1]!, name: DAY.rows.reception },
+];
+const tones = ["wine", "stone", "wine", "stone", "wine"] as const;
 ---
 
 <section class="day" id="the-day" aria-labelledby="day-title">
-  <header class="day__head">
-    <p class="eyebrow" data-reveal-fade><Rich text={DAY.eyebrow} /></p>
-    <h2 class="display" id="day-title" data-reveal><Rich text={DAY.title} /></h2>
+  <header class="v2-head">
+    <p class="v2-label">{DAY.eyebrow}</p>
+    <h2 class="v2-display-l" id="day-title" data-reveal><Rich text={DAY.title} /></h2>
   </header>
 
-  <div class="diptych" data-diptych>
-    <div class="diptych__sticky" data-pin-diptych>
-      <Media
-        slug="day-portrait"
-        label="Portrait - detail"
-        tone="stone"
-        sizes="(min-width: 900px) 48vw, 100vw"
-        class="diptych__hero"
-        data-mask
-      />
-    </div>
+  <div class="day__main">
+    <Media
+      slug="day-portrait"
+      label="Portrait - detail"
+      tone="stone"
+      sizes="(min-width: 900px) 48vw, 100vw"
+      class="day__portrait"
+      data-mask
+    />
 
-    <div class="diptych__col">
-      <div class="diptych__pair">
-        <Media slug="day-1" label="Day 1" tone="wine" sizes="24vw" data-mask />
-        <Media slug="day-2" label="Day 2" tone="stone" sizes="24vw" data-mask />
+    <div class="day__details">
+      <div class="day__intro">
+        <p class="v2-title">{DAY.intro.date}</p>
+        <p class="v2-lede day__lede">{DAY.intro.lede}</p>
       </div>
 
-      <div class="diptych__edito" data-fade>
-        <p class="title">{DAY.intro.title}</p>
-        <p class="prose prose--italic">{DAY.intro.lede}</p>
-
-        <dl class="schedule">
-          {
-            EVENTS.map((e) => (
-              <div class="schedule__row">
-                <dt>
-                  <span class="schedule__n">{e.n}</span>
-                  {e.name}
-                </dt>
-                <dd>
-                  <span class="schedule__time">{e.time}</span>
-                  <span class="schedule__place">{e.place}</span>
-                  <span class="schedule__address">{e.address}</span>
-                  <a class="schedule__map" href={e.map} target="_blank" rel="noopener">
-                    {DAY.directions}
-                    <Fragment set:html={arrow} />
-                  </a>
-                </dd>
-              </div>
-            ))
-          }
-          <div class="schedule__row">
-            <dt>
-              <span class="schedule__n">{DAY.dressCode.n}</span>
-              {DAY.dressCode.label}
-            </dt>
-            <dd class="dress">
-              {
-                DAY.dressCode.groups.map((g) => (
-                  <div class="dress__group">
-                    <p class="dress__who">{g.who}</p>
-                    {g.items.map((it) => (
-                      <p class="dress__item">
-                        {it.role && <span class="dress__role">{it.role}</span>}
-                        <span>{it.value}</span>
-                        {it.colors && (
-                          <span class="dress__colors">
-                            {it.colors.map((c) => (
-                              <span class="dress__color">
-                                <span class="dress__swatch" style={`--swatch:${c.hex}`} aria-hidden="true" />
-                                {c.name}
-                              </span>
-                            ))}
-                          </span>
-                        )}
-                      </p>
+      <dl class="day__rows">
+        {
+          rows.map(({ ev, name }) => (
+            <div class="row">
+              <dt class="v2-label row__label">
+                <span class="row__n">{ev.n}</span>
+                <span class="row__name">{name}</span>
+              </dt>
+              <dd class="row__content">
+                <span class="v2-title">{ev.time}</span>
+                <span class="v2-body row__place">{ev.place}</span>
+                <span class="v2-body row__soft">{ev.address}</span>
+                <a class="bv2 bv2--secondary row__btn" href={ev.map} target="_blank" rel="noopener">
+                  {DAY.directions}
+                  <span class="visually-hidden"> to {ev.venue} (opens Google Maps)</span>
+                </a>
+              </dd>
+            </div>
+          ))
+        }
+        <div class="row">
+          <dt class="v2-label row__label">
+            <span class="row__n">{DAY.dressCode.n}</span>
+            <span class="row__name">{DAY.dressCode.label}</span>
+          </dt>
+          <dd class="row__content">
+            {
+              DAY.dressCode.groups.map((g) => (
+                <div class="dress">
+                  <span class="v2-title dress__who">{g.who}</span>
+                  {g.items.map((it) => (
+                    <>
+                      {it.role && <span class="v2-body row__place">{it.role}</span>}
+                      <span class="v2-body">{it.value}</span>
+                    </>
+                  ))}
+                  <span class="dress__swatches">
+                    {g.colors.map((c) => (
+                      <span class="v2-small dress__swatch">
+                        <span class="dress__dot" style={`--swatch:${c.hex}`} aria-hidden="true" />
+                        {c.name}
+                      </span>
                     ))}
-                  </div>
-                ))
-              }
-            </dd>
-          </div>
-        </dl>
-      </div>
-
-      <div class="diptych__cta">
-        <Media slug="day-3" label="Day 3" tone="wine" sizes="12vw" class="diptych__small" data-mask />
-        <a class="btn" href={CTA.href} data-scroll-to><Rich text={CTA.label} /></a>
-      </div>
-
-      <div class="diptych__pair">
-        <Media slug="day-4" label="Day 4" tone="wine" sizes="24vw" data-mask />
-        <Media slug="day-5" label="Day 5" tone="stone" sizes="24vw" data-mask />
-      </div>
-
-      <figure class="diptych__quote" data-fade>
-        <blockquote class="title">{DAY.quote}</blockquote>
-        <figcaption class="eyebrow"><Rich text={DAY.quoteBy} /></figcaption>
-      </figure>
+                  </span>
+                </div>
+              ))
+            }
+          </dd>
+        </div>
+      </dl>
     </div>
   </div>
+
+  <div class="day__strip">
+    {
+      tones.map((tone, i) => (
+        <Media
+          slug={`day-${i + 1}`}
+          label={`Day ${i + 1}`}
+          tone={tone}
+          sizes="(min-width: 900px) 19vw, 48vw"
+          class={`day__photo day__photo--${i + 1}`}
+          data-mask
+        />
+      ))
+    }
+  </div>
+
+  <figure class="day__quote">
+    <blockquote class="v2-display-m">{DAY.quote}</blockquote>
+    <figcaption class="v2-label day__by">{DAY.quoteBy}</figcaption>
+  </figure>
 </section>
 
 <style>
   .day {
-    padding-top: 22vh;
-  }
-
-  .day__head {
-    display: grid;
-    gap: 16px;
-    padding-inline: var(--gutter);
-    margin-bottom: 7vh;
-  }
-
-  .diptych {
-    display: grid;
-    gap: var(--grid-gap);
-    padding-inline: var(--gutter);
-  }
-
-  @media (min-width: 900px) {
-    .diptych {
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-  }
-
-  .diptych__sticky :global(.diptych__hero) {
-    aspect-ratio: 4 / 5;
-  }
-
-  @media (min-width: 900px) {
-    .diptych__sticky {
-      height: calc(100svh - var(--gutter) * 2);
-    }
-
-    /* Without smooth scroll CSS can pin it; with it, motion.ts pins it. */
-    :global(html:not(.has-smoother)) .diptych__sticky {
-      position: sticky;
-      top: var(--gutter);
-    }
-
-    .diptych__sticky :global(.diptych__hero) {
-      aspect-ratio: auto;
-      height: 100%;
-    }
-  }
-
-  .diptych__col {
-    display: grid;
-    align-content: start;
-  }
-
-  .diptych__pair {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--grid-gap);
-  }
-
-  .diptych__pair :global(.media) {
-    aspect-ratio: 3 / 4;
-  }
-
-  .diptych__edito {
-    display: grid;
-    justify-items: center;
-    gap: 14px;
-    max-width: 480px;
-    margin: 0 auto;
-    padding: 14vh 0 12vh;
-  }
-
-  .schedule {
-    width: 100%;
-    margin: 32px 0 0;
-    border-top: 1px solid var(--ink-faint);
-  }
-
-  .schedule__row {
-    display: grid;
-    gap: 10px;
-    padding: 24px 0;
-    border-bottom: 1px solid var(--ink-faint);
-    text-align: left;
-  }
-
-  @media (min-width: 600px) {
-    .schedule__row {
-      grid-template-columns: 0.8fr 1.4fr;
-      gap: 20px;
-    }
-  }
-
-  .schedule dt {
-    font-family: var(--font-sans);
-    font-weight: 700;
-    font-size: var(--fs-tiny);
-    line-height: 1.4;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding: 96px var(--gutter);
+    background: var(--ivory);
     color: var(--ink);
   }
 
-  .schedule__n {
-    display: inline-block;
-    width: 2.4em;
-    font-family: var(--font-serif);
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: 0;
-    color: var(--wine);
+  /* ---------- Portrait + details ---------- */
+
+  .day__main {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
   }
 
-  .schedule dd {
-    display: grid;
-    gap: 2px;
+  .day__main :global(.day__portrait) {
+    width: 100%;
+    aspect-ratio: 358 / 440;
+  }
+
+  .day__details {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .day__intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .day__lede {
+    opacity: 0.82;
+  }
+
+  .day__rows {
     margin: 0;
-    font-size: var(--fs-body);
-    line-height: 1.45;
+    border-top: 1px solid var(--ink-faint);
   }
 
-  .schedule__time {
-    font-family: var(--font-serif);
-    font-size: var(--fs-title);
-    line-height: 1.25;
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--ink-faint);
   }
 
-  .schedule__place {
-    font-weight: 700;
-    margin-top: 4px;
-  }
-
-  .schedule__address {
-    color: var(--ink-soft);
-  }
-
-  .schedule__map {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    justify-self: start;
-    margin-top: 8px;
-    padding: 6px 0;
-    font-size: var(--fs-tiny);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  /* Phones: "I.  THE CEREMONY" on one wine line. */
+  .row__label {
+    display: flex;
+    gap: 10px;
     color: var(--wine);
-    border-bottom: 1px solid currentColor;
   }
 
-  .schedule__map :global(.schedule__icon) {
-    width: 9px;
-    height: 9px;
+  .row__content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 0;
+  }
+
+  .row__place {
+    font-weight: 700;
+  }
+
+  .row__soft {
+    opacity: 0.78;
+  }
+
+  /* Spacer 8 between two 8px gaps. */
+  .row__btn {
+    width: 100%;
+    margin-top: 16px;
   }
 
   .dress {
-    gap: 18px !important;
-  }
-
-  .dress__group {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 8px;
   }
 
+  .dress + .dress {
+    margin-top: 16px;
+  }
+
   .dress__who {
-    font-family: var(--font-serif);
     font-style: italic;
-    font-size: var(--fs-title);
-    line-height: 1.25;
   }
 
-  .dress__item {
-    display: grid;
-    gap: 2px;
-  }
-
-  .dress__role {
-    font-weight: 700;
-  }
-
-  .dress__colors {
+  .dress__swatches {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px 16px;
-    margin-top: 4px;
-    font-size: var(--fs-tiny);
-    color: var(--ink-soft);
+    gap: 16px;
   }
 
-  .dress__color {
+  .dress__swatch {
     display: inline-flex;
     align-items: center;
     gap: 8px;
   }
 
-  .dress__swatch {
-    width: 16px;
-    height: 16px;
+  .dress__dot {
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: var(--swatch);
-    box-shadow: inset 0 0 0 1px rgb(30 20 22 / 0.15);
   }
 
-  .diptych__cta {
+  /* ---------- Photo strip: 2 x 2 + 1 on phones ---------- */
+
+  .day__strip {
     display: grid;
-    justify-items: center;
-    gap: 28px;
-    padding-bottom: 14vh;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
   }
 
-  .diptych__cta :global(.diptych__small) {
-    width: clamp(88px, 9vw, 132px);
-    aspect-ratio: 2 / 3;
+  .day__strip :global(.day__photo) {
+    aspect-ratio: 174 / 232;
   }
 
-  .diptych__quote {
-    display: grid;
-    justify-items: center;
-    gap: 22px;
-    max-width: 420px;
-    margin: 0 auto;
-    padding: 14vh 0 10vh;
+  .day__strip :global(.day__photo--5) {
+    grid-column: 1 / -1;
+    aspect-ratio: 358 / 232;
   }
 
-  .diptych__quote blockquote {
+  /* ---------- Quote ---------- */
+
+  .day__quote {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
     margin: 0;
-    white-space: normal;
+    text-align: center;
+  }
+
+  .day__quote blockquote {
+    max-width: 960px;
+    margin: 0;
+  }
+
+  .day__by {
+    color: var(--wine);
+  }
+
+  /* ---------- Desktop ---------- */
+
+  @media (min-width: 900px) {
+    .day {
+      gap: 0;
+      padding: 160px var(--gutter);
+    }
+
+    .day__main {
+      display: grid;
+      grid-template-columns: 690fr 650fr;
+      gap: 60px;
+      align-items: start;
+      margin-top: 96px;
+    }
+
+    .day__main :global(.day__portrait) {
+      aspect-ratio: 690 / 1064;
+    }
+
+    .day__intro {
+      gap: 12px;
+    }
+
+    .day__lede {
+      max-width: 560px;
+    }
+
+    .row {
+      flex-direction: row;
+      gap: 24px;
+      padding: 32px 0;
+    }
+
+    .row__label {
+      flex: none;
+      flex-direction: column;
+      gap: 6px;
+      width: 170px;
+    }
+
+    .row__name {
+      color: var(--ink);
+    }
+
+    .row__content {
+      flex: 1;
+      gap: 6px;
+    }
+
+    .row__btn {
+      width: auto;
+      margin-top: 16px;
+    }
+
+    .dress {
+      gap: 6px;
+    }
+
+    .dress + .dress {
+      margin-top: 22px;
+    }
+
+    .dress__swatches {
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .dress__swatch {
+      opacity: 0.78;
+    }
+
+    .day__strip {
+      display: flex;
+      margin-top: 96px;
+    }
+
+    .day__strip :global(.day__photo),
+    .day__strip :global(.day__photo--5) {
+      flex: 1 1 0;
+      min-width: 0;
+      aspect-ratio: 272 / 362;
+    }
+
+    .day__quote {
+      gap: 24px;
+      margin-top: 160px;
+    }
   }
 </style>
