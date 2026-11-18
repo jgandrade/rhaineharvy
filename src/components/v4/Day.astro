@@ -2,7 +2,7 @@
 /**
  * V4 "The day": the date in Androgy, the church and the hotel stacked on the
  * left beside the two schedule rows, then the wine dress-code band - three
- * swatch cards and who wears what. Phones put each venue photo over its row
+ * swatch cards and who wears what. Under the schedule, the order of the day. Phones put each venue photo over its row
  * and stack the swatches three across.
  */
 import { EVENTS, V4 } from "../../lib/site";
@@ -35,11 +35,18 @@ import { EVENTS, V4 } from "../../lib/site";
       ))
     }
   </div>
+
+  <div class="flow" data-v4-rise>
+    <p class="v2-label flow__label">{V4.day.timeline.label}</p>
+    <ol class="flow__steps">
+      {V4.day.timeline.steps.map((step) => <li>{step}</li>)}
+    </ol>
+  </div>
 </section>
 
 <section class="dress" aria-labelledby="dress-title">
   <h2 class="v4-script dress__title" id="dress-title" data-v4-rise>{V4.dress.title}</h2>
-  <ul class="dress__cards">
+  <ul class="dress__cards" style={`--n:${V4.dress.cards.length}`}>
     {
       V4.dress.cards.map((c, i) => (
         <li class="card" style={`--chip:${c.hex}; --i:${i}`} data-v4-card>
@@ -228,6 +235,65 @@ import { EVENTS, V4 } from "../../lib/site";
     }
   }
 
+  /* ---------- The order of the day ---------- */
+
+  .flow {
+    display: grid;
+    justify-items: center;
+    gap: 18px;
+    margin: 48px var(--gutter) 0;
+    text-align: center;
+  }
+
+  .flow__label {
+    color: var(--wine);
+  }
+
+  .flow__steps {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    justify-content: center;
+    gap: 14px 32px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .flow__steps li {
+    counter-increment: step;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--f-dm);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  .flow__steps li::before {
+    content: counter(step, upper-roman) ".";
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--wine);
+  }
+
+  @media (min-width: 900px) {
+    .flow {
+      max-width: calc(1178 * var(--px));
+      margin: calc(72 * var(--px)) auto 0;
+    }
+
+    .flow__steps {
+      grid-template-columns: repeat(6, auto);
+      gap: 0 calc(40 * var(--px));
+    }
+
+    .flow__steps li {
+      font-size: 18px;
+    }
+  }
+
   /* ================= Dress band ================= */
 
   .dress {
@@ -247,7 +313,7 @@ import { EVENTS, V4 } from "../../lib/site";
 
   .dress__cards {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--n, 3), 1fr);
     gap: 10px;
     margin: 32px 0 0;
     padding: 0;
@@ -338,7 +404,7 @@ import { EVENTS, V4 } from "../../lib/site";
     }
 
     .dress__cards {
-      grid-template-columns: repeat(3, calc(276.67 * var(--px)));
+      grid-template-columns: repeat(var(--n, 3), calc(276.67 * var(--px)));
       /* The frame sets the row 14px left of centre (271 -> 1141). */
       justify-content: center;
       translate: calc(-14 * var(--px)) 0;

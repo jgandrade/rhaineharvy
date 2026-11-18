@@ -18,8 +18,8 @@ export const SITE = {
   dateLong: "Saturday, February 13, 2027",
   dateShort: "02 · 13 · 2027",
   city: "Ermita, Manila",
-  /** From the V4 design: "on or before 30th day of November". */
-  rsvpBy: "the 30th day of November",
+  /** Rhaine, Nov 9 2026: reply on or before January 5, 2027. */
+  rsvpBy: "January 5, 2027",
   contact: "",
   /** Optional hero loop (CloudFront URL). Falls back to the hero photo. */
   heroVideo: "",
@@ -56,9 +56,9 @@ export const EVENTS = [
     time: "Immediately after the ceremony",
     timeWords: "immediately after, for dinner and dancing",
     timeShort: "To follow",
-    place: "Manila Prince Hotel - Sapphire Hall C",
+    place: "Manila Prince Hotel - Sapphire Hall B & C, Lower Ground",
     venue: "Manila Prince Hotel",
-    room: "Sapphire Hall C",
+    room: "Sapphire Hall B & C, Lower Ground",
     address: "1000 San Marcelino St., Ermita, Manila",
     map: maps("Manila Prince Hotel, 1000 San Marcelino St., Ermita, Manila"),
     /** OpenStreetMap, Manila Prince Hotel node. */
@@ -138,7 +138,6 @@ export const DAY = {
         ],
         colors: [
           { name: "Champagne", hex: "#e3cfa8" },
-          { name: "Taupe", hex: "#8b7b6b" },
         ],
       },
       {
@@ -247,7 +246,7 @@ const CAL = {
   start: "20270213T060000Z",
   end: "20270213T140000Z",
   where: "San Vicente de Paul Parish, 959 San Marcelino St., Ermita, Manila",
-  details: "Ceremony at 2:00 PM, San Vicente de Paul Parish. Reception to follow at Manila Prince Hotel, Sapphire Hall C.",
+  details: "Ceremony at 2:00 PM, San Vicente de Paul Parish. Reception to follow at Manila Prince Hotel, Sapphire Hall B & C, Lower Ground.",
 };
 
 export const CALENDAR = {
@@ -286,7 +285,7 @@ export const V4 = {
   invite: {
     title: "We Invite You",
     lead: "Please confirm your attendance on or before ",
-    date: "30th day of November",
+    date: "January 5, 2027",
     cta: "KINDLY RSVP →",
     /** The moving ribbon between the invitation and the story. */
     ribbon: ["Rhaine & Harvy", "02 · 13 · 2027", "Ermita, Manila"],
@@ -329,12 +328,16 @@ export const V4 = {
     ],
     rows: ["THE CEREMONY", "THE RECEPTION"],
     directions: "DIRECTIONS ↗",
+    /** The order of the afternoon - no times, just what comes next. */
+    timeline: {
+      label: "HOW THE DAY UNFOLDS",
+      steps: ["Ceremony", "Photos", "Pica-pica", "Dinner", "Party & games", "Messages"],
+    },
   },
   dress: {
     title: "Dress for an evening in Burgundy.",
     cards: [
       { name: "Champagne", who: "NINANGS", hex: "#E3CFA8" },
-      { name: "Taupe", who: "NINANGS", hex: "#8B7B6B" },
       { name: "Burgundy", who: "GUESTS", hex: "#6E1A2B" },
     ],
     /** The outfit guide, in the order of the lines below it. */
@@ -356,7 +359,7 @@ export const V4 = {
   },
   notes: {
     title: "Before you Arrive.",
-    lede: "**Three little things** before the big day.",
+    lede: "**A few little things** before the big day.",
     /** Short on purpose: a title and one line each. Icons live in src/icons. */
     items: [
       {
@@ -377,11 +380,23 @@ export const V4 = {
         title: "Your presence is our gift",
         body: "If you’d like to give, a **monetary gift** toward our next chapter means the world.",
       },
+      {
+        n: "4",
+        icon: "unplugged",
+        title: "An unplugged ceremony",
+        body: "Kindly keep **phones and cameras away** during the ceremony. Our photographers have every moment covered, and we’ll share them with you.",
+      },
+      {
+        n: "5",
+        icon: "arrival",
+        title: "Come a little early",
+        body: "Please arrive **at least 30 minutes before** the 2:00 PM ceremony, so you can find your seat and settle in.",
+      },
     ],
   },
   reply: {
     title: "R.S.V.P.",
-    sub: "Kindly reply on or before the 30th day of November.",
+    sub: "Kindly reply on or before January 5, 2027.",
     facts: "SAT, FEB 13, 2027 · 2:00 PM · SAN VICENTE DE PAUL PARISH",
     accept: ["Joyfully", "ACCEPTS"],
     decline: ["Regretfully", "DECLINES"],
