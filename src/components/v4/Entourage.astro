@@ -1,0 +1,214 @@
+---
+/**
+ * V4 "Entourage", on cream between Moments and Good to know. Each group is a
+ * small caps label over its names, centred. Parents and the honour pair sit
+ * two across; principal sponsors run as him · her rows; the secondary
+ * sponsors, the party and the little ones fall into columns. Phones stack
+ * everything except the sponsor pairs.
+ */
+import { V4 } from "../../lib/site";
+
+const E = V4.entourage;
+---
+
+<section class="ent" id="entourage" aria-labelledby="entourage-title">
+  <h2 class="v4-script ent__title" id="entourage-title" data-v4-rise>{E.title}</h2>
+
+  <div class="ent__two" data-v4-rise>
+    {
+      E.parents.map((g) => (
+        <div class="grp">
+          <h3 class="v2-label grp__role">{g.role}</h3>
+          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="grp grp--sponsors" data-v4-rise>
+    <h3 class="v2-label grp__role">{E.sponsors.role}</h3>
+    <ul class="pairs">
+      {
+        E.sponsors.pairs.map(([him, her]) => (
+          <li class="pair">
+            <span>{him}</span>
+            <span>{her}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div class="ent__two" data-v4-rise>
+    {
+      E.honor.map((g) => (
+        <div class="grp">
+          <h3 class="v2-label grp__role">{g.role}</h3>
+          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="grp grp--wide" data-v4-rise>
+    <h3 class="v4-script ent__sub">{E.secondary.role}</h3>
+    <div class="ent__three">
+      {
+        E.secondary.groups.map((g) => (
+          <div class="grp">
+            <h4 class="v2-label grp__role">{g.role}</h4>
+            <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+
+  <div class="ent__two" data-v4-rise>
+    {
+      E.party.map((g) => (
+        <div class="grp">
+          <h3 class="v2-label grp__role">{g.role}</h3>
+          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+          {g.note && <p class="grp__note">({g.note})</p>}
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="ent__three" data-v4-rise>
+    {
+      E.little.map((g) => (
+        <div class="grp">
+          <h3 class="v2-label grp__role">{g.role}</h3>
+          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .ent {
+    display: grid;
+    gap: 44px;
+    padding: 72px var(--gutter) 80px;
+    background: var(--cream);
+    color: var(--ink);
+    text-align: center;
+  }
+
+  .ent__title {
+    font-size: 48px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .ent__sub {
+    margin-bottom: 24px;
+    font-size: 36px;
+    line-height: 1;
+    color: var(--wine);
+  }
+
+  .ent__two,
+  .ent__three {
+    display: grid;
+    gap: 32px;
+  }
+
+  .grp__role {
+    margin-bottom: 12px;
+    color: var(--wine);
+  }
+
+  .grp__names {
+    display: grid;
+    gap: 4px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--f-dm);
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .grp__note {
+    margin-top: 6px;
+    font-family: var(--f-dm);
+    font-size: 14px;
+    font-style: italic;
+    opacity: 0.72;
+  }
+
+  /* Him · her, the pair's two names meeting at the centre line. */
+  .pairs {
+    display: grid;
+    gap: 10px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--f-dm);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .pair span:first-child {
+    text-align: right;
+  }
+
+  .pair span:last-child {
+    text-align: left;
+  }
+
+  @media (min-width: 700px) {
+    .ent__two {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .ent__three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (min-width: 900px) {
+    .ent {
+      gap: calc(72 * var(--px));
+      padding: calc(120 * var(--px)) var(--gutter) calc(128 * var(--px));
+    }
+
+    .ent > * {
+      width: 100%;
+      max-width: 960px;
+      margin-inline: auto;
+    }
+
+    .ent__title {
+      font-size: calc(88 * var(--px));
+      letter-spacing: calc(-1.3 * var(--px));
+    }
+
+    .ent__sub {
+      font-size: calc(56 * var(--px));
+    }
+
+    .grp__names {
+      font-size: 19px;
+    }
+
+    .pairs {
+      gap: 12px;
+      font-size: 19px;
+    }
+
+    .pair {
+      gap: 40px;
+    }
+  }
+</style>

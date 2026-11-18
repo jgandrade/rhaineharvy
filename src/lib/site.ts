@@ -294,8 +294,9 @@ export const V4 = {
     story: ["№ 02", "OUR STORY"],
     day: ["№ 03", "THE DAY"],
     moments: ["№ 04", "MOMENTS"],
-    notes: ["№ 05", "GOOD TO KNOW"],
-    reply: ["№ 06", "REPLY"],
+    entourage: ["№ 05", "ENTOURAGE"],
+    notes: ["№ 06", "GOOD TO KNOW"],
+    reply: ["№ 07", "REPLY"],
     issue: "RHAINE & HARVY · VOL. I",
   },
   story: {
@@ -356,6 +357,48 @@ export const V4 = {
     quote: "“We never wanted a big day. We wanted the right people in the room - and that means You.”",
     by: "— RHAINE & HARVY",
     cta: "KINDLY RSVP →",
+  },
+  /** Rhaine's final list (Notes, Nov 9 2026) - spellings and titles as she typed them. */
+  entourage: {
+    title: "With the people who raised us.",
+    parents: [
+      { role: "Parents of the Groom", names: ["Mr. Hector Ramirez", "Mrs. Dotthy Ramirez"] },
+      { role: "Parents of the Bride", names: ["Mr. Loreno Rativo", "Mrs. Wilma Rativo"] },
+    ],
+    sponsors: {
+      role: "Principal Sponsors",
+      pairs: [
+        ["Mr. Emmanuel Alfiler", "Mrs. Cherie Alfiler"],
+        ["Mr. Roderick Dela Cruz", "Mrs. Franelie Dela Cruz"],
+        ["Mr. Rodolfo Doronila", "Mrs. Grace Doronila"],
+        ["Mr. Larry Ibuan", "Mrs. Julie Ibuan"],
+        ["Mr. Marvin Monterona", "Mrs. Annie Monterona"],
+        ["Mr. Solon Rativo", "Mrs. Luzviminda Rativo"],
+        ["Mr. Patrick Christian Rativo", "Mrs. Rovi Rativo"],
+        ["Atty. Manuel Rodriguez II", "Ms. Loreta Dizon"],
+      ],
+    },
+    honor: [
+      { role: "Best Man", names: ["Harold Dexter Ramirez"] },
+      { role: "Maid of Honor", names: ["Annie Agan-Chavez"] },
+    ],
+    secondary: {
+      role: "Secondary Sponsors",
+      groups: [
+        { role: "Veil", names: ["Keith Dicang", "Jasper Dicang"] },
+        { role: "Candle", names: ["Aiko Manuel", "Martel John De Leon"] },
+        { role: "Cord", names: ["Renelyn Velarde", "Engr. Anjoe Pengco"] },
+      ],
+    },
+    party: [
+      { role: "Groomsmen", names: ["Lawrence Gabriel Noble", "John Paul Tarrayo", "Allan Kliene Ligaya"] },
+      { role: "Bridesmaids", names: ["Joan Christel Aquino", "Bianca Lorenzo", "Beata Doronila"], note: "Beata Doronila represented by Jo-ann Episcope" },
+    ],
+    little: [
+      { role: "Bible & Coin Bearer", names: ["Brylle Laurence Pulanco"] },
+      { role: "Ring Bearer", names: ["Hermes Lyrel Ramirez"] },
+      { role: "Flower Girls", names: ["Samantha Avery Menulas", "Olivia Chandria Mercado"] },
+    ],
   },
   notes: {
     title: "Before you Arrive.",
@@ -419,6 +462,7 @@ export const V4 = {
     colophon: "Manila, 2027 · © Rhaine & Harvy",
     links: [
       { label: "THE DAY ↗", href: "#the-day" },
+      { label: "ENTOURAGE ↗", href: "#entourage" },
       { label: "GOOD TO KNOW ↗", href: "#notes" },
       { label: "OUR STORY ↗", href: "#story" },
       { label: "BACK TO TOP ↑", href: "#top" },
