@@ -26,11 +26,13 @@
 import Media from "../Media.astro";
 import { V4 } from "../../lib/site";
 
-const tones = ["wine", "blush", "stone", "wine"] as const;
-const frames = [4, 15, 19, 20].map((n, i) => ({
-  slug: `moment-${String(n).padStart(2, "0")}`,
-  tone: tones[i]!,
-}));
+/** Read left to right: warm spotlight, the wide white-wall frame, grey spotlight, hand in hand. */
+const frames = [
+  { n: 4, tone: "wine", wide: false },
+  { n: 19, tone: "stone", wide: true },
+  { n: 15, tone: "blush", wide: false },
+  { n: 20, tone: "stone", wide: false },
+].map((f, i) => ({ ...f, i, slug: `moment-${String(f.n).padStart(2, "0")}` }));
 ---
 
 <section class="band" aria-label="Counting down to the day">
@@ -53,8 +55,8 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
   <ul class="band__collage" data-v4-collage>
     {
       frames.map((f) => (
-        <li class="band__tile" data-v4-tile>
-          <Media slug={f.slug} label={f.slug} tone={f.tone} sizes="(min-width: 900px) 24vw, 48vw" class="band__img" />
+        <li class:list={["band__tile", `band__tile--${f.i + 1}`, { "band__tile--wide": f.wide }]} data-v4-tile>
+          <Media slug={f.slug} label={f.slug} tone={f.tone as "wine" | "blush" | "stone"} sizes={f.wide ? "(min-width: 900px) 38vw, 100vw" : "(min-width: 900px) 22vw, 33vw"} class="band__img" />
         </li>
       ))
     }
@@ -65,7 +67,10 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
 <section class="invite" aria-labelledby="invite-title">
   <img class="v4-rings invite__rings" src="/v4/rings.webp" alt="" width="256" height="256" loading="lazy" data-v4-beat />
   <h2 class="v4-script invite__title" id="invite-title" data-v4-rise>{V4.invite.title}</h2>
-  <p class="invite__lead" data-v4-rise>{V4.invite.lead}<strong>{V4.invite.date}</strong></p>
+  <p class="invite__lead" data-v4-rise>
+    <span>{V4.invite.lead.trim()}</span>
+    <strong class="invite__date">{V4.invite.date}</strong>
+  </p>
   <a class="bv2 bv2--primary invite__cta" href="#rsvp" data-v4-rise>{V4.invite.cta}</a>
 
   <!-- Two lines of script that slide past each other as the page scrolls:
@@ -101,19 +106,25 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
     z-index: 1;
     /* Its own block context, so the card's negative margin isn't absorbed. */
     display: flow-root;
-    padding: 0 0 48px;
+    padding: 0;
     background: var(--wine-deep);
   }
 
   /*
-   * Four portraits of one shape (2:3): two by two on phones, one row of four
-   * on desktop.
+   * The photos hang over the band's lower edge into the invitation, the way
+   * the countdown card hangs over its upper edge - one device, both seams.
+   * Phones: the wide frame across the top, three portraits under it, the
+   * middle one dropped a step. Desktop: one row, the wide frame second, the
+   * portraits stepping up and down so the bottom edge reads as a rhythm.
    */
   .band__collage {
+    position: relative;
+    z-index: 2;
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
     gap: 8px;
-    margin: 40px var(--gutter) 0;
+    margin: 40px var(--gutter) -72px;
     padding: 0;
     list-style: none;
   }
@@ -121,14 +132,26 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
   .band__tile {
     aspect-ratio: 2 / 3;
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: 3px;
+    /* A hairline and a deep, soft shadow keep the white-studio frames from
+       melting into the white invitation where they hang over the seam. */
+    box-shadow:
+      0 0 0 1px rgb(30 20 22 / 0.08),
+      0 24px 48px -20px rgb(34 7 13 / 0.45),
+      0 6px 14px -6px rgb(34 7 13 / 0.2);
   }
 
-  .band__tile :global(.band__img) {
-    width: 100%;
-    height: 100%;
+  .band__tile--wide {
+    grid-column: 1 / -1;
+    order: -1;
+    aspect-ratio: 3 / 2;
   }
 
+  .band__tile--3 {
+    margin-top: 24px;
+  }
+
+  .band__tile :global(.band__img),
   .band__tile :global(.media__img) {
     display: block;
     width: 100%;
@@ -281,14 +304,15 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 56px var(--gutter) 64px;
+    padding: calc(72px + 56px) var(--gutter) 64px;
     background: var(--paper);
     text-align: center;
   }
 
   .invite__rings {
-    width: 64px;
-    margin-bottom: 24px;
+    width: 52px;
+    min-width: 0;
+    margin-bottom: 20px;
   }
 
   .invite__title {
@@ -298,19 +322,32 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
   }
 
   .invite__lead {
+    display: grid;
+    gap: 6px;
     max-width: 32ch;
-    margin-top: 16px;
+    margin-top: 20px;
     font-family: var(--f-dm);
-    font-size: 17px;
-    line-height: 1.57;
+    font-size: 16px;
+    line-height: 1.5;
     letter-spacing: 0.02em;
+    color: var(--ink-soft);
+  }
+
+  /* The one fact to act on, set apart in the serif. */
+  .invite__date {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.2;
+    letter-spacing: 0;
     color: var(--wine);
   }
 
   .invite__cta {
     width: 100%;
     max-width: 320px;
-    margin-top: 28px;
+    margin-top: 32px;
   }
 
   /* ---------- The ribbon: script sliding past, edge to edge ---------- */
@@ -318,7 +355,7 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
   /* Clipped at the sides only, so the swashes above and below stay whole. */
   .ribbon {
     align-self: stretch;
-    margin: 72px calc(-1 * var(--gutter)) -16px;
+    margin: 88px calc(-1 * var(--gutter)) -16px;
     overflow-x: clip;
   }
 
@@ -327,7 +364,7 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
     align-items: center;
     gap: 0.45em;
     width: max-content;
-    font-size: 52px;
+    font-size: 44px;
     line-height: 1.05;
     white-space: nowrap;
     will-change: transform;
@@ -360,20 +397,31 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
   /* ---------- Desktop: the frame at 1440 ---------- */
 
   @media (min-width: 900px) {
-    .band {
-      padding-bottom: calc(80 * var(--px));
-    }
-
-    /* Desktop: the four frames in one row. */
+    /*
+     * One row. The wide frame is 1.7 portraits across, so it stands at three
+     * quarters of their height; the steps (0, 96, 40, 0) give the row its
+     * rise and fall against the seam.
+     */
     .band__collage {
-      grid-template-columns: repeat(4, 1fr);
-      gap: calc(16 * var(--px));
-      max-width: calc(1400 * var(--px));
-      margin: calc(64 * var(--px)) auto 0;
+      grid-template-columns: 1fr 1.7fr 1fr 1fr;
+      gap: calc(20 * var(--px));
+      max-width: calc(1320 * var(--px));
+      margin: calc(72 * var(--px)) auto calc(-180 * var(--px));
+      padding-inline: var(--gutter);
     }
 
     .band__tile {
-      border-radius: 6px;
+      border-radius: 4px;
+    }
+
+    .band__tile--wide {
+      grid-column: auto;
+      order: 0;
+      margin-top: calc(96 * var(--px));
+    }
+
+    .band__tile--3 {
+      margin-top: calc(40 * var(--px));
     }
 
     .count {
@@ -409,12 +457,13 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
     }
 
     .invite {
-      padding: calc(58 * var(--px)) var(--gutter) calc(76 * var(--px));
+      padding: calc((180 + 96) * var(--px)) var(--gutter) calc(88 * var(--px));
     }
 
     .invite__rings {
-      width: calc(89 * var(--px));
-      margin-bottom: calc(36 * var(--px));
+      width: calc(64 * var(--px));
+      min-width: 48px;
+      margin-bottom: calc(28 * var(--px));
     }
 
     .invite__title {
@@ -424,23 +473,28 @@ const frames = [4, 15, 19, 20].map((n, i) => ({
 
     .invite__lead {
       max-width: none;
-      margin-top: calc(8 * var(--px));
-      font-size: max(16px, calc(20 * var(--px)));
+      gap: calc(8 * var(--px));
+      margin-top: calc(24 * var(--px));
+      font-size: max(16px, calc(18 * var(--px)));
       letter-spacing: 0.4px;
+    }
+
+    .invite__date {
+      font-size: max(26px, calc(36 * var(--px)));
     }
 
     .invite__cta {
       width: 254px;
-      margin-top: calc(32 * var(--px));
+      margin-top: calc(40 * var(--px));
     }
 
     .ribbon {
-      margin-top: calc(110 * var(--px));
+      margin-top: calc(128 * var(--px));
       margin-bottom: calc(-24 * var(--px));
     }
 
     .ribbon__row {
-      font-size: calc(120 * var(--px));
+      font-size: calc(96 * var(--px));
     }
 
     .ribbon__row + .ribbon__row {

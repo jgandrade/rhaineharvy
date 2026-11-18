@@ -437,7 +437,8 @@ function collage() {
     start: "top 92%",
     once: true,
     onEnter: (batch) => {
-      gsap.to(batch, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, stagger: 0.08, ease: "expo.inOut" });
+      // Cleared at the end so the frames' shadows show past their edges.
+      gsap.to(batch, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, stagger: 0.08, ease: "expo.inOut", clearProps: "clipPath" });
       gsap.fromTo(
         batch.map((t) => q(".media", t)).filter(Boolean),
         { scale: 1.2 },
