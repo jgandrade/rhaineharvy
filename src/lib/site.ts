@@ -344,7 +344,7 @@ export const V4 = {
     /** The outfit guide, in the order of the lines below it. */
     lookbook: {
       src: "/v4/dress-lookbook",
-      alt: "Outfit guide: ninongs in a cream barong with black trousers and shoes; ninangs in burgundy, champagne or taupe gowns; guests in burgundy or taupe suits, burgundy or champagne dresses, and smart cream-and-beige separates.",
+      alt: "Outfit guide: ninongs in a cream barong with black slacks and black shoes; ninangs in champagne gowns; guests in burgundy or cream suits, burgundy or cream dresses, and smart cream-and-burgundy separates.",
     },
     lines: [
       ["Ninongs:", "Barong and black shoes"],
