@@ -1,11 +1,14 @@
 /**
  * RSVP form.
  *
- * Posts JSON to PUBLIC_RSVP_ENDPOINT (set it in .env.local). Until a backend
- * exists the form validates and tells the guest replies aren't open yet,
- * rather than pretending it sent anything.
+ * Posts each reply to the Google Apps Script web app behind the couple's
+ * RSVP Sheet (script: docs/rsvp-google-sheet.gs). The /exec URL is public by
+ * design - every guest's browser calls it - so it lives here;
+ * PUBLIC_RSVP_ENDPOINT overrides it. With neither, the form validates and
+ * says replies aren't open yet, rather than pretending it sent anything.
  */
-const ENDPOINT = import.meta.env.PUBLIC_RSVP_ENDPOINT as string | undefined;
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbw366ZDy0YB6MvQLF_ixErsljxFX0RYsjonGwN9THMbGFDzZ8Pb_G_OkiUHfRNtn5IsGQ/exec";
+const ENDPOINT = (import.meta.env.PUBLIC_RSVP_ENDPOINT as string | undefined) || SHEET_URL || undefined;
 
 const form = document.querySelector<HTMLFormElement>("[data-rsvp]");
 
@@ -100,10 +103,14 @@ if (form) {
     try {
       const res = await fetch(ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // text/plain keeps this a "simple" request: Apps Script can't answer
+        // the CORS preflight that application/json would trigger.
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify({ ...data, submittedAt: new Date().toISOString() }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const body = await res.json().catch(() => ({ ok: true }));
+      if (body.ok === false) throw new Error(body.error ?? "rejected");
 
       showThanks(data);
     } catch (err) {
