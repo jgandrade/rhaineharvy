@@ -582,9 +582,10 @@ function reveals() {
     gsap.from(el, { x: 40, opacity: 0, duration: 1.1, ease: "expo.out", scrollTrigger: { trigger: el, start: "top 85%" } });
   }
 
-  // Swatch cards flip up one after another.
-  const cards = qa("[data-v4-card]");
-  if (cards.length) {
+  // Swatch dots flip up one after another, each palette as its row arrives.
+  for (const list of qa(".attire__dots")) {
+    const cards = qa("[data-v4-card]", list);
+    if (!cards.length) continue;
     gsap.from(cards, {
       rotateX: -70,
       y: 40,

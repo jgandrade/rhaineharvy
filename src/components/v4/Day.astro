@@ -67,17 +67,6 @@ import { EVENTS, V4 } from "../../lib/site";
     {
       V4.dress.roles.map((r, i) => (
         <>
-          {i === 1 && (
-            <ul class="attire__dots" aria-label="Our wedding colours">
-              {V4.dress.cards.map((c) => (
-                <li class="dot" style={`--chip:${c.hex}`} data-v4-card>
-                  <span class="dot__chip" aria-hidden="true" />
-                  <span class="dot__name">{c.name}</span>
-                  <span class="dot__who">{c.who}</span>
-                </li>
-              ))}
-            </ul>
-          )}
           <div class="role">
             <dl class="role__looks">
               {r.looks.map((l) => (
@@ -89,6 +78,15 @@ import { EVENTS, V4 } from "../../lib/site";
             </dl>
             <img class="role__img" src={r.img.src} width={r.img.width} height={r.img.height} alt={r.alt} loading="lazy" />
           </div>
+          <ul class="attire__dots" aria-label={`Colours: ${r.palette.map((c) => c.name).join(", ")}`}>
+            {r.palette.map((c) => (
+              <li class="dot" style={`--chip:${c.hex}`} data-v4-card>
+                <span class="dot__chip" aria-hidden="true" />
+                <span class="dot__name">{c.name}</span>
+                {c.who && <span class="dot__who">{c.who}</span>}
+              </li>
+            ))}
+          </ul>
         </>
       ))
     }
@@ -436,7 +434,8 @@ import { EVENTS, V4 } from "../../lib/site";
     position: relative;
     max-width: 1040px;
     margin: 36px auto 0;
-    padding: 44px 24px 40px;
+    /* The bottom leaves room for the low floral spray under the last palette. */
+    padding: 44px 24px 84px;
     background:
       radial-gradient(ellipse 70% 40% at 20% 10%, rgb(234 219 213 / 0.55), transparent 70%),
       radial-gradient(ellipse 60% 45% at 85% 90%, rgb(227 207 168 / 0.28), transparent 70%),
@@ -551,8 +550,19 @@ import { EVENTS, V4 } from "../../lib/site";
   .dot {
     display: grid;
     justify-items: center;
+    align-content: start;
     gap: 2px;
     width: 76px;
+    text-align: center;
+  }
+
+  /* Four shades still fit one row on a 320px phone. */
+  .attire__dots {
+    gap: 10px;
+  }
+
+  .dot__name {
+    line-height: 1.25;
   }
 
   .dot__chip {

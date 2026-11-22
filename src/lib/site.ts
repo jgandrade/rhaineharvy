@@ -346,12 +346,6 @@ export const V4 = {
   dress: {
     title: "Dress for an evening in Burgundy.",
     intro: "We encourage you to dress in our wedding colours",
-    /** The palette, shown as dots between the two attire rows. */
-    cards: [
-      { name: "Champagne", who: "Ninangs", hex: "#E3CFA8" },
-      { name: "Cream", who: "Ninongs & guests", hex: "#F3EBD9" },
-      { name: "Burgundy", who: "Guests", hex: "#6E1A2B" },
-    ],
     /** Who wears what, each row beside its illustrated pair (transparent WebPs). */
     roles: [
       {
@@ -360,11 +354,19 @@ export const V4 = {
           { what: "Barong & black slacks", who: "For the ninongs, with black shoes" },
         ],
         img: { src: "/v4/dress-sponsors.webp", width: 639, height: 1000 },
+        /** Each row's colours, shown as dots under it. */
+        palette: [{ name: "Champagne", who: "Principal sponsors", hex: "#E3CFA8" }],
         alt: "A ninong in a cream barong with black slacks and black shoes beside a ninang in a champagne modern Filipiniana gown with butterfly sleeves.",
       },
       {
-        looks: [{ what: "Semi-formal attire", who: "For our guests, ladies & gentlemen, in burgundy or cream" }],
+        looks: [{ what: "Semi-formal attire", who: "For our guests, ladies & gentlemen, in shades of burgundy" }],
         img: { src: "/v4/dress-guests.webp", width: 522, height: 1001 },
+        palette: [
+          { name: "Deep burgundy", hex: "#3A0D16" },
+          { name: "Burgundy", hex: "#6E1A2B" },
+          { name: "Wine", hex: "#7F1D33" },
+          { name: "Dusty burgundy", hex: "#8A4552" },
+        ],
         alt: "A guest couple: a woman in a burgundy midi dress with a sash and a man in a cream suit with a burgundy tie.",
       },
     ],
