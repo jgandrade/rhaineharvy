@@ -1,8 +1,9 @@
 ---
 /**
  * V4 "The day": the date in Androgy, the church and the hotel stacked on the
- * left beside the two schedule rows, then the wine dress-code band - three
- * swatch cards and who wears what. Under the schedule, the order of the day. Phones put each venue photo over its row
+ * left beside the two schedule rows and, under them, the order of the day as
+ * an illustrated timeline; then the wine dress-code band - an
+ * ivory attire card: who wears what beside an illustrated pair per role, the palette as dots. Phones put each venue photo over its row
  * and stack the swatches three across.
  */
 import { EVENTS, V4 } from "../../lib/site";
@@ -36,50 +37,62 @@ import { EVENTS, V4 } from "../../lib/site";
     }
   </div>
 
-  <div class="flow" data-v4-rise>
-    <p class="v2-label flow__label">{V4.day.timeline.label}</p>
-    <ol class="flow__steps">
-      {V4.day.timeline.steps.map((step) => <li>{step}</li>)}
+  <div class="flow">
+    <p class="v2-label flow__label" data-v4-rise>{V4.day.timeline.label}</p>
+    <ol class="flow__steps" data-v4-flow>
+      {
+        V4.day.timeline.steps.map((step, i) => (
+          <li class="stop" data-v4-stop>
+            <span class="stop__art">
+              <img src={step.img} width="320" height="320" alt="" loading="lazy" />
+            </span>
+            <span class="stop__node" aria-hidden="true" />
+            <span class="stop__text">
+              <span class="stop__n">{["I", "II", "III", "IV", "V", "VI"][i]}.</span>
+              <span class="stop__label">{step.label}</span>
+            </span>
+          </li>
+        ))
+      }
     </ol>
   </div>
 </section>
 
 <section class="dress" aria-labelledby="dress-title">
   <h2 class="v4-script dress__title" id="dress-title" data-v4-rise>{V4.dress.title}</h2>
-  <ul class="dress__cards" style={`--n:${V4.dress.cards.length}`}>
+  <div class="attire" data-v4-rise>
+    <img class="attire__floral attire__floral--high" src="/v4/floral-spray.webp" width="600" height="633" alt="" loading="lazy" />
+    <img class="attire__floral attire__floral--low" src="/v4/floral-spray.webp" width="600" height="633" alt="" loading="lazy" />
+    <p class="v2-label attire__intro">{V4.dress.intro}</p>
     {
-      V4.dress.cards.map((c, i) => (
-        <li class="card" style={`--chip:${c.hex}; --i:${i}`} data-v4-card>
-          <span class={`card__chip ${c.name === "Burgundy" ? "card__chip--edge" : ""}`} aria-hidden="true" />
-          <span class="card__label">
-            <span class="card__name">{c.name}</span>
-            <span class="v2-label">{c.who}</span>
-            <span class="card__hex">{c.hex}</span>
-          </span>
-        </li>
+      V4.dress.roles.map((r, i) => (
+        <>
+          {i === 1 && (
+            <ul class="attire__dots" aria-label="Our wedding colours">
+              {V4.dress.cards.map((c) => (
+                <li class="dot" style={`--chip:${c.hex}`} data-v4-card>
+                  <span class="dot__chip" aria-hidden="true" />
+                  <span class="dot__name">{c.name}</span>
+                  <span class="dot__who">{c.who}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div class="role">
+            <dl class="role__looks">
+              {r.looks.map((l) => (
+                <div class="role__look">
+                  <dt class="role__what">{l.what}</dt>
+                  <dd class="role__who">{l.who}</dd>
+                </div>
+              ))}
+            </dl>
+            <img class="role__img" src={r.img.src} width={r.img.width} height={r.img.height} alt={r.alt} loading="lazy" />
+          </div>
+        </>
       ))
     }
-  </ul>
-  <figure class="dress__look" data-v4-rise>
-    <img
-      src={`${V4.dress.lookbook.src}-1400.webp`}
-      srcset={`${V4.dress.lookbook.src}-1400.webp 1400w, ${V4.dress.lookbook.src}-2600.webp 2600w`}
-      sizes="(min-width: 900px) 860px, 100vw"
-      alt={V4.dress.lookbook.alt}
-      width="2600"
-      height="1007"
-      loading="lazy"
-    />
-  </figure>
-  <p class="dress__lines" data-v4-rise>
-    {
-      V4.dress.lines.map(([who, what]) => (
-        <span class="dress__line">
-          <strong>{who}</strong> {what}
-        </span>
-      ))
-    }
-  </p>
+  </div>
 </section>
 
 <style>
@@ -112,6 +125,7 @@ import { EVENTS, V4 } from "../../lib/site";
     width: 100%;
     aspect-ratio: 331 / 248;
     margin-top: 24px;
+    border-radius: 16px;
     object-fit: cover;
   }
 
@@ -237,67 +251,163 @@ import { EVENTS, V4 } from "../../lib/site";
 
   /* ---------- The order of the day ---------- */
 
+  /*
+   * "How the day unfolds": six stops, each a small watercolour vignette over
+   * a gold node on a dotted path, its numeral and name beneath. Desktop: one
+   * row, the path running through the nodes. Phones: a vertical timeline -
+   * the path down the left, each stop's picture and name beside its node.
+   */
   .flow {
-    display: grid;
-    justify-items: center;
-    gap: 18px;
-    margin: 48px var(--gutter) 0;
+    --gold: #c9a96a;
+    margin: 56px var(--gutter) 0;
     text-align: center;
   }
 
   .flow__label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
     color: var(--wine);
+  }
+
+  .flow__label::before,
+  .flow__label::after {
+    content: "";
+    width: 40px;
+    height: 1px;
+    background: var(--gold);
   }
 
   .flow__steps {
+    position: relative;
     display: grid;
-    grid-template-columns: repeat(2, auto);
-    justify-content: center;
-    gap: 14px 32px;
-    margin: 0;
+    gap: 8px;
+    max-width: 360px;
+    margin: 28px auto 0;
     padding: 0;
     list-style: none;
-    counter-reset: step;
   }
 
-  .flow__steps li {
-    counter-increment: step;
-    display: inline-flex;
-    align-items: baseline;
-    gap: 8px;
-    font-family: var(--f-dm);
-    font-weight: 500;
-    font-size: 16px;
-    line-height: 1.4;
+  /* The dotted path: down the left on phones, across the nodes on desktop. */
+  .flow__steps::before {
+    content: "";
+    position: absolute;
+    top: 40px;
+    bottom: 40px;
+    left: 108px;
+    border-left: 2px dotted var(--gold);
   }
 
-  .flow__steps li::before {
-    content: counter(step, upper-roman) ".";
+  .stop {
+    position: relative;
+    display: grid;
+    grid-template-columns: 88px 40px 1fr;
+    align-items: center;
+    text-align: left;
+  }
+
+  .stop__art img {
+    display: block;
+    width: 88px;
+    height: 88px;
+    object-fit: contain;
+    filter: drop-shadow(0 6px 8px rgb(58 13 22 / 0.12));
+    transition: translate 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), rotate 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .stop__node {
+    position: relative;
+    z-index: 1;
+    justify-self: center;
+    width: 12px;
+    height: 12px;
+    border: 2px solid var(--gold);
+    background: var(--ivory);
+    rotate: 45deg;
+  }
+
+  .stop__text {
+    display: grid;
+    gap: 2px;
+  }
+
+  .stop__n {
     font-family: var(--font-serif);
+    font-size: 14px;
     font-style: italic;
-    color: var(--wine);
+    color: #a8823f;
+  }
+
+  .stop__label {
+    font-family: var(--font-serif);
+    font-size: 19px;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  @media (hover: hover) {
+    .stop:hover .stop__art img {
+      translate: 0 -6px;
+      rotate: -3deg;
+    }
+
+    .stop:hover .stop__node {
+      background: var(--wine);
+      border-color: var(--wine);
+    }
   }
 
   @media (min-width: 900px) {
     .flow {
-      max-width: calc(1178 * var(--px));
-      margin: calc(72 * var(--px)) auto 0;
+      max-width: calc(1240 * var(--px));
+      margin: calc(88 * var(--px)) auto 0;
     }
 
     .flow__steps {
-      grid-template-columns: repeat(6, auto);
-      gap: 0 calc(40 * var(--px));
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      max-width: none;
+      margin-top: calc(44 * var(--px));
     }
 
-    .flow__steps li {
-      font-size: 18px;
+    .flow__steps::before {
+      top: calc(150 * var(--px) + 6px);
+      bottom: auto;
+      left: calc(100% / 12);
+      right: calc(100% / 12);
+      border-left: 0;
+      border-top: 2px dotted var(--gold);
+    }
+
+    .stop {
+      grid-template-columns: none;
+      grid-template-rows: auto auto auto;
+      justify-items: center;
+      gap: calc(18 * var(--px));
+      text-align: center;
+    }
+
+    .stop__art img {
+      width: calc(132 * var(--px));
+      height: calc(132 * var(--px));
+      min-width: 96px;
+      min-height: 96px;
+    }
+
+    .stop__text {
+      justify-items: center;
+    }
+
+    .stop__label {
+      font-size: max(18px, calc(22 * var(--px)));
     }
   }
 
   /* ================= Dress band ================= */
 
   .dress {
-    /* The swatch cards flip up in 3D; their projection never widens the page. */
+    /* The palette dots flip up in 3D; their projection never widens the page. */
     overflow-x: clip;
     padding: 64px var(--gutter) 72px;
     background: var(--wine-deep);
@@ -311,86 +421,161 @@ import { EVENTS, V4 } from "../../lib/site";
     letter-spacing: -0.01em;
   }
 
-  .dress__cards {
+  /*
+   * The attire card, after the inspo invitation: one ivory paper panel on the
+   * wine band. An intro line, then each role as a row - its labels on the
+   * left, its illustrated pair on the right - with the palette as a centred
+   * row of dots between the two rows. One spacing scale throughout:
+   * --s1 (inside a label), --s2 (between labels), --s3 (between blocks).
+   */
+  .attire {
+    --attire-r: 20px;
+    --s1: 6px;
+    --s2: 20px;
+    --s3: 36px;
+    position: relative;
+    max-width: 1040px;
+    margin: 36px auto 0;
+    padding: 44px 24px 40px;
+    background:
+      radial-gradient(ellipse 70% 40% at 20% 10%, rgb(234 219 213 / 0.55), transparent 70%),
+      radial-gradient(ellipse 60% 45% at 85% 90%, rgb(227 207 168 / 0.28), transparent 70%),
+      var(--ivory);
+    color: var(--wine);
+    border-radius: var(--attire-r);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.28);
+  }
+
+  /* The floral spray from the gift note, peeking out of two corners of the card. */
+  .attire__floral {
+    position: absolute;
+    z-index: 2;
+    width: 120px;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 16px rgb(0 0 0 / 0.3));
+  }
+
+  /* Phones: only the low spray - the high one would crowd the title. */
+  .attire__floral--high {
+    display: none;
+    rotate: 180deg;
+  }
+
+  .attire__floral--low {
+    bottom: -52px;
+    left: -26px;
+  }
+
+  /* A hairline inset border, like a printed card. */
+  .attire::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgb(110 26 43 / 0.24);
+    /* Concentric with the card: its radius less the 10px inset. */
+    border-radius: calc(var(--attire-r) - 10px);
+    pointer-events: none;
+  }
+
+  .attire__intro {
+    max-width: 30ch;
+    margin: 0 auto;
+    font-size: 11px;
+    line-height: 1.7;
+    letter-spacing: 0.16em;
+    color: var(--ink-soft);
+  }
+
+  .role {
     display: grid;
-    grid-template-columns: repeat(var(--n, 3), 1fr);
-    gap: 10px;
-    margin: 32px 0 0;
+    justify-items: center;
+    gap: var(--s2);
+    margin-top: var(--s3);
+  }
+
+  .role__looks {
+    display: flex;
+    flex-direction: column;
+    gap: var(--s2);
+    margin: 0;
+  }
+
+  .role__what {
+    font-family: var(--font-serif);
+    font-size: 21px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .role__who {
+    margin: var(--s1) 0 0;
+    font-family: var(--f-dm);
+    font-size: 12px;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+
+  .role__img {
+    display: block;
+    width: auto;
+    height: 300px;
+    filter: drop-shadow(0 12px 14px rgb(58 13 22 / 0.18));
+  }
+
+  /* The palette: a centred row of dots between the rows (desktop adds hairlines). */
+  .attire__dots {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 16px;
+    margin: var(--s3) 0 0;
     padding: 0;
     list-style: none;
   }
 
-  .card {
-    display: flex;
-    flex-direction: column;
-    background: var(--white);
-    color: var(--ink);
-    text-align: left;
-    box-shadow: 0 8px 24px rgb(58 13 22 / 0.06);
+  .attire__dots::before,
+  .attire__dots::after {
+    content: none;
+    flex: 1;
+    max-width: 180px;
+    height: 1px;
+    margin-top: 22px;
+    background: rgb(110 26 43 / 0.24);
   }
 
-  .card__chip {
-    aspect-ratio: 276.67 / 220;
+  .dot {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    width: 76px;
+  }
+
+  .dot__chip {
+    width: 44px;
+    height: 44px;
+    margin-bottom: 8px;
+    border-radius: 50%;
     background: var(--chip);
+    box-shadow: inset 0 0 0 1px rgb(30 20 22 / 0.1), 0 4px 10px rgb(58 13 22 / 0.12);
   }
 
-  .card__chip--edge {
-    box-shadow: inset 0 0 0 1px #fff;
-  }
-
-  .card__label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 10px;
-  }
-
-  .card__name {
+  .dot__name {
     font-family: var(--font-serif);
-    font-size: 18px;
-    line-height: 1.25;
+    font-size: 14px;
   }
 
-  .card__label .v2-label {
-    font-size: 10px;
-    letter-spacing: 0.12em;
-  }
-
-  .card__hex {
-    font-family: var(--font-sans);
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-  /*
-   * The outfit guide, straight on the wine band (the PNG is transparent). A
-   * faint warm glow behind and a soft light rim keep the black trousers and
-   * burgundy gowns from sinking into the wine.
-   */
-  .dress__look {
-    margin: 32px 0 0;
-    background: radial-gradient(ellipse 60% 55% at 50% 55%, rgb(244 238 234 / 0.1), transparent 70%);
-  }
-
-  .dress__look img {
-    display: block;
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 0 1px rgb(244 238 234 / 0.35)) drop-shadow(0 10px 18px rgb(0 0 0 / 0.35));
-  }
-
-  .dress__lines {
-    display: flex;
-    flex-direction: column;
-    margin-top: 28px;
+  .dot__who {
     font-family: var(--f-dm);
-    font-size: 18px;
-    line-height: 1.7;
-  }
-
-  /* The frame sets these in Title Case ("Barong And Black Shoes"). */
-  .dress__line {
-    text-transform: capitalize;
+    font-size: 9px;
+    line-height: 1.4;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
   }
 
   @media (min-width: 900px) {
@@ -403,46 +588,91 @@ import { EVENTS, V4 } from "../../lib/site";
       letter-spacing: calc(-0.8 * var(--px));
     }
 
-    .dress__cards {
-      grid-template-columns: repeat(var(--n, 3), calc(276.67 * var(--px)));
-      /* The frame sets the row 14px left of centre (271 -> 1141). */
-      justify-content: center;
-      translate: calc(-14 * var(--px)) 0;
-      gap: calc(20 * var(--px));
-      margin-top: calc(43 * var(--px));
+    .attire {
+      --attire-r: 32px;
+      --s2: 28px;
+      --s3: 48px;
+      margin-top: calc(56 * var(--px));
+      padding: 64px 88px 56px;
     }
 
-    .card__chip {
-      height: calc(220 * var(--px));
-      aspect-ratio: auto;
+    .attire__floral {
+      width: 210px;
     }
 
-    .card__label {
-      padding: 16px;
+    .attire__floral--high {
+      display: block;
+      top: -52px;
+      right: -118px;
     }
 
-    .card__name {
+    .attire__floral--low {
+      bottom: -96px;
+      left: -120px;
+    }
+
+    .attire__intro {
+      max-width: none;
+      font-size: 13px;
+    }
+
+    /*
+     * Text and picture share one row; the picture column is a fixed width so
+     * both pairs line up, and the text sits optically centred against it.
+     */
+    .role {
+      grid-template-columns: minmax(0, 1fr) 300px;
+      align-items: center;
+      justify-items: start;
+      gap: 48px;
+      text-align: left;
+    }
+
+    .role__looks {
+      padding-left: 24px;
+      border-left: 1px solid rgb(110 26 43 / 0.24);
+    }
+
+    .role__what {
       font-size: 28px;
+      text-wrap: balance;
     }
 
-    .card__label .v2-label {
-      font-size: 12px;
-      letter-spacing: var(--track-label);
+    .role__who {
+      font-size: 13px;
     }
 
-    .card__hex {
-      font-size: 15px;
+    .role__img {
+      justify-self: center;
+      height: 380px;
     }
 
-    .dress__look {
-      max-width: calc(860 * var(--px));
-      margin: calc(56 * var(--px)) auto 0;
+    .attire__dots {
+      gap: 28px;
     }
 
-    .dress__lines {
-      margin-top: calc(43 * var(--px));
-      font-size: max(18px, calc(26 * var(--px)));
-      line-height: 1.89;
+    .attire__dots::before,
+    .attire__dots::after {
+      content: "";
+      max-width: 240px;
+      margin-top: 28px;
+    }
+
+    .dot {
+      width: 96px;
+    }
+
+    .dot__chip {
+      width: 56px;
+      height: 56px;
+    }
+
+    .dot__name {
+      font-size: 16px;
+    }
+
+    .dot__who {
+      font-size: 10px;
     }
   }
 </style>

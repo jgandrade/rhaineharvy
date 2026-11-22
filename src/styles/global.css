@@ -550,6 +550,8 @@ html.menu-open body {
 	align-items: center;
 	justify-content: center;
 	height: 56px;
+	/* Rounded, like every card and print on the page. */
+	border-radius: 12px;
 	padding: 0 32px;
 	font-family: var(--font-sans);
 	font-weight: 700;
@@ -584,6 +586,7 @@ html.menu-open body {
 .bv2--link,
 .bv2--link-light {
 	height: auto;
+	border-radius: 0;
 	padding: 4px 0 6px;
 	border-bottom: 1px solid currentColor;
 }

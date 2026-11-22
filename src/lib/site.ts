@@ -330,26 +330,43 @@ export const V4 = {
     rows: ["THE CEREMONY", "THE RECEPTION"],
     directions: "DIRECTIONS ↗",
     /** The order of the afternoon - no times, just what comes next. */
+    /** Each stop carries its watercolour vignette (public/v4/step-*.webp, made in Figma). */
     timeline: {
       label: "HOW THE DAY UNFOLDS",
-      steps: ["Ceremony", "Photos", "Pica-pica", "Dinner", "Party & games", "Messages"],
+      steps: [
+        { label: "Ceremony", img: "/v4/step-ceremony.webp" },
+        { label: "Photos", img: "/v4/step-photos.webp" },
+        { label: "Pica-pica", img: "/v4/step-picapica.webp" },
+        { label: "Dinner", img: "/v4/step-dinner.webp" },
+        { label: "Party & games", img: "/v4/step-party.webp" },
+        { label: "Messages", img: "/v4/step-messages.webp" },
+      ],
     },
   },
   dress: {
     title: "Dress for an evening in Burgundy.",
+    intro: "We encourage you to dress in our wedding colours",
+    /** The palette, shown as dots between the two attire rows. */
     cards: [
-      { name: "Champagne", who: "NINANGS", hex: "#E3CFA8" },
-      { name: "Burgundy", who: "GUESTS", hex: "#6E1A2B" },
+      { name: "Champagne", who: "Ninangs", hex: "#E3CFA8" },
+      { name: "Cream", who: "Ninongs & guests", hex: "#F3EBD9" },
+      { name: "Burgundy", who: "Guests", hex: "#6E1A2B" },
     ],
-    /** The outfit guide, in the order of the lines below it. */
-    lookbook: {
-      src: "/v4/dress-lookbook",
-      alt: "Outfit guide: ninongs in a cream barong with black slacks and black shoes; ninangs in champagne gowns; guests in burgundy or cream suits, burgundy or cream dresses, and smart cream-and-burgundy separates.",
-    },
-    lines: [
-      ["Ninongs:", "Barong and black shoes"],
-      ["Ninangs:", "modern Filipiniana or long gown"],
-      ["Guests:", "semi-formal attire"],
+    /** Who wears what, each row beside its illustrated pair (transparent WebPs). */
+    roles: [
+      {
+        looks: [
+          { what: "Modern Filipiniana", who: "For the ninangs, in champagne" },
+          { what: "Barong & black slacks", who: "For the ninongs, with black shoes" },
+        ],
+        img: { src: "/v4/dress-sponsors.webp", width: 639, height: 1000 },
+        alt: "A ninong in a cream barong with black slacks and black shoes beside a ninang in a champagne modern Filipiniana gown with butterfly sleeves.",
+      },
+      {
+        looks: [{ what: "Semi-formal attire", who: "For our guests, ladies & gentlemen, in burgundy or cream" }],
+        img: { src: "/v4/dress-guests.webp", width: 522, height: 1001 },
+        alt: "A guest couple: a woman in a burgundy midi dress with a sash and a man in a cream suit with a burgundy tie.",
+      },
     ],
   },
   moments: {
@@ -360,7 +377,10 @@ export const V4 = {
   },
   /** Rhaine's final list (Notes, Nov 9 2026) - spellings and titles as she typed them. */
   entourage: {
-    title: "With the people who raised us.",
+    title: "Standing with us.",
+    lede: "The family and friends who will walk beside us as we say I do.",
+    partyTitle: "The Bridal Party",
+    littleTitle: "Our Little Ones",
     parents: [
       { role: "Parents of the Groom", names: ["Mr. Hector Ramirez", "Mrs. Dotthy Ramirez"] },
       { role: "Parents of the Bride", names: ["Mr. Loreno Rativo", "Mrs. Wilma Rativo"] },
@@ -400,6 +420,18 @@ export const V4 = {
       { role: "Flower Girls", names: ["Samantha Avery Menulas", "Olivia Chandria Mercado"] },
     ],
   },
+  /** Its own framed note above "Before you Arrive." (after the inspo invitation). */
+  gifts: {
+    eyebrow: "A note on gifts",
+    title: "Your presence is our present.",
+    body: [
+      "Truly, having you there as we say I do is the greatest gift we could ask for.",
+      "If you would like to bless us as we begin our life together, a monetary gift would mean the world to us. Whatever you decide, just come — and bring your biggest smile.",
+    ],
+    signoff: "With all our love,",
+    signature: "Rhaine & Harvy",
+  },
+
   notes: {
     title: "Before you Arrive.",
     lede: "**A few little things** before the big day.",
@@ -419,18 +451,12 @@ export const V4 = {
       },
       {
         n: "3",
-        icon: "gift",
-        title: "Your presence is our gift",
-        body: "If you’d like to give, a **monetary gift** toward our next chapter means the world.",
-      },
-      {
-        n: "4",
         icon: "unplugged",
         title: "An unplugged ceremony",
         body: "Kindly keep **phones and cameras away** during the ceremony. Our photographers have every moment covered, and we’ll share them with you.",
       },
       {
-        n: "5",
+        n: "4",
         icon: "arrival",
         title: "Come a little early",
         body: "Please arrive **at least 30 minutes before** the 2:00 PM ceremony, so you can find your seat and settle in.",
@@ -438,17 +464,35 @@ export const V4 = {
     ],
   },
   reply: {
-    title: "R.S.V.P.",
+    eyebrow: "R · S · V · P",
+    title: "Will you join us?",
     sub: "Kindly reply on or before January 5, 2027.",
-    facts: "SAT, FEB 13, 2027 · 2:00 PM · SAN VICENTE DE PAUL PARISH",
-    accept: ["Joyfully", "ACCEPTS"],
-    decline: ["Regretfully", "DECLINES"],
+    /** The invitation side of the reply card, set like stationery. */
+    facts: [
+      { label: "When", lines: ["Saturday, February 13, 2027", "2:00 in the afternoon"], short: ["Sat, Feb 13, 2027", "2:00 PM"] },
+      { label: "Where", lines: ["San Vicente de Paul Parish", "Ermita, Manila"], short: ["San Vicente de Paul", "Ermita, Manila"] },
+    ],
+    /** Phones: the reply-by line, shorter. */
+    subShort: "Kindly reply by January 5, 2027.",
+    ask: "Will you attend?",
+    /** Full wording, and the short form small phones show. */
+    accept: ["Joyfully accept", "Accept"],
+    decline: ["Regretfully decline", "Decline"],
     fields: {
-      name: "Full name, as on your invitation",
-      contact: "Email or mobile number",
-      guests: "Names of everyone attending",
-      diet: "Dietary needs or allergies",
-      note: "A note for us (optional)",
+      name: "Your name",
+      namePh: "As written on your invitation",
+      guests: "How many of you are coming?",
+      guestsHint: "Including you — only the guests named on your invitation, please.",
+      note: "A note for us",
+      notePh: "A wish, a hello, anything at all",
+      /** Phones: the same questions in fewer words. */
+      short: {
+        ask: "Attending?",
+        guests: "How many?",
+        guestsHint: "Including you, as named on your invite.",
+        note: "A note",
+      },
+      optional: "optional",
     },
     submit: "SEND REPLY →",
     thanks: {

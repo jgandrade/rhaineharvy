@@ -1,0 +1,295 @@
+---
+/**
+ * V4 "A note on gifts", on wine-deep just above "Before you Arrive." - set
+ * as a real letter: an ivory card standing up out of an open cream envelope,
+ * sealed with Rhaine & Harvy's monogram wax seal, a low peony garland laid
+ * across the envelope's foot. The card carries the note and their signature.
+ *
+ * The envelope is built in CSS so it can open: back, flap, the letter, the
+ * front pocket (a shallow V at its mouth), the seal, then the garland on top.
+ * The letter's foot always sits inside the pocket; its own bottom padding is
+ * deeper than the pocket's mouth, so no line of text is ever tucked away.
+ *
+ * Motion (scripts/v4.ts, giftLetter()): the reader's scroll opens it - seal,
+ * flap, the letter rising, then its lines one by one - finished by the time
+ * the letter's top is just under the menu bar. No pin. Without motion it simply sits open.
+ */
+import { V4 } from "../../lib/site";
+
+const G = V4.gifts;
+---
+
+<section class="gifts" aria-labelledby="gifts-title">
+  <p class="v2-label gifts__eyebrow" data-v4-rise>{G.eyebrow}</p>
+
+  <div class="note" data-v4-gift>
+    <div class="note__stage">
+      <span class="env__back" aria-hidden="true"></span>
+      <span class="env__flap" aria-hidden="true" data-v4-gift-flap></span>
+
+      <article class="letter" data-v4-gift-letter>
+        <span class="letter__frame" aria-hidden="true"></span>
+        <h2 class="v4-script letter__title" id="gifts-title">{G.title}</h2>
+        {G.body.map((p) => <p class="letter__text">{p}</p>)}
+        <p class="letter__sign">
+          <span class="letter__with">{G.signoff}</span>
+          <span class="v4-script letter__names">{G.signature}</span>
+        </p>
+      </article>
+
+      <span class="env__pocket" aria-hidden="true"></span>
+      <img class="env__seal" src="/v4/gift-seal.webp" width="320" height="345" alt="" loading="lazy" data-v4-gift-seal />
+    </div>
+    <img class="note__garland" src="/v4/gift-garland.webp" width="1200" height="448" alt="" loading="lazy" />
+  </div>
+</section>
+
+<style>
+  .gifts {
+    overflow-x: clip;
+    padding: 72px var(--gutter) 120px;
+    background:
+      radial-gradient(ellipse 60% 55% at 50% 55%, rgb(143 43 60 / 0.45), transparent 70%),
+      var(--wine-deep);
+    color: var(--ivory);
+    text-align: center;
+  }
+
+  .gifts__eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+    color: #e3cfa8;
+  }
+
+  .gifts__eyebrow::before,
+  .gifts__eyebrow::after {
+    content: "";
+    width: 36px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.6;
+  }
+
+  /* ---------- the envelope ---------- */
+
+  .note {
+    /* Envelope height, pocket height, and how deep the letter's foot sits in it. */
+    --env-h: 220px;
+    --pocket-h: 150px;
+    --tuck: 74px;
+    position: relative;
+    width: min(100%, 358px);
+    margin: 0 auto;
+  }
+
+  .note__stage {
+    position: relative;
+    /* Room under the letter for the part of the envelope below its foot. */
+    padding-bottom: calc(var(--pocket-h) - var(--tuck));
+    perspective: 1400px;
+    /* Clip only below: the letter, rising from inside, never shows under the envelope. */
+    overflow: visible clip;
+  }
+
+  .env__back,
+  .env__pocket,
+  .env__flap {
+    position: absolute;
+    left: 0;
+    right: 0;
+  }
+
+  .env__back {
+    bottom: 0;
+    z-index: 1;
+    height: var(--env-h);
+    border-radius: 14px;
+    background: linear-gradient(180deg, #d9c7a3, #e8dabd);
+    box-shadow: 0 30px 60px -20px rgb(0 0 0 / 0.55);
+  }
+
+  /* The flap hinges on the envelope's top edge; open, it stands up behind the letter. */
+  .env__flap {
+    bottom: var(--env-h);
+    z-index: 1;
+    height: calc(var(--env-h) * 0.6);
+    background: linear-gradient(0deg, #e3d3b2, #d6c29b);
+    clip-path: polygon(0 100%, 100% 100%, 50% 0);
+    transform-origin: 50% 100%;
+  }
+
+  .env__pocket {
+    bottom: 0;
+    z-index: 3;
+    height: var(--pocket-h);
+    border-radius: 0 0 14px 14px;
+    background:
+      linear-gradient(115deg, rgb(0 0 0 / 0.07), transparent 40%),
+      linear-gradient(245deg, rgb(0 0 0 / 0.07), transparent 40%),
+      linear-gradient(180deg, #f3e9d4, #efe2c6);
+    clip-path: polygon(0 0, 50% 38%, 100% 0, 100% 100%, 0 100%);
+  }
+
+  .env__seal {
+    position: absolute;
+    left: 50%;
+    bottom: calc(var(--pocket-h) * 0.62 - 34px);
+    z-index: 4;
+    width: 68px;
+    height: auto;
+    translate: -50% 0;
+    filter: drop-shadow(0 6px 8px rgb(34 7 13 / 0.45));
+  }
+
+  /* Laid across the envelope's foot, a little wider than it. */
+  .note__garland {
+    position: absolute;
+    left: 50%;
+    bottom: -96px;
+    z-index: 5;
+    width: 118%;
+    max-width: none;
+    height: auto;
+    translate: -50% 0;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 14px rgb(0 0 0 / 0.4));
+  }
+
+  /* ---------- the letter ---------- */
+
+  .letter {
+    position: relative;
+    z-index: 2;
+    width: 92%;
+    margin: 0 auto;
+    /* The foot is tucked into the pocket, so the text ends well above it. */
+    padding: 36px 22px calc(var(--tuck) + 22px);
+    border-radius: 12px;
+    background:
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgb(255 255 255 / 0.7), transparent 70%),
+      #fbf7f0;
+    color: var(--ink);
+    box-shadow: 0 -6px 24px rgb(0 0 0 / 0.18);
+  }
+
+  .letter__frame {
+    position: absolute;
+    inset: 8px 8px 0;
+    border: 1px solid rgb(110 26 43 / 0.22);
+    border-bottom: 0;
+    border-radius: 7px 7px 0 0;
+    pointer-events: none;
+  }
+
+  .letter__title {
+    font-size: 40px;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: var(--wine);
+    text-wrap: balance;
+  }
+
+  .letter__text {
+    margin-top: 16px;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  .letter__text + .letter__text {
+    margin-top: 10px;
+  }
+
+  .letter__sign {
+    display: grid;
+    gap: 2px;
+    margin-top: 22px;
+  }
+
+  .letter__with {
+    font-family: var(--font-serif);
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+
+  .letter__names {
+    font-size: 34px;
+    line-height: 1.05;
+    color: var(--wine);
+  }
+
+  /* Desktop: a wider, lower envelope, so the note reads in fewer lines. */
+  @media (min-width: 900px) {
+    .gifts {
+      padding: calc(110 * var(--px)) var(--gutter) calc(190 * var(--px));
+    }
+
+    .gifts__eyebrow {
+      margin-bottom: 26px;
+    }
+
+    .note {
+      --env-h: 290px;
+      --pocket-h: 190px;
+      --tuck: 92px;
+      width: 720px;
+    }
+
+    .env__back {
+      border-radius: 18px;
+    }
+
+    .env__pocket {
+      border-radius: 0 0 18px 18px;
+    }
+
+    /* Over the garland's tallest bloom, so the monogram always shows. */
+    .env__seal {
+      z-index: 6;
+      bottom: calc(var(--pocket-h) * 0.62 - 40px);
+      width: 88px;
+    }
+
+    .note__garland {
+      bottom: -124px;
+      width: 100%;
+    }
+
+    .letter {
+      width: 92%;
+      padding: 40px 56px calc(var(--tuck) + 24px);
+      border-radius: 16px;
+    }
+
+    .letter__frame {
+      inset: 10px 10px 0;
+      border-radius: 9px 9px 0 0;
+    }
+
+    .letter__title {
+      font-size: 54px;
+    }
+
+    .letter__text {
+      margin-top: 18px;
+      font-size: 17px;
+    }
+
+    .letter__sign {
+      margin-top: 20px;
+    }
+
+    .letter__with {
+      font-size: 15px;
+    }
+
+    .letter__names {
+      font-size: 42px;
+    }
+  }
+</style>

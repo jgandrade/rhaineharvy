@@ -11,22 +11,25 @@ const form = document.querySelector<HTMLFormElement>("[data-rsvp]");
 
 if (form) {
   const status = form.querySelector<HTMLElement>("[data-rsvp-status]")!;
-  const more = form.querySelector<HTMLElement>("[data-rsvp-more]")!;
   const submit = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
   const thanks = document.querySelector<HTMLElement>("[data-rsvp-thanks]")!;
 
   const attending = () =>
     (form.elements.namedItem("attending") as RadioNodeList).value;
 
-  // Guest names and dietary needs only matter for a yes.
-  const syncMore = () => {
-    more.hidden = attending() === "no";
-  };
-  form.addEventListener("change", syncMore);
-
   const say = (msg: string) => {
     status.textContent = msg;
   };
+
+  // A nudge is gone the moment they act on it: typing, or choosing an answer.
+  const clear = (e: Event) => {
+    const el = e.target as HTMLElement;
+    el.classList?.remove("is-invalid");
+    el.removeAttribute?.("aria-invalid");
+    if (!submit.disabled) say("");
+  };
+  form.addEventListener("input", clear);
+  form.addEventListener("change", clear);
 
   // Swap the form for the thank-you and a ledger of what we received.
   const showThanks = (data: Record<string, string>) => {
@@ -68,8 +71,8 @@ if (form) {
       }
       say(
         attending()
-          ? "Kindly fill in your name and how we can reach you."
-          : "Kindly let us know whether you can join us.",
+          ? "Kindly add your name, as written on your invitation."
+          : "Kindly let us know whether you can attend.",
       );
       invalid[0]!.focus();
       return;

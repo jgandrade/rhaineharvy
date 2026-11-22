@@ -1,125 +1,264 @@
 ---
 /**
- * V4 "Entourage", on cream between Moments and Good to know. Each group is a
- * small caps label over its names, centred. Parents and the honour pair sit
- * two across; principal sponsors run as him · her rows; the secondary
- * sponsors, the party and the little ones fall into columns. Phones stack
- * everything except the sponsor pairs.
+ * V4 "Entourage", on cream between Moments and the gift note - set as the
+ * entourage page of a printed wedding programme: one ivory card with an inset
+ * hairline frame and a floral spray on two corners. Inside, the script title
+ * and lede, then each group under a small-caps heading flanked by gold rules.
+ * Paired groups (the parents, best man & maid of honour, groomsmen &
+ * bridesmaids) sit either side of a fine gold centre line; the principal
+ * sponsors run as him | her rows along that same line, the way a programme
+ * sets them. Names are in the serif.
+ *
+ * Phones: the paired groups keep their centre line; the sponsor couples
+ * stack, him over "& her".
  */
 import { V4 } from "../../lib/site";
 
 const E = V4.entourage;
+const pairs: [typeof E.parents, typeof E.honor, typeof E.party] = [E.parents, E.honor, E.party];
 ---
 
 <section class="ent" id="entourage" aria-labelledby="entourage-title">
-  <h2 class="v4-script ent__title" id="entourage-title" data-v4-rise>{E.title}</h2>
+  <div class="prog" data-v4-rise>
+    <img class="prog__floral prog__floral--high" src="/v4/floral-spray.webp" width="600" height="633" alt="" loading="lazy" />
+    <img class="prog__floral prog__floral--low" src="/v4/floral-spray.webp" width="600" height="633" alt="" loading="lazy" />
+    <span class="prog__frame" aria-hidden="true"></span>
 
-  <div class="ent__two" data-v4-rise>
-    {
-      E.parents.map((g) => (
-        <div class="grp">
-          <h3 class="v2-label grp__role">{g.role}</h3>
-          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
-        </div>
-      ))
-    }
-  </div>
+    <header class="prog__head">
+      <h2 class="v4-script prog__title" id="entourage-title">{E.title}</h2>
+      <p class="prog__lede">{E.lede}</p>
+    </header>
 
-  <div class="grp grp--sponsors" data-v4-rise>
-    <h3 class="v2-label grp__role">{E.sponsors.role}</h3>
-    <ul class="pairs">
+    <!-- Parents -->
+    <div class="duo">
       {
-        E.sponsors.pairs.map(([him, her]) => (
-          <li class="pair">
-            <span>{him}</span>
-            <span>{her}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </div>
-
-  <div class="ent__two" data-v4-rise>
-    {
-      E.honor.map((g) => (
-        <div class="grp">
-          <h3 class="v2-label grp__role">{g.role}</h3>
-          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
-        </div>
-      ))
-    }
-  </div>
-
-  <div class="grp grp--wide" data-v4-rise>
-    <h3 class="v4-script ent__sub">{E.secondary.role}</h3>
-    <div class="ent__three">
-      {
-        E.secondary.groups.map((g) => (
+        pairs[0].map((g) => (
           <div class="grp">
-            <h4 class="v2-label grp__role">{g.role}</h4>
+            <h3 class="v2-label grp__role">{g.role}</h3>
             <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
           </div>
         ))
       }
     </div>
-  </div>
 
-  <div class="ent__two" data-v4-rise>
-    {
-      E.party.map((g) => (
-        <div class="grp">
-          <h3 class="v2-label grp__role">{g.role}</h3>
-          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
-          {g.note && <p class="grp__note">({g.note})</p>}
-        </div>
-      ))
-    }
-  </div>
+    <!-- Principal sponsors -->
+    <div class="blk">
+      <h3 class="v2-label rule">{E.sponsors.role}</h3>
+      <ul class="sponsors">
+        {
+          E.sponsors.pairs.map(([him, her]) => (
+            <li class="sp">
+              <span class="sp__him">{him}</span>
+              <span class="sp__her">
+                <span class="sp__amp" aria-hidden="true">&amp; </span>
+                {her}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
 
-  <div class="ent__three" data-v4-rise>
-    {
-      E.little.map((g) => (
-        <div class="grp">
-          <h3 class="v2-label grp__role">{g.role}</h3>
-          <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
-        </div>
-      ))
-    }
+    <!-- Best man & maid of honour -->
+    <div class="duo duo--lead">
+      {
+        pairs[1].map((g) => (
+          <div class="grp">
+            <h3 class="v2-label grp__role">{g.role}</h3>
+            <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <!-- Secondary sponsors -->
+    <div class="blk">
+      <h3 class="v2-label rule">{E.secondary.role}</h3>
+      <div class="trio">
+        {
+          E.secondary.groups.map((g) => (
+            <div class="grp">
+              <h4 class="grp__sub">{g.role}</h4>
+              <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- Groomsmen & bridesmaids -->
+    <div class="blk">
+      <h3 class="v2-label rule">{E.partyTitle}</h3>
+      <div class="duo duo--bare">
+        {
+          pairs[2].map((g) => (
+            <div class="grp">
+              <h4 class="grp__sub">{g.role}</h4>
+              <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+              {g.note && <p class="grp__note">({g.note})</p>}
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <!-- The little ones -->
+    <div class="blk">
+      <h3 class="v2-label rule">{E.littleTitle}</h3>
+      <div class="trio">
+        {
+          E.little.map((g) => (
+            <div class="grp">
+              <h4 class="grp__sub">{g.role}</h4>
+              <ul class="grp__names">{g.names.map((n) => <li>{n}</li>)}</ul>
+            </div>
+          ))
+        }
+      </div>
+    </div>
   </div>
 </section>
 
 <style>
   .ent {
-    display: grid;
-    gap: 44px;
-    padding: 72px var(--gutter) 80px;
-    background: var(--cream);
+    position: relative;
+    overflow: clip;
+    padding: 72px var(--gutter) 96px;
+    background:
+      radial-gradient(ellipse 60% 30% at 50% 0%, rgb(227 207 168 / 0.4), transparent 70%),
+      var(--cream);
     color: var(--ink);
     text-align: center;
   }
 
-  .ent__title {
-    font-size: 48px;
-    line-height: 1;
-    letter-spacing: -0.02em;
+  /* ---------- the programme card ---------- */
+
+  .prog {
+    --gold: #c9a96a;
+    position: relative;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 56px 18px 52px;
+    border-radius: 24px;
+    background:
+      radial-gradient(ellipse 80% 30% at 50% 0%, rgb(255 255 255 / 0.9), transparent 70%),
+      #fffdf9;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.8) inset,
+      0 30px 70px -30px rgb(58 13 22 / 0.35),
+      0 6px 18px -8px rgb(58 13 22 / 0.12);
   }
 
-  .ent__sub {
-    margin-bottom: 24px;
-    font-size: 36px;
+  .prog__frame {
+    position: absolute;
+    inset: 10px;
+    border: 1px solid rgb(201 169 106 / 0.55);
+    border-radius: 16px;
+    pointer-events: none;
+  }
+
+  .prog__floral {
+    position: absolute;
+    z-index: 2;
+    width: 104px;
+    height: auto;
+    pointer-events: none;
+    filter: drop-shadow(0 10px 14px rgb(58 13 22 / 0.2));
+  }
+
+  .prog__floral--high {
+    top: -40px;
+    right: -26px;
+    rotate: 180deg;
+  }
+
+  .prog__floral--low {
+    bottom: -66px;
+    left: -30px;
+  }
+
+  .prog__head {
+    margin-bottom: 8px;
+  }
+
+  .prog__title {
+    font-size: 46px;
     line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--wine-deep);
+    text-wrap: balance;
+  }
+
+  .prog__lede {
+    max-width: 30ch;
+    margin: 14px auto 0;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- groups ---------- */
+
+  .blk,
+  .duo {
+    margin-top: 40px;
+  }
+
+  /* A small-caps heading between two gold rules, a diamond at each inner end. */
+  .rule {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 22px;
     color: var(--wine);
   }
 
-  .ent__two,
-  .ent__three {
-    display: grid;
-    gap: 32px;
+  .rule {
+    white-space: nowrap;
+  }
+
+  .rule::before,
+  .rule::after {
+    content: "";
+    flex: 0 1 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold));
+  }
+
+  .rule::after {
+    background: linear-gradient(270deg, transparent, var(--gold));
   }
 
   .grp__role {
     margin-bottom: 12px;
     color: var(--wine);
+  }
+
+  /* Phones: tighter caps so "Parents of the Groom" holds one line. */
+  @media (max-width: 699px) {
+    .grp__role,
+    .rule {
+      font-size: 9.5px;
+      letter-spacing: 0.12em;
+    }
+
+    .trio .grp__names,
+    .trio .grp__sub {
+      font-size: 13px;
+    }
+  }
+
+  /* A paired group's sub-heading: the serif italic, gold. */
+  .grp__sub {
+    margin-bottom: 8px;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    font-style: italic;
+    font-weight: 400;
+    color: #a8823f;
   }
 
   .grp__names {
@@ -128,87 +267,193 @@ const E = V4.entourage;
     margin: 0;
     padding: 0;
     list-style: none;
-    font-family: var(--f-dm);
-    font-size: 17px;
-    line-height: 1.5;
+    font-family: var(--font-serif);
+    font-size: 15px;
+    line-height: 1.45;
   }
 
   .grp__note {
     margin-top: 6px;
     font-family: var(--f-dm);
-    font-size: 14px;
+    font-size: 11px;
     font-style: italic;
-    opacity: 0.72;
+    line-height: 1.4;
+    opacity: 0.62;
   }
 
-  /* Him · her, the pair's two names meeting at the centre line. */
-  .pairs {
+  /* Two groups either side of a fine gold centre line. */
+  .duo {
+    position: relative;
     display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .duo::before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 50%;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--gold) 20%, var(--gold) 80%, transparent);
+  }
+
+  .duo--bare {
+    margin-top: 0;
+  }
+
+  /* The best man and maid of honour: one name each, so it leads. */
+  .duo--lead .grp__names {
+    font-size: 18px;
+  }
+
+  /* Three across at every width, as a printed programme sets them. */
+  .trio {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+  }
+
+  /* ---------- principal sponsors ---------- */
+
+  .sponsors {
+    display: grid;
+    gap: 12px;
     margin: 0;
     padding: 0;
     list-style: none;
-    font-family: var(--f-dm);
-    font-size: 14px;
+    font-family: var(--font-serif);
+    font-size: 15px;
     line-height: 1.4;
   }
 
-  .pair {
+  /* Phones: him, then "& her" under it. */
+  .sp {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
   }
 
-  .pair span:first-child {
-    text-align: right;
-  }
-
-  .pair span:last-child {
-    text-align: left;
+  .sp__amp {
+    font-style: italic;
+    color: #a8823f;
   }
 
   @media (min-width: 700px) {
-    .ent__two {
-      grid-template-columns: 1fr 1fr;
+    /* Him | her, meeting at the centre line. */
+    .sponsors {
+      position: relative;
+      gap: 14px;
     }
 
-    .ent__three {
-      grid-template-columns: repeat(3, 1fr);
+    .sponsors::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(180deg, transparent, var(--gold) 10%, var(--gold) 90%, transparent);
+    }
+
+    .sp {
+      grid-template-columns: 1fr 1fr;
+      gap: 56px;
+    }
+
+    .sp__him {
+      text-align: right;
+    }
+
+    .sp__her {
+      text-align: left;
+    }
+
+    .sp__amp {
+      display: none;
     }
   }
 
   @media (min-width: 900px) {
     .ent {
-      gap: calc(72 * var(--px));
-      padding: calc(120 * var(--px)) var(--gutter) calc(128 * var(--px));
+      padding: calc(128 * var(--px)) var(--gutter) calc(136 * var(--px));
     }
 
-    .ent > * {
-      width: 100%;
-      max-width: 960px;
-      margin-inline: auto;
+    .prog {
+      padding: 88px 72px 80px;
+      border-radius: 36px;
     }
 
-    .ent__title {
+    .prog__frame {
+      inset: 14px;
+      border-radius: 24px;
+    }
+
+    .prog__floral {
+      width: 230px;
+    }
+
+    .prog__floral--high {
+      top: -84px;
+      right: -96px;
+    }
+
+    .prog__floral--low {
+      bottom: -120px;
+      left: -150px;
+    }
+
+    .prog__title {
       font-size: calc(88 * var(--px));
       letter-spacing: calc(-1.3 * var(--px));
     }
 
-    .ent__sub {
-      font-size: calc(56 * var(--px));
-    }
-
-    .grp__names {
+    .prog__lede {
+      max-width: none;
       font-size: 19px;
     }
 
-    .pairs {
-      gap: 12px;
+    .blk,
+    .duo {
+      margin-top: 60px;
+    }
+
+    .duo--bare {
+      margin-top: 0;
+    }
+
+    .duo {
+      gap: 112px;
+    }
+
+    .rule {
+      gap: 16px;
+      margin-bottom: 30px;
+    }
+
+    .rule::before,
+    .rule::after {
+      flex-basis: 160px;
+    }
+
+    .grp__sub {
+      font-size: 18px;
+    }
+
+    .grp__names,
+    .sponsors {
       font-size: 19px;
     }
 
-    .pair {
-      gap: 40px;
+    .duo--lead .grp__names {
+      font-size: 24px;
+    }
+
+    .grp__note {
+      font-size: 13px;
+    }
+
+    .trio {
+      gap: 32px;
     }
   }
 </style>

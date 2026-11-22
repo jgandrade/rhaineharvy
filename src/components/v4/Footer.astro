@@ -2,7 +2,7 @@
 /**
  * V4 back cover: the couple photo under a shade that sinks into wine-night,
  * "Rhaine & Harvy" in white Androgy on the left, "We can't wait to see you."
- * in caps, the reply button, then the colophon. Phones: the two of them
+ * in champagne serif italic between two small diamonds, the reply button, then the colophon. Phones: the two of them
  * centred at the top with their faces clear, the names starting below
  * them, then the closing, the button and the links in a centred grid.
  */
@@ -97,13 +97,30 @@ const F = V4.footer;
     color: var(--rose);
   }
 
+  /* The closing line in the serif italic, champagne, between two small ornaments. */
   .cover__closing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
     margin-top: 22px;
-    font-family: var(--f-dm);
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 1.15;
-    text-transform: uppercase;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.2;
+    color: #f1e2bf;
+  }
+
+  .cover__closing::before,
+  .cover__closing::after {
+    content: "";
+    flex: none;
+    width: 7px;
+    height: 7px;
+    background: currentColor;
+    rotate: 45deg;
+    opacity: 0.7;
   }
 
   /* The one thing left to do: reply. */
@@ -136,6 +153,11 @@ const F = V4.footer;
     justify-content: center;
     justify-items: center;
     gap: 16px 32px;
+  }
+
+  /* Phones: five links in a two-column grid leave one over - centre it. */
+  .cover__links :global(a:last-child:nth-child(odd)) {
+    grid-column: 1 / -1;
   }
 
   /* ---------- Desktop: the frame at 1440 ---------- */
@@ -219,9 +241,9 @@ const F = V4.footer;
       width: calc(725 * var(--px));
       margin: 0;
       translate: -50% 0;
-      font-size: calc(40 * var(--px));
-      line-height: 1.05;
-      letter-spacing: calc(-0.4 * var(--px));
+      font-size: max(28px, calc(40 * var(--px)));
+      line-height: 1.1;
+      gap: 18px;
     }
 
     /* Centred under the closing line, where the names' column sits. */

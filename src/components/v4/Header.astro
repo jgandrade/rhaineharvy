@@ -64,7 +64,8 @@ const links = [
   /*
    * Tucked away from the first paint until the entrance brings it in
    * (scripts/v4.ts adds bar-in), so it never flashes in place first.
-   * bar-away: a full-screen section (Story's close) has the screen to itself.
+   * bar-away: the reader is scrolling down, or a full-screen section (Story's
+   * close, the back cover) has the screen to itself. Scrolling up brings it back.
    */
   :global(html.js:not(.reduce-motion):not(.bar-in)) .bar,
   :global(html.bar-away:not(.menu-open)) .bar {

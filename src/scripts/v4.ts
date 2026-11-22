@@ -32,8 +32,8 @@ const q = <T extends Element = HTMLElement>(sel: string, scope: ParentNode = doc
   scope.querySelector<T>(sel);
 
 /**
- * The bar steps aside (html.bar-away) while any of these is under it: the
- * story's full-screen close, the back cover. Each owns its own reason, so one
+ * The bar steps aside (html.bar-away) while any of these holds: the reader
+ * is scrolling down (scrollAway), the story's full-screen close, the back cover. Each owns its own reason, so one
  * leaving never brings the bar back over the other.
  */
 const awayFor = new Set<string>();
@@ -74,6 +74,36 @@ function bar() {
       toggle.focus();
     }
   });
+}
+
+/**
+ * Every section gets the whole screen: the bar slides away as the reader
+ * scrolls down, and comes straight back the moment they scroll up (or reach
+ * the top), so the menu and RSVP are always one flick away. It stays while
+ * the keyboard is inside it. Not motion, so reduced motion keeps it too.
+ */
+function scrollAway() {
+  const el = q("[data-v4-bar]");
+  if (!el) return;
+  let last = window.scrollY;
+  let ticking = false;
+  const update = () => {
+    ticking = false;
+    const y = window.scrollY;
+    const delta = y - last;
+    // Ignore jitter; near the top it always shows.
+    if (y < barHeight() * 2) away("scroll", false);
+    else if (delta > 6 && !el.contains(document.activeElement)) away("scroll", true);
+    else if (delta < -6) away("scroll", false);
+    if (Math.abs(delta) > 6 || y < barHeight() * 2) last = y;
+  };
+  window.addEventListener("scroll", () => {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(update);
+    }
+  }, { passive: true });
+  el.addEventListener("focusin", () => away("scroll", false));
 }
 
 /** The back cover has the screen to itself: the bar goes as it slides under. */
@@ -304,17 +334,57 @@ function together() {
 }
 
 /**
- * The ribbon between the invitation and the story: its two lines of script
- * slide past each other, solid one way and outlined the other, only as the
- * page scrolls - so it moves with the reader, never on its own.
+ * The gift note opens with the reader's scroll - no pin, so nothing waits
+ * behind the menu bar and every screen size reads it whole. As the section
+ * comes up the screen the seal presses down, the flap (folded over the
+ * letter) lifts and slips behind it, the letter rises out of the envelope,
+ * then its title, each paragraph and the signature arrive in turn - all of
+ * it finished by the time the letter's top is just under the menu bar.
+ * Scrolling back rewinds it. Reduced motion never gets here: it sits open.
  */
-function ribbon() {
-  const box = q("[data-v4-ribbon]");
+function giftLetter() {
+  const box = q("[data-v4-gift]");
   if (!box) return;
-  const [solid, outline] = qa("[data-v4-ribbon-row]", box);
-  const st = { trigger: box, start: "top bottom", end: "bottom top", scrub: 0.6 };
-  if (solid) gsap.fromTo(solid, { xPercent: -6 }, { xPercent: -26, ease: "none", scrollTrigger: st });
-  if (outline) gsap.fromTo(outline, { xPercent: -30 }, { xPercent: -10, ease: "none", scrollTrigger: st });
+  const flap = q("[data-v4-gift-flap]", box);
+  const letter = q("[data-v4-gift-letter]", box);
+  const seal = q("[data-v4-gift-seal]", box);
+  if (!flap || !letter) return;
+  const lines = [q(".letter__title", letter), ...qa(".letter__text", letter), q(".letter__sign", letter)].filter(Boolean);
+  const css = (name: string) => parseFloat(getComputedStyle(box).getPropertyValue(name));
+  // How far down the letter starts: wholly below the pocket's mouth - past the
+  // deepest point of its V - so not a sliver of it shows while the flap is shut.
+  const tuck = () => letter.offsetHeight - css("--tuck") + css("--pocket-h") * 0.38 + 10;
+
+  const tl = gsap.timeline({
+    defaults: { ease: "none" },
+    scrollTrigger: {
+      trigger: box,
+      start: "top 85%",
+      // Done when the letter's top is just under the menu bar (a 92px bar is
+      // 12% of a 768px laptop, 64px is 10% of a 667px phone), so the whole
+      // letter has been readable on the way up, on every screen.
+      end: "top 18%",
+      scrub: 0.6,
+      invalidateOnRefresh: true,
+    },
+  });
+  if (seal) tl.fromTo(seal, { scale: 1.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, 0);
+  tl.fromTo(flap, { rotateX: 180, zIndex: 4 }, { rotateX: 0, duration: 0.8, ease: "power2.inOut" }, 0.1)
+    .set(flap, { zIndex: 1 }, 0.5)
+    .fromTo(letter, { y: tuck }, { y: 0, duration: 1.2, ease: "power2.out" }, 0.6)
+    .fromTo(lines, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.25, ease: "power2.out" }, 1.1);
+}
+
+/**
+ * "How the day unfolds": the stops arrive in order, each vignette popping up
+ * over its node as if laid on the path.
+ */
+function flow() {
+  const box = q("[data-v4-flow]");
+  if (!box) return;
+  const stops = qa("[data-v4-stop]", box);
+  gsap.from(stops.map((s) => q(".stop__art", s)), { y: 24, scale: 0.8, opacity: 0, duration: 0.9, stagger: 0.12, ease: "back.out(1.8)", scrollTrigger: { trigger: box, start: "top 82%" } });
+  gsap.from(stops.map((s) => q(".stop__node", s)), { scale: 0, duration: 0.5, stagger: 0.12, ease: "back.out(3)", delay: 0.2, scrollTrigger: { trigger: box, start: "top 82%" } });
 }
 
 /* ---------------- Entrance + reveals ---------------- */
@@ -431,18 +501,18 @@ function collage() {
   const box = q("[data-v4-collage]");
   if (!box) return;
   const tiles = qa("[data-v4-tile]", box);
-  gsap.set(tiles, { clipPath: "inset(100% 0% 0% 0%)" });
+  // Each print drops softly onto the table (the tilt is the CSS rotate property, so it holds).
+  gsap.set(tiles, { y: -40, opacity: 0 });
 
   ScrollTrigger.batch(tiles, {
     start: "top 92%",
     once: true,
     onEnter: (batch) => {
-      // Cleared at the end so the frames' shadows show past their edges.
-      gsap.to(batch, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, stagger: 0.08, ease: "expo.inOut", clearProps: "clipPath" });
+      gsap.to(batch, { y: 0, opacity: 1, duration: 1.1, stagger: 0.1, ease: "expo.out", clearProps: "transform,opacity" });
       gsap.fromTo(
         batch.map((t) => q(".media", t)).filter(Boolean),
-        { scale: 1.2 },
-        { scale: 1, duration: 1.6, stagger: 0.08, ease: "expo.out", delay: 0.15 },
+        { scale: 1.15 },
+        { scale: 1, duration: 1.6, stagger: 0.1, ease: "expo.out", delay: 0.1 },
       );
     },
   });
@@ -577,6 +647,7 @@ function reveals() {
 }
 
 bar();
+scrollAway();
 countdown();
 
 if (!reduced) {
@@ -584,10 +655,11 @@ if (!reduced) {
   requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add("bar-in")));
   hero();
   collage();
-  ribbon();
   reveals();
   story();
   together();
+  giftLetter();
+  flow();
   document.fonts.ready.then(() => ScrollTrigger.refresh());
   window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 }

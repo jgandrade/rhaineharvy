@@ -1,9 +1,11 @@
 ---
 /**
- * V4: the wine band holding four photo-shoot portraits - two by two on
- * phones, one row of four on desktop - under the cream countdown card,
+ * V4: the wine band holding four photo-shoot portraits, set as keepsake
+ * prints (an even white border, a slight tilt each) - the wide frame
+ * over three on phones, one overlapping row of four on desktop - under the
+ * cream countdown card,
  * which sits on the seam with the hero above; then "We Invite You" with the
- * reply-by line and the button.
+ * reply-by line, the button, and two satin ribbons crossing beneath it.
  *
  * The countdown is set like stationery: a small cream card with an inset
  * hairline frame, the line "Until we say I do" between two rules, the four
@@ -19,9 +21,9 @@
  * close-up), 07 (the back cover's twin), 11/14 (03's sofa scene), 13 (the
  * story's "together" photo) and 18 (04's twin).
  *
- * Motion (scripts/v4.ts, collage()): frames open upward in small batches as
- * they arrive, each photo settling from a slight zoom. Reduced motion: the
- * wall just sits.
+ * Motion (scripts/v4.ts, collage()): prints drop softly into place in small
+ * batches as they arrive, each photo settling from a slight zoom; hover
+ * straightens and lifts one. Reduced motion: the prints just sit.
  */
 import Media from "../Media.astro";
 import { V4 } from "../../lib/site";
@@ -56,7 +58,11 @@ const frames = [
     {
       frames.map((f) => (
         <li class:list={["band__tile", `band__tile--${f.i + 1}`, { "band__tile--wide": f.wide }]} data-v4-tile>
-          <Media slug={f.slug} label={f.slug} tone={f.tone as "wine" | "blush" | "stone"} sizes={f.wide ? "(min-width: 900px) 38vw, 100vw" : "(min-width: 900px) 22vw, 33vw"} class="band__img" />
+          <figure class="print">
+            <div class="print__photo">
+              <Media slug={f.slug} label={f.slug} tone={f.tone as "wine" | "blush" | "stone"} sizes={f.wide ? "(min-width: 900px) 38vw, 100vw" : "(min-width: 900px) 22vw, 33vw"} class="band__img" />
+            </div>
+          </figure>
         </li>
       ))
     }
@@ -73,20 +79,23 @@ const frames = [
   </p>
   <a class="bv2 bv2--primary invite__cta" href="#rsvp" data-v4-rise>{V4.invite.cta}</a>
 
-  <!-- Two lines of script that slide past each other as the page scrolls:
-       solid wine one way, outlined the other (scripts/v4.ts, ribbon()). -->
-  <div class="ribbon" aria-hidden="true" data-v4-ribbon>
+  <!-- Two satin ribbons crossing in a shallow X: wine over champagne, each
+       drifting its own way. Each track holds the phrases twice, so sliding
+       it half its width loops without a seam (pure CSS; reduced motion stops). -->
+  <div class="ribbons" aria-hidden="true">
     {
-      ["solid", "outline"].map((kind) => (
-        <div class={`ribbon__row ribbon__row--${kind}`} data-v4-ribbon-row>
-          {[0, 1, 2, 3].map(() =>
-            V4.invite.ribbon.map((part) => (
-              <>
-                <span class="v4-script ribbon__text">{part}</span>
-                <span class="ribbon__mark" />
-              </>
-            )),
-          )}
+      ["gold", "wine"].map((kind) => (
+        <div class={`rib rib--${kind}`}>
+          <div class="rib__track">
+            {[0, 1, 2, 3, 4, 5].map(() =>
+              V4.invite.ribbon.map((part) => (
+                <>
+                  <span class="rib__text">{part}</span>
+                  <svg class="rib__mark" viewBox="0 0 16 16"><path d="M8 0c.6 4.2 3.2 7.4 8 8-4.8.6-7.4 3.8-8 8-.6-4.2-3.2-7.4-8-8 4.8-.6 7.4-3.8 8-8z" fill="currentColor" /></svg>
+                </>
+              )),
+            )}
+          </div>
         </div>
       ))
     }
@@ -107,15 +116,18 @@ const frames = [
     /* Its own block context, so the card's negative margin isn't absorbed. */
     display: flow-root;
     padding: 0;
-    background: var(--wine-deep);
+    background:
+      radial-gradient(ellipse 70% 60% at 50% 30%, rgb(143 43 60 / 0.5), transparent 70%),
+      var(--wine-deep);
   }
 
   /*
-   * The photos hang over the band's lower edge into the invitation, the way
-   * the countdown card hangs over its upper edge - one device, both seams.
-   * Phones: the wide frame across the top, three portraits under it, the
-   * middle one dropped a step. Desktop: one row, the wide frame second, the
-   * portraits stepping up and down so the bottom edge reads as a rhythm.
+   * The photos as keepsake prints scattered on the wine: even white borders,
+   * rounded corners, each set at its own
+   * slight angle and overlapping its neighbour a touch. They hang over the
+   * band's lower edge into the invitation, as the countdown card hangs over
+   * its upper edge. Phones: the wide frame across the top, three prints
+   * under it. Desktop: one row, the prints stepping up and down.
    */
   .band__collage {
     position: relative;
@@ -123,41 +135,69 @@ const frames = [
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     align-items: start;
-    gap: 8px;
-    margin: 40px var(--gutter) -72px;
+    gap: 4px;
+    margin: 44px var(--gutter) -84px;
     padding: 0;
     list-style: none;
   }
 
   .band__tile {
-    aspect-ratio: 2 / 3;
-    overflow: hidden;
-    border-radius: 3px;
-    /* A hairline and a deep, soft shadow keep the white-studio frames from
-       melting into the white invitation where they hang over the seam. */
-    box-shadow:
-      0 0 0 1px rgb(30 20 22 / 0.08),
-      0 24px 48px -20px rgb(34 7 13 / 0.45),
-      0 6px 14px -6px rgb(34 7 13 / 0.2);
+    transition: rotate 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), translate 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+
+  .band__tile--1 { rotate: -4deg; }
+  .band__tile--2 { rotate: 1.5deg; }
+  .band__tile--3 { rotate: 3deg; margin-top: 22px; }
+  .band__tile--4 { rotate: -2.5deg; }
 
   .band__tile--wide {
     grid-column: 1 / -1;
     order: -1;
+    width: 92%;
+    justify-self: center;
+    margin-bottom: 6px;
+  }
+
+  /* Pick one up: it straightens and lifts. */
+  @media (hover: hover) {
+    .band__tile:hover {
+      z-index: 3;
+      rotate: 0deg;
+      translate: 0 -10px;
+    }
+  }
+
+  .print {
+    margin: 0;
+    padding: 5px;
+    border-radius: 10px;
+    background: #fffdf9;
+    box-shadow:
+      0 1px 0 rgb(255 255 255 / 0.7) inset,
+      0 22px 40px -18px rgb(0 0 0 / 0.55),
+      0 4px 10px -4px rgb(0 0 0 / 0.25);
+  }
+
+  .print__photo {
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  .band__tile--wide .print__photo {
     aspect-ratio: 3 / 2;
   }
 
-  .band__tile--3 {
-    margin-top: 24px;
-  }
-
-  .band__tile :global(.band__img),
-  .band__tile :global(.media__img) {
+  .print__photo :global(.band__img),
+  .print__photo :global(.media),
+  .print__photo :global(.media__img) {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+
+
 
   /* ---------- Countdown card: set like stationery ---------- */
 
@@ -350,48 +390,101 @@ const frames = [
     margin-top: 32px;
   }
 
-  /* ---------- The ribbon: script sliding past, edge to edge ---------- */
+  /* ---------- The ribbons: two satin bands crossing, edge to edge ---------- */
 
-  /* Clipped at the sides only, so the swashes above and below stay whole. */
-  .ribbon {
+  .ribbons {
+    position: relative;
     align-self: stretch;
-    margin: 88px calc(-1 * var(--gutter)) -16px;
-    overflow-x: clip;
+    height: 170px;
+    margin: 64px calc(-1 * var(--gutter)) -64px;
+    overflow: clip;
   }
 
-  .ribbon__row {
+  .rib {
+    position: absolute;
+    left: -6%;
+    right: -6%;
+    top: 50%;
     display: flex;
     align-items: center;
-    gap: 0.45em;
-    width: max-content;
-    font-size: 44px;
-    line-height: 1.05;
-    white-space: nowrap;
-    will-change: transform;
+    height: 46px;
+    overflow: hidden;
+    translate: 0 -50%;
+    box-shadow: 0 14px 28px -12px rgb(34 7 13 / 0.45);
   }
 
-  .ribbon__row + .ribbon__row {
-    margin-top: 4px;
+  /* Satin: a sheen across the middle, darker at the folds, stitched edges. */
+  .rib::before,
+  .rib::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
   }
 
-  .ribbon__text {
-    color: var(--wine);
+  .rib::before {
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.18), rgb(255 255 255 / 0.16) 38%, rgb(255 255 255 / 0.04) 55%, rgb(0 0 0 / 0.2));
   }
 
-  /* The second line in outline only, a lighter echo of the first. */
-  .ribbon__row--outline .ribbon__text {
-    color: transparent;
-    -webkit-text-stroke: 1px var(--wine);
-    opacity: 0.55;
+  .rib::after {
+    inset: 5px 0;
+    border-block: 1px dashed currentColor;
+    opacity: 0.35;
   }
 
-  /* A small rose diamond between the phrases. */
-  .ribbon__mark {
+  /* Phones tilt steeper, so the X still reads across a narrow screen. */
+  .rib--gold {
+    rotate: 7deg;
+    background: #d8bf8c;
+    color: var(--wine-deep);
+  }
+
+  .rib--wine {
+    z-index: 1;
+    rotate: -7deg;
+    background: var(--wine);
+    color: #f1e2bf;
+  }
+
+  .rib__track {
+    display: flex;
     flex: none;
-    width: 0.14em;
-    height: 0.14em;
-    background: var(--rose);
-    rotate: 45deg;
+    align-items: center;
+    gap: 22px;
+    padding-right: 22px;
+    white-space: nowrap;
+    animation: rib-slide 70s linear infinite;
+  }
+
+  .rib--gold .rib__track {
+    animation-direction: reverse;
+    animation-duration: 85s;
+  }
+
+  .rib__text {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+  }
+
+  .rib__mark {
+    flex: none;
+    width: 11px;
+    height: 11px;
+    opacity: 0.85;
+  }
+
+  @keyframes rib-slide {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rib__track {
+      animation: none;
+    }
   }
 
   /* ---------- Desktop: the frame at 1440 ---------- */
@@ -404,25 +497,39 @@ const frames = [
      */
     .band__collage {
       grid-template-columns: 1fr 1.7fr 1fr 1fr;
-      gap: calc(20 * var(--px));
+      gap: 0;
       max-width: calc(1320 * var(--px));
-      margin: calc(72 * var(--px)) auto calc(-180 * var(--px));
+      margin: calc(80 * var(--px)) auto calc(-200 * var(--px));
       padding-inline: var(--gutter);
     }
 
-    .band__tile {
-      border-radius: 4px;
+    /* Prints overlap their neighbours a touch, like a hand laid them down. */
+    .band__tile + .band__tile {
+      margin-left: calc(-18 * var(--px));
     }
 
     .band__tile--wide {
       grid-column: auto;
       order: 0;
+      width: auto;
       margin-top: calc(96 * var(--px));
+      margin-bottom: 0;
     }
 
     .band__tile--3 {
       margin-top: calc(40 * var(--px));
     }
+
+    .print {
+      padding: 10px;
+      border-radius: 14px;
+    }
+
+    .print__photo {
+      border-radius: 8px;
+    }
+
+
 
     .count {
       max-width: 700px;
@@ -488,17 +595,41 @@ const frames = [
       margin-top: calc(40 * var(--px));
     }
 
-    .ribbon {
-      margin-top: calc(128 * var(--px));
-      margin-bottom: calc(-24 * var(--px));
+    .ribbons {
+      height: calc(260 * var(--px));
+      min-height: 190px;
+      margin-top: calc(112 * var(--px));
+      margin-bottom: calc(-88 * var(--px));
     }
 
-    .ribbon__row {
-      font-size: calc(96 * var(--px));
+    .rib {
+      height: max(64px, calc(78 * var(--px)));
     }
 
-    .ribbon__row + .ribbon__row {
-      margin-top: calc(6 * var(--px));
+    .rib--gold {
+      rotate: 3deg;
+    }
+
+    .rib--wine {
+      rotate: -3.5deg;
+    }
+
+    .rib::after {
+      inset: 8px 0;
+    }
+
+    .rib__track {
+      gap: 36px;
+      padding-right: 36px;
+    }
+
+    .rib__text {
+      font-size: max(17px, calc(21 * var(--px)));
+    }
+
+    .rib__mark {
+      width: 15px;
+      height: 15px;
     }
   }
 

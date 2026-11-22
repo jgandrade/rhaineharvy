@@ -333,4 +333,12 @@ const tones = ["wine", "stone", "wine"] as const;
     height: 80svh;
     clip-path: none;
   }
+
+  /* Outranks ".story__slide + .story__slide" above, which keeps chapters II
+     and III wiped shut until the stepper opens them - without it they stayed
+     invisible here, and their photos never loaded. */
+  :global(html:not(.js)) .story__slide + .story__slide,
+  :global(html.reduce-motion) .story__slide + .story__slide {
+    clip-path: none;
+  }
 </style>
