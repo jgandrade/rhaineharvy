@@ -350,7 +350,7 @@ export const V4 = {
     roles: [
       {
         looks: [
-          { what: "Modern Filipiniana", who: "For the ninangs, in champagne" },
+          { what: "Modern Filipiniana or long gown", who: "For the ninangs, in champagne" },
           { what: "Barong & black slacks", who: "For the ninongs, with black shoes" },
         ],
         img: { src: "/v4/dress-sponsors.webp", width: 639, height: 1000 },
@@ -460,8 +460,8 @@ export const V4 = {
       {
         n: "4",
         icon: "arrival",
-        title: "Come a little early",
-        body: "Please arrive **at least 30 minutes before** the 2:00 PM ceremony, so you can find your seat and settle in.",
+        title: "Come on time",
+        body: "Kindly **arrive on time** for the 2:00 PM ceremony, so you can find your seat and settle in before we begin.",
       },
     ],
   },
